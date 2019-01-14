@@ -24,5 +24,8 @@ public class HelloWorld {
         System.out.println("Please input your age: ");
         int age = scanner.nextInt();
         System.out.printf("You are %d years old.\n", age);
+
+        Basic basic = new Basic();
+        basic.func();
     }
 }

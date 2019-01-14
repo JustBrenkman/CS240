@@ -36,6 +36,8 @@ public class ImageEditor {
         } else {
             System.out.println("Unable to perform action: to few arguments");
         }
+
+
     }
 
     /**
@@ -82,7 +84,8 @@ public class ImageEditor {
      * @param length - focal length
      */
     private void motionBlurImage(Path pathToImage, Path pathToResult, int length) {
-
+        PPMImage image = ImageLoader.loadImage(pathToImage);
+        ImageLoader.saveImage(pathToResult, image);
     }
 
     /**
@@ -91,7 +94,10 @@ public class ImageEditor {
      * @param pathToResult - Saved image path
      */
     private void embossImage(Path pathToImage, Path pathToResult) {
-
+        System.out.println("Process to perform: EMBOSS");
+        PPMImage image = ImageLoader.loadImage(pathToImage);
+        PPMImage embossedImage = Manipulator.embossImage(image);
+        ImageLoader.saveImage(pathToResult, embossedImage);
     }
 
     /**
@@ -100,7 +106,10 @@ public class ImageEditor {
      * @param pathToResult - Saved image path
      */
     private void grayScaleImage(Path pathToImage, Path pathToResult) {
-
+        System.out.println("Process to perform: GRAYSCALE");
+        PPMImage image = ImageLoader.loadImage(pathToImage);
+        PPMImage convertedImage = Manipulator.convertToGrayScale(image);
+        ImageLoader.saveImage(pathToResult, convertedImage);
     }
 
     /**
