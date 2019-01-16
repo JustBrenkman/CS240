@@ -1,11 +1,12 @@
 package com.cs240.imageeditor;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 class Manipulator {
 
+    /**
+     * Inverts image colors
+     * @param imageToInvert - original
+     * @return - new image with effect applied
+     */
     static PPMImage invertImage(PPMImage imageToInvert) {
         System.out.println("Inverting and creating new image");
         PPMImage.Pixel[][] pixels = new PPMImage.Pixel[imageToInvert.getWidth()][imageToInvert.getHeight()];
@@ -21,6 +22,11 @@ class Manipulator {
         return new PPMImage(imageToInvert.getType(), imageToInvert.getWidth(), imageToInvert.getHeight(), imageToInvert.getMaxVal(), pixels);
     }
 
+    /**
+     * Converts image to grayscale
+     * @param imageToInvert - original
+     * @return - new image with effect applied
+     */
     static PPMImage convertToGrayScale(PPMImage imageToInvert) {
         System.out.println("Creating new image and converting to gray scale");
         PPMImage.Pixel[][] pixels = new PPMImage.Pixel[imageToInvert.getWidth()][imageToInvert.getHeight()];
@@ -37,6 +43,11 @@ class Manipulator {
         return new PPMImage(imageToInvert.getType(), imageToInvert.getWidth(), imageToInvert.getHeight(), imageToInvert.getMaxVal(), pixels);
     }
 
+    /**
+     * Embosses image
+     * @param imageToInvert - original
+     * @return - new image with effect applied
+     */
     static PPMImage embossImage(PPMImage imageToInvert) {
         System.out.println("Embossing and creating new image");
         PPMImage.Pixel[][] pixels = new PPMImage.Pixel[imageToInvert.getWidth()][imageToInvert.getHeight()];
@@ -71,10 +82,22 @@ class Manipulator {
         return new PPMImage(imageToInvert.getType(), imageToInvert.getWidth(), imageToInvert.getHeight(), imageToInvert.getMaxVal(), pixels);
     }
 
+    /**
+     * Help with embossing, returns largest value ignoring sign
+     * @param a - integer to compare
+     * @param b - integer to compare
+     * @return - returns largest integer value with its occupying sign
+     */
     private static int maxIgnoreSign(int a, int b) {
         return (Math.abs(a) >= Math.abs(b) ? a : b);
     }
 
+    /**
+     * Applies a motion blur effect to the image based on the length i.e. range of pixels to average
+     * @param imageToConvert - original
+     * @param length - pixel length away to average
+     * @return - new image with effect applied
+     */
     static PPMImage blurImage(PPMImage imageToConvert, int length) {
         PPMImage.Pixel[][] pixels = new PPMImage.Pixel[imageToConvert.getWidth()][imageToConvert.getHeight()];
         for (int i = 0; i < imageToConvert.getHeight(); i++) {

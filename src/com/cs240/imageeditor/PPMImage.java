@@ -31,6 +31,14 @@ public class PPMImage {
         }
     }
 
+    /**
+     * New Image
+     * @param ppmType - P3
+     * @param imageWidth - Image width
+     * @param imageHeight - Image height
+     * @param maxColorVal - max color value
+     * @param imagePixels - pixels to image as 2d array of Pixels
+     */
     PPMImage(String ppmType, int imageWidth, int imageHeight, int maxColorVal, Pixel[][] imagePixels) {
         this.type = ppmType;
         this.width = imageWidth;

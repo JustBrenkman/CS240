@@ -36,8 +36,6 @@ public class ImageEditor {
         } else {
             System.out.println("Unable to perform action: to few arguments");
         }
-
-
     }
 
     /**
@@ -84,9 +82,8 @@ public class ImageEditor {
      * @param length - focal length
      */
     private void motionBlurImage(Path pathToImage, Path pathToResult, int length) {
-        System.out.println("Process to perform: BLUR");
         PPMImage image = ImageLoader.loadImage(pathToImage);
-//        PPMImage gray = Manipulator.convertToGrayScale(image);
+        System.out.println("Process to perform: BLUR");
         PPMImage blurred = Manipulator.blurImage(image, length);
         ImageLoader.saveImage(pathToResult, blurred);
     }
@@ -97,8 +94,8 @@ public class ImageEditor {
      * @param pathToResult - Saved image path
      */
     private void embossImage(Path pathToImage, Path pathToResult) {
-        System.out.println("Process to perform: EMBOSS");
         PPMImage image = ImageLoader.loadImage(pathToImage);
+        System.out.println("Process to perform: EMBOSS");
         PPMImage embossedImage = Manipulator.embossImage(image);
         ImageLoader.saveImage(pathToResult, embossedImage);
     }
@@ -109,8 +106,8 @@ public class ImageEditor {
      * @param pathToResult - Saved image path
      */
     private void grayScaleImage(Path pathToImage, Path pathToResult) {
-        System.out.println("Process to perform: GRAYSCALE");
         PPMImage image = ImageLoader.loadImage(pathToImage);
+        System.out.println("Process to perform: GRAYSCALE");
         PPMImage convertedImage = Manipulator.convertToGrayScale(image);
         ImageLoader.saveImage(pathToResult, convertedImage);
     }
@@ -121,8 +118,8 @@ public class ImageEditor {
      * @param pathToSavedVersion - Saved image path
      */
     private void invertImage(Path pathToImage, Path pathToSavedVersion) {
-        System.out.println("Process to perform: INVERT");
         PPMImage image = ImageLoader.loadImage(pathToImage);
+        System.out.println("Process to perform: INVERT");
         PPMImage invertedImage = Manipulator.invertImage(image);
         ImageLoader.saveImage(pathToSavedVersion, invertedImage);
     }
