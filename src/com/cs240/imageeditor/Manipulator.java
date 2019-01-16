@@ -4,6 +4,7 @@ class Manipulator {
 
     /**
      * Inverts image colors
+     *
      * @param imageToInvert - original
      * @return - new image with effect applied
      */
@@ -24,6 +25,7 @@ class Manipulator {
 
     /**
      * Converts image to grayscale
+     *
      * @param imageToInvert - original
      * @return - new image with effect applied
      */
@@ -45,6 +47,7 @@ class Manipulator {
 
     /**
      * Embosses image
+     *
      * @param imageToInvert - original
      * @return - new image with effect applied
      */
@@ -84,6 +87,7 @@ class Manipulator {
 
     /**
      * Help with embossing, returns largest value ignoring sign
+     *
      * @param a - integer to compare
      * @param b - integer to compare
      * @return - returns largest integer value with its occupying sign
@@ -94,21 +98,25 @@ class Manipulator {
 
     /**
      * Applies a motion blur effect to the image based on the length i.e. range of pixels to average
+     *
      * @param imageToConvert - original
-     * @param length - pixel length away to average
+     * @param length         - pixel length away to average
      * @return - new image with effect applied
      */
     static PPMImage blurImage(PPMImage imageToConvert, int length) {
         PPMImage.Pixel[][] pixels = new PPMImage.Pixel[imageToConvert.getWidth()][imageToConvert.getHeight()];
         for (int i = 0; i < imageToConvert.getHeight(); i++) {
-            for (int j = 0; j < imageToConvert.getWidth() ; j++) {
+            for (int j = 0; j < imageToConvert.getWidth(); j++) {
                 int averageR = 0, averageG = 0, averageB = 0;
                 for (int k = 0; k < ((j <= (imageToConvert.getWidth() - length)) ? length : (imageToConvert.getWidth() - j)); k++) {
                     averageR += imageToConvert.getPixels()[j + k][i].getR();
                     averageG += imageToConvert.getPixels()[j + k][i].getG();
                     averageB += imageToConvert.getPixels()[j + k][i].getB();
                 }
-                pixels[j][i] = new PPMImage.Pixel((averageR / ((j <= (imageToConvert.getWidth() - length)) ? length : (imageToConvert.getWidth() - j))), (averageG / ((j <= (imageToConvert.getWidth() - length)) ? length : (imageToConvert.getWidth() - j))), (averageB / ((j <= (imageToConvert.getWidth() - length)) ? length : (imageToConvert.getWidth() - j))));
+                pixels[j][i] = new PPMImage.Pixel(
+                        (averageR / ((j <= (imageToConvert.getWidth() - length)) ? length : (imageToConvert.getWidth() - j))),
+                        (averageG / ((j <= (imageToConvert.getWidth() - length)) ? length : (imageToConvert.getWidth() - j))),
+                        (averageB / ((j <= (imageToConvert.getWidth() - length)) ? length : (imageToConvert.getWidth() - j))));
             }
         }
         return new PPMImage(imageToConvert.getType(), imageToConvert.getWidth(), imageToConvert.getHeight(), imageToConvert.getMaxVal(), pixels);

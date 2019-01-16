@@ -26,7 +26,7 @@ class ImageLoader {
      * @return - returns the PPM image
      */
     private static PPMImage loadImage(Path pathToImage, PathType pathType) {
-        System.out.println("Attempting to load image");
+//        System.out.println("Attempting to load image...");
         try {
             InputStream inputStream = Files.newInputStream(pathToImage);
             Scanner scanner = new Scanner(inputStream); // Hopefully this will make it easier to read
@@ -34,9 +34,9 @@ class ImageLoader {
 
             String ppmCheck = scanner.next();
 //            assert ppmCheck.equals("p3");
-            if (ppmCheck.toUpperCase().equals("P3")) {
-                System.out.println("Asserted ppmCheck == p3");
-            }
+//            if (ppmCheck.toUpperCase().equals("P3")) {
+//                System.out.println("Asserted ppmCheck == p3");
+//            }
 
             int width = 0, heigth = 0;
             int maxVal = 0;
@@ -50,17 +50,17 @@ class ImageLoader {
                 switch (state) {
                     case 0:
                         width = Integer.valueOf(next);
-                        System.out.printf("Width: %d \n", width);
+//                        System.out.printf("Width: %d \n", width);
                         state = 1;
                         break;
                     case 1:
                         heigth = Integer.valueOf(next);
-                        System.out.printf("Height: %d \n", heigth);
+//                        System.out.printf("Height: %d \n", heigth);
                         state = 2;
                         break;
                     case 2:
                         maxVal = Integer.valueOf(next);
-                        System.out.printf("Max Val: %d \n", maxVal);
+//                        System.out.printf("Max Val: %d \n", maxVal);
                         state = 3;
                         break;
                     case 3:
@@ -103,12 +103,15 @@ class ImageLoader {
 
     /**
      * Saves ppm image to a specific file location
+     * Note: This method is not optimized for performance
+     * TODO use a stringbuilder
+     *
      * @param pathToImage - path literal
-     * @param type - path type
-     * @param image - image to save
+     * @param type        - path type
+     * @param image       - image to save
      */
     private static void saveImage(Path pathToImage, PathType type, PPMImage image) {
-        System.out.println("Attempting to save image");
+//        System.out.println("Attempting to save image");
         try {
             OutputStream outputStream = Files.newOutputStream(pathToImage);
             Writer writer = new OutputStreamWriter(outputStream);
@@ -135,7 +138,7 @@ class ImageLoader {
             }
 
             writer.close();
-            System.out.println("Saved image :)");
+//            System.out.println("Saved image :)");
         } catch (IOException e) {
             throw new FailedProcessImageException("Something went wrong, may have had something to do with the path name", e);
         }

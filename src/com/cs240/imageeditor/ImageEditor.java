@@ -8,31 +8,41 @@ import java.nio.file.Paths;
 
 public class ImageEditor {
 
-    enum ProcessType {INVERT, GRAYSCALE, EMBOSS, MOTION_BLUR}
+    enum ProcessType {INVERT, GRAYSCALE, EMBOSS, MOTION_BLUR} // Image process type
 
-    private ImageEditor() {}
+    private ImageEditor() {} // Default constructor
 
+    /**
+     * Main method
+     * @param args - in-file out-file (invert|grayscale|emboss|motionblur {{length}})
+     */
     public static void main(String[] args) {
-        System.out.println("Image Editor Alpha v0.1");
+//        System.out.println("Image Editor v1.0");
 
         ImageEditor imageEditor = new ImageEditor(); // Image editor will handle loading, processing and saving of images
 
         // if we have enough arguments then process an image
         if (args.length >= 3) {
-            System.out.printf("Processing image: %s\n", args[0]);
-            if (args[2].equals("invert")) {
-                imageEditor.processImage(args[0], args[1], ProcessType.INVERT);
-            } else if (args[2].equals("grayscale")) {
-                imageEditor.processImage(args[0], args[1], ProcessType.GRAYSCALE);
-            } else if (args[2].equals("emboss")) {
-                imageEditor.processImage(args[0], args[1], ProcessType.EMBOSS);
-            } else if (args[2].equals("motionblur")) {
-                if (args.length > 3) {
-                    imageEditor.processImage(args[0], args[1], ProcessType.MOTION_BLUR, Integer.valueOf(args[3]));
-                } else {
-                    System.out.println("Unable to perform motion blur, please specify length");
-                }
+            System.out.printf("Processing image: %s to: %s %s\n", args[0], args[1], args[2].toUpperCase());
+            switch (args[2]) {
+                case "invert":
+                    imageEditor.processImage(args[0], args[1], ProcessType.INVERT);
+                    break;
+                case "grayscale":
+                    imageEditor.processImage(args[0], args[1], ProcessType.GRAYSCALE);
+                    break;
+                case "emboss":
+                    imageEditor.processImage(args[0], args[1], ProcessType.EMBOSS);
+                    break;
+                case "motionblur":
+                    if (args.length > 3) {
+                        imageEditor.processImage(args[0], args[1], ProcessType.MOTION_BLUR, Integer.valueOf(args[3]));
+                    } else {
+                        System.out.println("Unable to perform motion blur, please specify length");
+                    }
+                    break;
             }
+            System.out.println("Success :)");
         } else {
             System.out.println("Unable to perform action: to few arguments");
         }
@@ -83,7 +93,7 @@ public class ImageEditor {
      */
     private void motionBlurImage(Path pathToImage, Path pathToResult, int length) {
         PPMImage image = ImageLoader.loadImage(pathToImage);
-        System.out.println("Process to perform: BLUR");
+//        System.out.println("Process to perform: BLUR");
         PPMImage blurred = Manipulator.blurImage(image, length);
         ImageLoader.saveImage(pathToResult, blurred);
     }
@@ -95,7 +105,7 @@ public class ImageEditor {
      */
     private void embossImage(Path pathToImage, Path pathToResult) {
         PPMImage image = ImageLoader.loadImage(pathToImage);
-        System.out.println("Process to perform: EMBOSS");
+//        System.out.println("Process to perform: EMBOSS");
         PPMImage embossedImage = Manipulator.embossImage(image);
         ImageLoader.saveImage(pathToResult, embossedImage);
     }
@@ -107,7 +117,7 @@ public class ImageEditor {
      */
     private void grayScaleImage(Path pathToImage, Path pathToResult) {
         PPMImage image = ImageLoader.loadImage(pathToImage);
-        System.out.println("Process to perform: GRAYSCALE");
+//        System.out.println("Process to perform: GRAYSCALE");
         PPMImage convertedImage = Manipulator.convertToGrayScale(image);
         ImageLoader.saveImage(pathToResult, convertedImage);
     }
@@ -119,7 +129,7 @@ public class ImageEditor {
      */
     private void invertImage(Path pathToImage, Path pathToSavedVersion) {
         PPMImage image = ImageLoader.loadImage(pathToImage);
-        System.out.println("Process to perform: INVERT");
+//        System.out.println("Process to perform: INVERT");
         PPMImage invertedImage = Manipulator.invertImage(image);
         ImageLoader.saveImage(pathToSavedVersion, invertedImage);
     }
@@ -140,7 +150,6 @@ public class ImageEditor {
                 out.write(5);
                 System.out.println("Closing file");
                 out.close();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
