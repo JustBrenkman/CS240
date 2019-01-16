@@ -31,7 +31,7 @@ public class Basic {
         // sout
         // switch
 
-        for (int i = 0; i < ; i++) {
+        for (int i = 0; i < 10; i++) {
 
         }
 

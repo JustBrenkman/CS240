@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
 
-public class ImageLoader {
+class ImageLoader {
     enum PathType {RELATIVE, DIRECT}
 
     /**
@@ -14,7 +14,7 @@ public class ImageLoader {
      * @param pathToImage - relative path to the image
      * @return - The ppm version of the image
      */
-    public static PPMImage loadImage(Path pathToImage) {
+    static PPMImage loadImage(Path pathToImage) {
         return loadImage(pathToImage, PathType.RELATIVE);
     }
 
@@ -30,6 +30,7 @@ public class ImageLoader {
         try {
             InputStream inputStream = Files.newInputStream(pathToImage);
             Scanner scanner = new Scanner(inputStream); // Hopefully this will make it easier to read
+//            scanner.useDelimiter("((#[^\\n]*\\n) | (\\s+))+");
 
             String ppmCheck = scanner.next();
             assert ppmCheck.equals("p3");
@@ -49,7 +50,6 @@ public class ImageLoader {
                     next = scanner.nextLine();
                     continue;
                 }
-
                 switch (state) {
                     case 0:
                         width = Integer.valueOf(next);
@@ -72,11 +72,11 @@ public class ImageLoader {
                         int second = Integer.valueOf(scanner.next());
                         int third = Integer.valueOf(scanner.next());
                         int count = 0;
-                        for (int i = 0; i < width; i++) {
-                            for (int j = 0; j < heigth; j++) {
+                        for (int i = 0; i < heigth; i++) {
+                            for (int j = 0; j < width; j++) {
                                 // If it is the first one stick in that one we had to create before the loop
                                 if (i == 0 && j == 0) {
-                                    pixels[i][j] = new PPMImage.Pixel(first, second, third);
+                                    pixels[j][i] = new PPMImage.Pixel(first, second, third);
                                 } else {
                                     if (scanner.hasNext()) { // double check we didnt run out of stuff to read
                                         int pixel_0 = Integer.valueOf(scanner.next());
@@ -84,7 +84,7 @@ public class ImageLoader {
                                         int pixel_2 = Integer.valueOf(scanner.next());
 
                                         PPMImage.Pixel pixel = new PPMImage.Pixel(pixel_0, pixel_1, pixel_2);
-                                        pixels[i][j] = pixel;
+                                        pixels[j][i] = pixel;
                                     }
                                 }
                             }
@@ -125,13 +125,13 @@ public class ImageLoader {
 
             PPMImage.Pixel[][] pixels = image.getPixels();
 
-            for (int i = 0; i < image.getWidth(); i++) {
-                for (int j = 0; j < image.getHeight(); j++) {
-                    writer.write(Integer.toString(pixels[i][j].getR()));
+            for (int i = 0; i < image.getHeight(); i++) {
+                for (int j = 0; j < image.getWidth(); j++) {
+                    writer.write(Integer.toString(pixels[j][i].getR()));
                     writer.write("\n");
-                    writer.write(Integer.toString(pixels[i][j].getG()));
+                    writer.write(Integer.toString(pixels[j][i].getG()));
                     writer.write("\n");
-                    writer.write(Integer.toString(pixels[i][j].getB()));
+                    writer.write(Integer.toString(pixels[j][i].getB()));
                     writer.write("\n");
                 }
             }

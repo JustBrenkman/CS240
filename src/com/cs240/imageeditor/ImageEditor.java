@@ -60,7 +60,7 @@ public class ImageEditor {
                 embossImage(Paths.get(pathToImage),Paths.get(pathToResult));
                 break;
             case MOTION_BLUR:
-                motionBlurImage(Paths.get(pathToImage), Paths.get(pathToResult), 10);
+                motionBlurImage(Paths.get(pathToImage), Paths.get(pathToResult), length);
                 break;
         }
     }
@@ -84,8 +84,11 @@ public class ImageEditor {
      * @param length - focal length
      */
     private void motionBlurImage(Path pathToImage, Path pathToResult, int length) {
+        System.out.println("Process to perform: BLUR");
         PPMImage image = ImageLoader.loadImage(pathToImage);
-        ImageLoader.saveImage(pathToResult, image);
+//        PPMImage gray = Manipulator.convertToGrayScale(image);
+        PPMImage blurred = Manipulator.blurImage(image, length);
+        ImageLoader.saveImage(pathToResult, blurred);
     }
 
     /**

@@ -4,18 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class Manipulator {
-    private String happy;
+class Manipulator {
 
-    public String getHappy() {
-        return happy;
-    }
-
-    public void setHappy(String happy) {
-        this.happy = happy;
-    }
-
-    public static PPMImage invertImage(PPMImage imageToInvert) {
+    static PPMImage invertImage(PPMImage imageToInvert) {
         System.out.println("Inverting and creating new image");
         PPMImage.Pixel[][] pixels = new PPMImage.Pixel[imageToInvert.getWidth()][imageToInvert.getHeight()];
         for (int i = 0; i < imageToInvert.getHeight(); i++) {
@@ -30,8 +21,8 @@ public class Manipulator {
         return new PPMImage(imageToInvert.getType(), imageToInvert.getWidth(), imageToInvert.getHeight(), imageToInvert.getMaxVal(), pixels);
     }
 
-    public static PPMImage convertToGrayScale(PPMImage imageToInvert) {
-        System.out.println("creating new image and converting to gray scale");
+    static PPMImage convertToGrayScale(PPMImage imageToInvert) {
+        System.out.println("Creating new image and converting to gray scale");
         PPMImage.Pixel[][] pixels = new PPMImage.Pixel[imageToInvert.getWidth()][imageToInvert.getHeight()];
         for (int i = 0; i < imageToInvert.getHeight(); i++) {
             for (int j = 0; j < imageToInvert.getWidth(); j++) {
@@ -81,6 +72,22 @@ public class Manipulator {
     }
 
     private static int maxIgnoreSign(int a, int b) {
-        return (Math.abs(a) >= Math.abs(b)? a : b);
+        return (Math.abs(a) >= Math.abs(b) ? a : b);
+    }
+
+    static PPMImage blurImage(PPMImage imageToConvert, int length) {
+        PPMImage.Pixel[][] pixels = new PPMImage.Pixel[imageToConvert.getWidth()][imageToConvert.getHeight()];
+        for (int i = 0; i < imageToConvert.getHeight(); i++) {
+            for (int j = 0; j < imageToConvert.getWidth() ; j++) {
+                int averageR = 0, averageG = 0, averageB = 0;
+                for (int k = 0; k < ((j <= (imageToConvert.getWidth() - length)) ? length : (imageToConvert.getWidth() - j)); k++) {
+                    averageR += imageToConvert.getPixels()[j + k][i].getR();
+                    averageG += imageToConvert.getPixels()[j + k][i].getG();
+                    averageB += imageToConvert.getPixels()[j + k][i].getB();
+                }
+                pixels[j][i] = new PPMImage.Pixel((averageR / ((j <= (imageToConvert.getWidth() - length)) ? length : (imageToConvert.getWidth() - j))), (averageG / ((j <= (imageToConvert.getWidth() - length)) ? length : (imageToConvert.getWidth() - j))), (averageB / ((j <= (imageToConvert.getWidth() - length)) ? length : (imageToConvert.getWidth() - j))));
+            }
+        }
+        return new PPMImage(imageToConvert.getType(), imageToConvert.getWidth(), imageToConvert.getHeight(), imageToConvert.getMaxVal(), pixels);
     }
 }
