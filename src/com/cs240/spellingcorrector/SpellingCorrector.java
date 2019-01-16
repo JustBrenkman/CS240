@@ -16,7 +16,7 @@ public class SpellingCorrector {
         /**
          * Create an instance of your corrector here
          */
-        ISpellCorrector corrector = null;
+        ISpellCorrector corrector = new Corrector();
 
         corrector.useDictionary(dictionaryFileName);
         String suggestion = corrector.suggestSimilarWord(inputWord);
