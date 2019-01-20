@@ -18,7 +18,11 @@ public class Corrector implements ISpellCorrector {
             trie.add(words[i]);
         }
 
-        System.out.println(trie.doTest());
+//        System.out.println(trie.doTest());
+        System.out.println("Word count: " + trie.getWordCount());
+        System.out.println("Node count: " + trie.getNodeCount());
+//        System.out.println();
+//        System.out.println("Doing test, word = hello");
     }
 
     @Override
