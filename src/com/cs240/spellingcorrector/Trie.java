@@ -1,13 +1,13 @@
 package com.cs240.spellingcorrector;
 
-import java.io.InputStream;
 import java.util.*;
 
 public class Trie implements ITrie {
     private Node root; // Root node
     private int wordCount = 0; // number of unique words in structure
     private int nodeCount = 0; // number of nodes to make structure
-    private char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    private char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                               'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
     /**
      * Trie data structure constructor
@@ -53,16 +53,11 @@ public class Trie implements ITrie {
         return ret; // returns node where the last char was inserted
     }
 
-    boolean doTest() {
-        System.out.println(root.children.get('p').children.get('r').children.get('o').children.get('j').children.get('e').children.get('c').count);
-        return root.children.get('p').children.get('r').children.get('o').children.get('j').children.get('e').children.get('c').children.containsKey('t');
-    }
-
     /**
      * Finds a word that is similar to the given word
      *
      * @param word The word being searched for
-     * @return
+     * @return The node that the word is at, just call toString() on node to print word
      */
     @Override
     public INode find(String word) {
@@ -214,7 +209,7 @@ public class Trie implements ITrie {
     /**
      * Gets number of words in structure
      *
-     * @return
+     * @return numnber of unique words
      */
     @Override
     public int getWordCount() {
@@ -224,7 +219,7 @@ public class Trie implements ITrie {
     /**
      * Gets number of nodes required in structure
      *
-     * @return
+     * @return number of nodes
      */
     @Override
     public int getNodeCount() {
@@ -234,7 +229,7 @@ public class Trie implements ITrie {
     /**
      * Hashcode for structure
      *
-     * @return
+     * @return hashcode for tries
      */
     @Override
     public int hashCode() {
@@ -244,8 +239,8 @@ public class Trie implements ITrie {
     /**
      * Determines if two trie objects contain the same data structure and words
      *
-     * @param obj
-     * @return
+     * @param obj Object to compare
+     * @return equal to or not
      */
     @Override
     public boolean equals(Object obj) {
@@ -277,20 +272,9 @@ public class Trie implements ITrie {
     }
 
     /**
-     * Clones the data structure
-     *
-     * @return new Trie object
-     * @throws CloneNotSupportedException
-     */
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    /**
      * Prints all words in data structure
      *
-     * @return
+     * @return List of words in alphabetical order
      */
     @Override
     public String toString() {
@@ -310,8 +294,8 @@ public class Trie implements ITrie {
     /**
      * Fun little recursive action going on here
      *
-     * @param builder
-     * @param node
+     * @param builder list of words
+     * @param node node to dive to
      */
     private void dive(List<String> builder, Node node) {
         for (Map.Entry<Character, Node> ref : node.children.entrySet()) {
