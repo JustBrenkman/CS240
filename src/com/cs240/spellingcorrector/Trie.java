@@ -1,11 +1,13 @@
 package com.cs240.spellingcorrector;
 
+import java.io.InputStream;
 import java.util.*;
 
 public class Trie implements ITrie {
     private Node root; // Root node
-    private int wordCount = 0; // number of words in structure
+    private int wordCount = 0; // number of unique words in structure
     private int nodeCount = 0; // number of nodes to make structure
+    private char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
     /**
      * Trie data structure constructor
@@ -27,16 +29,17 @@ public class Trie implements ITrie {
             Character c = word.charAt(i);
             ref = addChar(c, ref);
         }
-        wordCount++;
+        if (ref.count == 0)
+            wordCount++;
         ref.increaseCount();
     }
 
     /**
      * Adds a single char to the data structure
      *
-     * @param c
-     * @param node
-     * @return
+     * @param c - Char to add
+     * @param node - node to add char to
+     * @return - returns node
      */
     private Node addChar(Character c, Node node) {
         Node ret;
@@ -63,17 +66,149 @@ public class Trie implements ITrie {
      */
     @Override
     public INode find(String word) {
+        INode ref = findWholeWord(word);
+        if (ref != null) {
+            return ref;
+        } else {
+            // This is were the magic happens
+            // First check for an edit distance of 1
+            // Checking deletion distance
+            List<Node> possibles = new ArrayList<>();
+            for (int i = 0; i < word.length(); i++) {
+                StringBuilder stringBuilder = new StringBuilder(word);
+                stringBuilder.deleteCharAt(i);
+                Node node = (Node) findWholeWord(stringBuilder.toString());
+                if (node != null)
+                    possibles.add(node);
+            }
+            for (int i = 0; i < word.length() - 1; i++) {
+                StringBuilder stringBuilder = new StringBuilder(word);
+                Character c = stringBuilder.charAt(i);
+                stringBuilder.deleteCharAt(i);
+                stringBuilder.insert(i + 1, c);
+                Node node = (Node) findWholeWord(stringBuilder.toString());
+                if (node != null)
+                    possibles.add(node);
+            }
+            for (int i = 0; i < word.length(); i++) {
+                for (int j = 0; j < alphabet.length; j++) {
+                    StringBuilder stringBuilder = new StringBuilder(word);
+                    stringBuilder.deleteCharAt(i);
+                    stringBuilder.insert(i, alphabet[j]);
+                    Node node = (Node) findWholeWord(stringBuilder.toString());
+                    if (node != null)
+                        possibles.add(node);
+                }
+            }
+            for (int i = 0; i < word.length() + 1; i++) {
+                for (int j = 0; j < alphabet.length; j++) {
+                    StringBuilder stringBuilder = new StringBuilder(word);
+                    stringBuilder.insert(i, alphabet[j]);
+                    Node node = (Node) findWholeWord(stringBuilder.toString());
+                    if (node != null)
+                        possibles.add(node);
+                }
+            }
+
+            if (possibles.size() == 0) {
+                // do the second distance edit
+                for (int i = 0; i < word.length(); i++) {
+                    StringBuilder stringBuilder = new StringBuilder(word);
+                    stringBuilder.deleteCharAt(i);
+                    for (int j = 0; j < stringBuilder.length(); j++) {
+                        StringBuilder second = new StringBuilder(stringBuilder);
+                        second.deleteCharAt(j);
+                        int m = 0; // Forget this, just to get rid of stuff
+                        Node node = (Node) findWholeWord(second.toString());
+                        if (node != null)
+                            possibles.add(node);
+                    }
+                }
+                for (int i = 0; i < word.length() - 1; i++) {
+                    StringBuilder stringBuilder = new StringBuilder(word);
+                    Character c = stringBuilder.charAt(i);
+                    stringBuilder.deleteCharAt(i);
+                    stringBuilder.insert(i + 1, c);
+                    for (int j = 0; j < stringBuilder.length() - 1; j++) {
+                        StringBuilder second = new StringBuilder(stringBuilder);
+                        Character d = second.charAt(j);
+                        second.deleteCharAt(j);
+                        second.insert(j + 1, d);
+                        Node node = (Node) findWholeWord(second.toString());
+                        if (node != null)
+                            possibles.add(node);
+                    }
+                }
+                for (int i = 0; i < word.length(); i++) {
+                    for (char c : alphabet) {
+                        StringBuilder stringBuilder = new StringBuilder(word);
+                        stringBuilder.deleteCharAt(i);
+                        stringBuilder.insert(i, c);
+                        for (int k = 0; k < stringBuilder.length(); k++) {
+                            for (char c1 : alphabet) {
+                                StringBuilder second = new StringBuilder(stringBuilder);
+                                second.deleteCharAt(k);
+                                second.insert(k, c1);
+                                Node node = (Node) findWholeWord(second.toString());
+                                if (node != null)
+                                    possibles.add(node);
+                            }
+                        }
+                    }
+                }
+                for (int i = 0; i < word.length() + 1; i++) {
+                    for (char c : alphabet) {
+                        StringBuilder stringBuilder = new StringBuilder(word);
+                        stringBuilder.insert(i, c);
+                        for (int j = 0; j < stringBuilder.length() + 1; j++) {
+                            for (char c1 : alphabet) {
+                                StringBuilder second = new StringBuilder(stringBuilder);
+                                second.insert(j, c1);
+                                Node node = (Node) findWholeWord(second.toString());
+                                if (node != null)
+                                    possibles.add(node);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (possibles.size() > 0) {
+                possibles.sort(this::compare);
+                int highVal = possibles.get(0).count;
+                possibles.removeIf(p -> p.count < highVal);
+                if (possibles.size() > 1) {
+                    possibles.sort(this::compareAlph);
+                }
+                return possibles.get(0);
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private int compare(Node x, Node y) {
+        return Integer.compare(y.count, x.count);
+    }
+
+    private int compareAlph(Node x, Node y) {
+        return y.c.compareTo(x.c);
+    }
+
+    private INode findWholeWord(String word) {
+//        System.out.println("Checking word: " + word);
         Node ref = root;
         for (int i = 0; i < word.length(); i++) {
             if (ref.children.containsKey(word.charAt(i))) {
                 ref = ref.children.get(word.charAt(i));
+            } else {
+                return null;
             }
         }
         if (ref.isWord()) {
             return ref;
-        } else {
+        } else
             return null;
-        }
     }
 
     /**

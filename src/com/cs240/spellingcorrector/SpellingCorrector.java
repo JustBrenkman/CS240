@@ -26,6 +26,6 @@ public class SpellingCorrector {
 
         System.out.println("Suggestion is: " + suggestion);
 
-        ((Corrector) corrector).doTests();
+//        ((Corrector) corrector).doTests();
     }
 }

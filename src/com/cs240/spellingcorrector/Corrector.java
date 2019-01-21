@@ -17,14 +17,16 @@ public class Corrector implements ISpellCorrector {
         for (String word : words) {
             trie.add(word);
         }
-
-        System.out.println("Word count: " + trie.getWordCount());
-        System.out.println("Node count: " + trie.getNodeCount());
+//        System.out.println("Word count: " + trie.getWordCount());
+//        System.out.println("Node count: " + trie.getNodeCount());
     }
 
     @Override
     public String suggestSimilarWord(String inputWord) {
-        return "Hello";
+        ITrie.INode node = trie.find(inputWord);
+        if (node != null)
+            return node.toString();
+        return null;
     }
 
     void doTests() throws IOException {
