@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-class DictionaryLoader {
+public class DictionaryLoader {
     static String[] loadDictionary(Path pathToDictionary) throws IOException {
         try {
             InputStream inputStream = Files.newInputStream(pathToDictionary);

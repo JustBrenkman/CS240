@@ -12,7 +12,7 @@ public class Trie implements ITrie {
     /**
      * Trie data structure constructor
      */
-    Trie() {
+    public Trie() {
         root = new Node(null, null);
         nodeCount++;
     }
@@ -266,7 +266,8 @@ public class Trie implements ITrie {
             Node ref2 = node2.children.get(ref.getKey());
             if (ref2.count != ref.getValue().count)
                 return false;
-            deep(ref.getValue(), ref2);
+            if (!deep(ref.getValue(), ref2))
+                return false;
         }
         return true;
     }

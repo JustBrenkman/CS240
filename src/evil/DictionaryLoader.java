@@ -1,12 +1,27 @@
 package evil;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class DictionaryLoader {
+class DictionaryLoader {
+    static List<String> loadDictionary(Path path) {
+        try {
+            List<String> words = new ArrayList<>();
+            InputStream is = Files.newInputStream(path);
+            Scanner scanner = new Scanner(is);
 
-    public static List<String> loadDictionary(Path path) {
-        List<String> words;
+            while (scanner.hasNext())
+                words.add(scanner.next().toLowerCase());
+
+            return words;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

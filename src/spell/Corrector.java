@@ -7,7 +7,7 @@ public class Corrector implements ISpellCorrector {
 
     private Trie trie;
 
-    Corrector() {
+    public Corrector() {
         trie = new Trie();
     }
 
