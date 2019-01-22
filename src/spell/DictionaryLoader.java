@@ -1,4 +1,4 @@
-package com.cs240.spellingcorrector;
+package spell;
 
 import java.io.IOException;
 import java.io.InputStream;

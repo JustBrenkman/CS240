@@ -1,4 +1,4 @@
-package com.cs240.imageeditor;
+package imageeditor;
 
 import java.io.*;
 import java.nio.file.Files;

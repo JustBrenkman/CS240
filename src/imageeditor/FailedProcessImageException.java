@@ -1,4 +1,4 @@
-package com.cs240.imageeditor;
+package imageeditor;
 
 class FailedProcessImageException extends RuntimeException {
     FailedProcessImageException(String message, Throwable cause) {

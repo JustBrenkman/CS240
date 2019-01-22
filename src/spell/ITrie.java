@@ -1,4 +1,4 @@
-package com.cs240.spellingcorrector;
+package spell;
 
 /**
  * Your trie class should implement the ITrie interface

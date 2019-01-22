@@ -1,4 +1,4 @@
-package com.cs240.imageeditor;
+package imageeditor;
 
 public class PPMImage {
     private String type;

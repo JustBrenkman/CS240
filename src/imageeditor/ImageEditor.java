@@ -1,4 +1,4 @@
-package com.cs240.imageeditor;
+package imageeditor;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -1,9 +1,8 @@
-package com.cs240.spellingcorrector;
+package spell;
 
 import java.io.IOException;
 
 public class SpellingCorrector {
-
     /**
      * Give the dictionary file name as the first argument and the word to correct
      * as the second argument.
@@ -13,8 +12,8 @@ public class SpellingCorrector {
         String dictionaryFileName = args[0];
         String inputWord = args[1];
 
-        /**
-         * Create an instance of your corrector here
+        /*
+          Create an instance of your corrector here
          */
         ISpellCorrector corrector = new Corrector();
 

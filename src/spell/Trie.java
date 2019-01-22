@@ -1,4 +1,4 @@
-package com.cs240.spellingcorrector;
+package spell;
 
 import java.util.*;
 
