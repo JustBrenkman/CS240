@@ -86,19 +86,19 @@ public class Trie implements ITrie {
                     possibles.add(node);
             }
             for (int i = 0; i < word.length(); i++) {
-                for (char c : alphabet) {
+                for (int j = 0; j < alphabet.length; j++) {
                     StringBuilder stringBuilder = new StringBuilder(word);
                     stringBuilder.deleteCharAt(i);
-                    stringBuilder.insert(i, c);
+                    stringBuilder.insert(i, alphabet[j]);
                     Node node = (Node) findWholeWord(stringBuilder.toString());
                     if (node != null)
                         possibles.add(node);
                 }
             }
             for (int i = 0; i < word.length() + 1; i++) {
-                for (char c : alphabet) {
+                for (int j = 0; j < alphabet.length; j++) {
                     StringBuilder stringBuilder = new StringBuilder(word);
-                    stringBuilder.insert(i, c);
+                    stringBuilder.insert(i, alphabet[j]);
                     Node node = (Node) findWholeWord(stringBuilder.toString());
                     if (node != null)
                         possibles.add(node);
