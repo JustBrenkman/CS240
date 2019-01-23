@@ -15,16 +15,16 @@ public class Corrector implements ISpellCorrector {
     public void useDictionary(String dictionaryFileName) throws IOException {
         String[] words = DictionaryLoader.loadDictionary(Paths.get(dictionaryFileName));
         for (String word : words) {
-            trie.add(word);
+            trie.add(word.toLowerCase());
         }
     }
 
     @Override
     public String suggestSimilarWord(String inputWord) {
-        ITrie.INode node = trie.find(inputWord);
+        ITrie.INode node = trie.find(inputWord.toLowerCase());
         if (node != null)
             return node.toString();
-        node = trie.findSimilarWord(inputWord);
+        node = trie.findSimilarWord(inputWord.toLowerCase());
         if (node != null)
             return node.toString();
         return null;
