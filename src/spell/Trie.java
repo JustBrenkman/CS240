@@ -74,101 +74,86 @@ public class Trie implements ITrie {
             // First check for an edit distance of 1
             // Checking deletion distance
             List<Node> possibles = new ArrayList<>();
-            for (int i = 0; i < word.length(); i++) {
-                StringBuilder stringBuilder = new StringBuilder(word);
-                stringBuilder.deleteCharAt(i);
-                Node node = (Node) findWholeWord(stringBuilder.toString());
-                if (node != null)
-                    possibles.add(node);
-            }
-            for (int i = 0; i < word.length() - 1; i++) {
-                StringBuilder stringBuilder = new StringBuilder(word);
-                Character c = stringBuilder.charAt(i);
-                stringBuilder.deleteCharAt(i);
-                stringBuilder.insert(i + 1, c);
-                Node node = (Node) findWholeWord(stringBuilder.toString());
-                if (node != null)
-                    possibles.add(node);
-            }
-            for (int i = 0; i < word.length(); i++) {
-                for (int j = 0; j < alphabet.length; j++) {
-                    StringBuilder stringBuilder = new StringBuilder(word);
-                    stringBuilder.deleteCharAt(i);
-                    stringBuilder.insert(i, alphabet[j]);
-                    Node node = (Node) findWholeWord(stringBuilder.toString());
-                    if (node != null)
-                        possibles.add(node);
-                }
-            }
-            for (int i = 0; i < word.length() + 1; i++) {
-                for (int j = 0; j < alphabet.length; j++) {
-                    StringBuilder stringBuilder = new StringBuilder(word);
-                    stringBuilder.insert(i, alphabet[j]);
-                    Node node = (Node) findWholeWord(stringBuilder.toString());
-                    if (node != null)
-                        possibles.add(node);
-                }
-            }
+            deletion(possibles, word);
+            transpose(possibles, word);
+            alteration(possibles, word);
+            insertion(possibles, word);
 
             if (possibles.size() == 0) {
                 // do the second distance edit
                 for (int i = 0; i < word.length(); i++) {
                     StringBuilder stringBuilder = new StringBuilder(word);
                     stringBuilder.deleteCharAt(i);
-                    for (int j = 0; j < stringBuilder.length(); j++) {
-                        StringBuilder second = new StringBuilder(stringBuilder);
-                        second.deleteCharAt(j);
-                        int m = 0; // Forget this, just to get rid of stuff
-                        Node node = (Node) findWholeWord(second.toString());
-                        if (node != null)
-                            possibles.add(node);
-                    }
+                    deletion(possibles, stringBuilder.toString());
+                    transpose(possibles, stringBuilder.toString());
+                    alteration(possibles, stringBuilder.toString());
+                    insertion(possibles, stringBuilder.toString());
+//                    for (int j = 0; j < stringBuilder.length(); j++) {
+//                        StringBuilder second = new StringBuilder(stringBuilder);
+//                        second.deleteCharAt(j);
+//                        int m = 0; // Forget this, just to get rid of stuff
+//                        Node node = (Node) findWholeWord(second.toString());
+//                        if (node != null)
+//                            possibles.add(node);
+//                    }
                 }
                 for (int i = 0; i < word.length() - 1; i++) {
                     StringBuilder stringBuilder = new StringBuilder(word);
                     Character c = stringBuilder.charAt(i);
                     stringBuilder.deleteCharAt(i);
                     stringBuilder.insert(i + 1, c);
-                    for (int j = 0; j < stringBuilder.length() - 1; j++) {
-                        StringBuilder second = new StringBuilder(stringBuilder);
-                        Character d = second.charAt(j);
-                        second.deleteCharAt(j);
-                        second.insert(j + 1, d);
-                        Node node = (Node) findWholeWord(second.toString());
-                        if (node != null)
-                            possibles.add(node);
-                    }
+                    deletion(possibles, stringBuilder.toString());
+                    transpose(possibles, stringBuilder.toString());
+                    alteration(possibles, stringBuilder.toString());
+                    insertion(possibles, stringBuilder.toString());
+//                    for (int j = 0; j < stringBuilder.length() - 1; j++) {
+//                        StringBuilder second = new StringBuilder(stringBuilder);
+//                        Character d = second.charAt(j);
+//                        second.deleteCharAt(j);
+//                        second.insert(j + 1, d);
+//                        Node node = (Node) findWholeWord(second.toString());
+//                        if (node != null)
+//                            possibles.add(node);
+//                    }
                 }
                 for (int i = 0; i < word.length(); i++) {
                     for (char c : alphabet) {
                         StringBuilder stringBuilder = new StringBuilder(word);
                         stringBuilder.deleteCharAt(i);
                         stringBuilder.insert(i, c);
-                        for (int k = 0; k < stringBuilder.length(); k++) {
-                            for (char c1 : alphabet) {
-                                StringBuilder second = new StringBuilder(stringBuilder);
-                                second.deleteCharAt(k);
-                                second.insert(k, c1);
-                                Node node = (Node) findWholeWord(second.toString());
-                                if (node != null)
-                                    possibles.add(node);
-                            }
-                        }
+                        deletion(possibles, stringBuilder.toString());
+                        transpose(possibles, stringBuilder.toString());
+                        alteration(possibles, stringBuilder.toString());
+                        insertion(possibles, stringBuilder.toString());
+//                        for (int k = 0; k < stringBuilder.length(); k++) {
+//                            for (char c1 : alphabet) {
+//                                StringBuilder second = new StringBuilder(stringBuilder);
+//                                second.deleteCharAt(k);
+//                                second.insert(k, c1);
+//                                Node node = (Node) findWholeWord(second.toString());
+//                                if (node != null)
+//                                    possibles.add(node);
+//                            }
+//                        }
                     }
                 }
                 for (int i = 0; i < word.length() + 1; i++) {
                     for (char c : alphabet) {
                         StringBuilder stringBuilder = new StringBuilder(word);
                         stringBuilder.insert(i, c);
-                        for (int j = 0; j < stringBuilder.length() + 1; j++) {
-                            for (char c1 : alphabet) {
-                                StringBuilder second = new StringBuilder(stringBuilder);
-                                second.insert(j, c1);
-                                Node node = (Node) findWholeWord(second.toString());
-                                if (node != null)
-                                    possibles.add(node);
-                            }
-                        }
+                        deletion(possibles, stringBuilder.toString());
+                        transpose(possibles, stringBuilder.toString());
+                        alteration(possibles, stringBuilder.toString());
+                        insertion(possibles, stringBuilder.toString());
+//                        for (int j = 0; j < stringBuilder.length() + 1; j++) {
+//                            for (char c1 : alphabet) {
+//                                StringBuilder second = new StringBuilder(stringBuilder);
+//                                second.insert(j, c1);
+//                                Node node = (Node) findWholeWord(second.toString());
+//                                if (node != null)
+//                                    possibles.add(node);
+//                            }
+//                        }
                     }
                 }
             }
@@ -187,12 +172,64 @@ public class Trie implements ITrie {
         }
     }
 
+    private void deletion(List<Node> possibles, String word) {
+        // Deletion
+        for (int i = 0; i < word.length(); i++) {
+            StringBuilder stringBuilder = new StringBuilder(word);
+            stringBuilder.deleteCharAt(i);
+            Node node = (Node) findWholeWord(stringBuilder.toString());
+            if (node != null)
+                possibles.add(node);
+        }
+    }
+
+    private void transpose(List<Node> possibles, String word) {
+        // Transpose
+        for (int j = 0; j < word.length() - 1; j++) {
+            StringBuilder stringBuilder1 = new StringBuilder(word);
+            Character c = stringBuilder1.charAt(j);
+            stringBuilder1.deleteCharAt(j);
+            stringBuilder1.insert(j + 1, c);
+            Node node1 = (Node) findWholeWord(stringBuilder1.toString());
+            if (node1 != null)
+                possibles.add(node1);
+        }
+    }
+
+    private void alteration(List<Node> possibles, String word) {
+        // Alteration
+        for (int i = 0; i < word.length(); i++) {
+            for (int j = 0; j < alphabet.length; j++) {
+                StringBuilder stringBuilder = new StringBuilder(word);
+                stringBuilder.deleteCharAt(i);
+                stringBuilder.insert(i, alphabet[j]);
+                Node node = (Node) findWholeWord(stringBuilder.toString());
+                if (node != null)
+                    possibles.add(node);
+            }
+        }
+    }
+
+    private void insertion(List<Node> possibles, String word) {
+        // Insertion
+        for (int i = 0; i < word.length() + 1; i++) {
+            for (int j = 0; j < alphabet.length; j++) {
+                StringBuilder stringBuilder = new StringBuilder(word);
+                stringBuilder.insert(i, alphabet[j]);
+                Node node = (Node) findWholeWord(stringBuilder.toString());
+                if (node != null)
+                    possibles.add(node);
+            }
+        }
+    }
+
+
     private int compare(Node x, Node y) {
         return Integer.compare(y.count, x.count);
     }
 
     private int compareAlph(Node x, Node y) {
-        return y.c.compareTo(x.c);
+        return x.c.compareTo(y.c);
     }
 
     private INode findWholeWord(String word) {
