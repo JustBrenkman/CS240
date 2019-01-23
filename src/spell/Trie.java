@@ -50,6 +50,7 @@ public class Trie implements ITrie {
         } else {
             ret = node.children.get(c);
         }
+
         return ret; // returns node where the last char was inserted
     }
 
@@ -61,6 +62,10 @@ public class Trie implements ITrie {
      */
     @Override
     public INode find(String word) {
+        return findWholeWord(word);
+    }
+
+    public INode findSimilarWord(String word) {
         INode ref = findWholeWord(word);
         if (ref != null) {
             return ref;

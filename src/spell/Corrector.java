@@ -24,6 +24,9 @@ public class Corrector implements ISpellCorrector {
         ITrie.INode node = trie.find(inputWord);
         if (node != null)
             return node.toString();
+        node = trie.findSimilarWord(inputWord);
+        if (node != null)
+            return node.toString();
         return null;
     }
 }
