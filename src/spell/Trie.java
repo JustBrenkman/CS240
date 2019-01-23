@@ -229,7 +229,7 @@ public class Trie implements ITrie {
     }
 
     private int compareAlph(Node x, Node y) {
-        return y.c.compareTo(x.c);
+        return x.c.compareTo(y.c);
     }
 
     private INode findWholeWord(String word) {
