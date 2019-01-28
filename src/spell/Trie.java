@@ -88,14 +88,6 @@ public class Trie implements ITrie {
                     transpose(possibles, stringBuilder.toString());
                     alteration(possibles, stringBuilder.toString());
                     insertion(possibles, stringBuilder.toString());
-//                    for (int j = 0; j < stringBuilder.length(); j++) {
-//                        StringBuilder second = new StringBuilder(stringBuilder);
-//                        second.deleteCharAt(j);
-//                        int m = 0; // Forget this, just to get rid of stuff
-//                        Node node = (Node) findWholeWord(second.toString());
-//                        if (node != null)
-//                            possibles.add(node);
-//                    }
                 }
                 for (int i = 0; i < word.length() - 1; i++) {
                     StringBuilder stringBuilder = new StringBuilder(word);
@@ -106,15 +98,6 @@ public class Trie implements ITrie {
                     transpose(possibles, stringBuilder.toString());
                     alteration(possibles, stringBuilder.toString());
                     insertion(possibles, stringBuilder.toString());
-//                    for (int j = 0; j < stringBuilder.length() - 1; j++) {
-//                        StringBuilder second = new StringBuilder(stringBuilder);
-//                        Character d = second.charAt(j);
-//                        second.deleteCharAt(j);
-//                        second.insert(j + 1, d);
-//                        Node node = (Node) findWholeWord(second.toString());
-//                        if (node != null)
-//                            possibles.add(node);
-//                    }
                 }
                 for (int i = 0; i < word.length(); i++) {
                     for (char c : alphabet) {
@@ -125,16 +108,6 @@ public class Trie implements ITrie {
                         transpose(possibles, stringBuilder.toString());
                         alteration(possibles, stringBuilder.toString());
                         insertion(possibles, stringBuilder.toString());
-//                        for (int k = 0; k < stringBuilder.length(); k++) {
-//                            for (char c1 : alphabet) {
-//                                StringBuilder second = new StringBuilder(stringBuilder);
-//                                second.deleteCharAt(k);
-//                                second.insert(k, c1);
-//                                Node node = (Node) findWholeWord(second.toString());
-//                                if (node != null)
-//                                    possibles.add(node);
-//                            }
-//                        }
                     }
                 }
                 for (int i = 0; i < word.length() + 1; i++) {
@@ -145,15 +118,6 @@ public class Trie implements ITrie {
                         transpose(possibles, stringBuilder.toString());
                         alteration(possibles, stringBuilder.toString());
                         insertion(possibles, stringBuilder.toString());
-//                        for (int j = 0; j < stringBuilder.length() + 1; j++) {
-//                            for (char c1 : alphabet) {
-//                                StringBuilder second = new StringBuilder(stringBuilder);
-//                                second.insert(j, c1);
-//                                Node node = (Node) findWholeWord(second.toString());
-//                                if (node != null)
-//                                    possibles.add(node);
-//                            }
-//                        }
                     }
                 }
             }
