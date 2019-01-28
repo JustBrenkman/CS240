@@ -1,6 +1,5 @@
 package evil;
 
-import javax.swing.text.MaskFormatter;
 import java.util.*;
 
 public class Pattern {
@@ -18,9 +17,12 @@ public class Pattern {
 
     Pattern merge(Pattern pattern) {
         Pattern result;
-
-
         return null;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Pattern) && (((Pattern) obj).mask.equals(this.mask));
     }
 
     static class Mask {
