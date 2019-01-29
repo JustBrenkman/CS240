@@ -184,6 +184,7 @@ public class EvilHangman implements IEvilHangmanGame {
 //                DictionaryLoader.loadDictionary(dictionary.toPath()), wordLength, 1000
 //        );
         Set<String> words = DictionaryLoader.loadDictionary(dictionary.toPath());
+        this.wordLength = wordLength;
         for (String str : words)
             this.words.add(new Pattern.Pair(null, str));
     }
