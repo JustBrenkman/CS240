@@ -24,11 +24,13 @@ public class EvilHangman implements IEvilHangmanGame {
     private int numGuess;
     Pattern word;
     List<Character> guesses;
+    int guessesLeft;
 
 
     public EvilHangman(Set<String> words, int wordLength, int numGuess) {
         this.wordLength = wordLength;
         this.numGuess = numGuess;
+        this.guessesLeft = numGuess;
         this.words = new HashSet<>();
         guesses = new ArrayList<>();
 
@@ -137,26 +139,44 @@ public class EvilHangman implements IEvilHangmanGame {
                     }
                 }
                 // Rightmost letter
-                Set<Pattern.Pair> selected = null;
-                int right = 0;
-                boolean found = false;
+//                Set<Pattern.Pair> selected = null;
+//                for (Set<Pattern.Pair> p : filtered) {
+//                    for (Pattern.Pair g : p) {
+//                        if (g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() - 1) > right) {
+//                            selected = p;
+//                            right = g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() -1);
+//                            found = true;
+//                        }
+//                        if (g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() - 1) == right)
+//                            found = false;
+//                        break;
+//                    }
+//                }
+                Set<Pattern.Pair> NEW = new HashSet<>();
+                Set<Pattern.Pair> clone = new HashSet<>();
+
                 for (Set<Pattern.Pair> p : filtered) {
-                    for (Pattern.Pair g : p) {
-                        if (g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() - 1) > right) {
-                            selected = p;
-                            right = g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() -1);
-                            found = true;
-                        }
-                        if (g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() - 1) == right)
-                            found = false;
+                    for (Pattern.Pair g : p){
+                        clone.add(g);
                         break;
                     }
                 }
-                if (selected != null) {
-                    this.words = selected;
-                    for (Pattern.Pair g : selected) {
-                        return g.pattern;
+
+                for (int i = 0; i < wordLength; i ++) {
+                    NEW = new HashSet<>();
+                    for (Pattern.Pair p : clone) {
+                        if (p.pattern.mask.get(wordLength - i))
+                            NEW.add(p);
                     }
+                    if (NEW.size() == 1)
+                        break;
+                    if (NEW.size() > 0) {
+                        clone = NEW;
+                    }
+                }
+                this.words = NEW;
+                for (Pattern.Pair g : NEW) {
+                    return g.pattern;
                 }
             }
         }
@@ -174,10 +194,11 @@ public class EvilHangman implements IEvilHangmanGame {
 
     public void takeGuess() {
         Scanner input = new Scanner(System.in);
+//        int guessesLeft = numGuess;
 //        input.useDelimiter("/^[a-z]+$/i");
-        while (guesses.size() < numGuess) {
+        while (guessesLeft > 0) {
 //            System.out.printf("There are %s many words", this.words.size());
-            System.out.printf("You have %s guesses left\n", numGuess - guesses.size());
+            System.out.printf("You have %s guesses left\n", guessesLeft);
             StringBuilder stringBuilder = new StringBuilder(guesses.toString());
             stringBuilder.deleteCharAt(0).deleteCharAt(stringBuilder.length() - 1);
             System.out.println("Used letters: " + stringBuilder.toString());
@@ -187,8 +208,13 @@ public class EvilHangman implements IEvilHangmanGame {
             boolean runAgain = true;
             do {
                 System.out.print("Enter a guess: ");
-                character = input.next().toLowerCase();
-                c = character.charAt(0);
+                character = input.nextLine().toLowerCase();
+                character = character.replaceAll("\\s+","");
+                if (character.length() != 0) {
+                    c = character.charAt(0);
+                } else {
+                    c = '!';
+                }
                 if (guesses.contains(c)) {
                     System.out.println("You have already used that letter");
                     continue;
@@ -202,9 +228,11 @@ public class EvilHangman implements IEvilHangmanGame {
                     Set<String> filt = makeGuess(c);
                     if (filt.size() == 1) {
                         for (String f : filt) {
-                            if (f.equals(word.wordToString()))
+                            if (f.equals(word.wordToString())) {
                                 System.out.println("You win!");
+                                System.out.println("The word was: " + word.wordToString());
                                 return;
+                            }
                         }
                     }
                     runAgain = false;
@@ -251,6 +279,7 @@ public class EvilHangman implements IEvilHangmanGame {
             word.applyPattern(patternToApply);
             if (!patternToApply.mask.doesContainMask()) {
                 System.out.printf("Sorry there are no %s\'s\n", guess);
+                guessesLeft--;
                 return wordsToList();
             } else {
                 System.out.printf("Yes there is %d %s\n", patternToApply.getNumberOfMasks(), patternToApply.type);
@@ -258,6 +287,7 @@ public class EvilHangman implements IEvilHangmanGame {
             }
         }
         System.out.printf("Sorry there are no %s\'s\n", guess);
+        guessesLeft--;
         return wordsToList();
     }
 }
