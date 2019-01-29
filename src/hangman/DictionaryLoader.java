@@ -1,17 +1,16 @@
-package evil;
+package hangman;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 class DictionaryLoader {
-    static List<String> loadDictionary(Path path) {
+    static Set<String> loadDictionary(Path path) {
         try {
-            List<String> words = new ArrayList<>();
+            Set<String> words = new HashSet<>();
             InputStream is = Files.newInputStream(path);
             Scanner scanner = new Scanner(is);
 
