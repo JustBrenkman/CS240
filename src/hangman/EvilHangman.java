@@ -128,9 +128,33 @@ public class EvilHangman implements IEvilHangmanGame {
                     }
                     return false;
                 });
+                if (filtered.size() == 1) {
+                    for (Set<Pattern.Pair> p : filtered) {
+                        this.words = p;
+                        for (Pattern.Pair g : p) {
+                            return g.pattern;
+                        }
+                    }
+                }
+                // Rightmost letter
+                Set<Pattern.Pair> selected = null;
+                int right = 0;
+                boolean found = false;
                 for (Set<Pattern.Pair> p : filtered) {
-                    this.words = p;
                     for (Pattern.Pair g : p) {
+                        if (g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() - 1) > right) {
+                            selected = p;
+                            right = g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() -1);
+                            found = true;
+                        }
+                        if (g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() - 1) == right)
+                            found = false;
+                        break;
+                    }
+                }
+                if (selected != null) {
+                    this.words = selected;
+                    for (Pattern.Pair g : selected) {
                         return g.pattern;
                     }
                 }

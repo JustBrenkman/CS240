@@ -3,7 +3,7 @@ package hangman;
 import java.util.*;
 
 public class Pattern {
-    Mask mask;
+    public Mask mask;
     Character type;
     HashMap<Integer, Character> word;
 
@@ -129,6 +129,18 @@ public class Pattern {
             }
             string.append("]");
             return string.toString();
+        }
+
+        List<Integer> getListOfMasks() {
+            List<Integer> list = new ArrayList<>();
+
+            for (int i = 0; i < mask.size(); i++) {
+                if (mask.get(i))
+                    list.add(i);
+            }
+
+            list.sort(Integer::compareTo);
+            return list;
         }
 
         boolean isCompatibleWith(Mask mask) {
