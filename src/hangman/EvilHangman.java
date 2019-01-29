@@ -38,6 +38,13 @@ public class EvilHangman implements IEvilHangmanGame {
             this.words.add(new Pattern.Pair(null, str));
     }
 
+    public EvilHangman() {
+        this.words = new HashSet<>();
+        guesses = new ArrayList<>();
+
+        word = new Pattern(new Pattern.Mask(wordLength), ' ');
+    }
+
     private boolean doesCharExist(Character c) {
         for (Pattern.Pair w : words) {
             if (w.word.contains(c.toString()))
@@ -87,10 +94,32 @@ public class EvilHangman implements IEvilHangmanGame {
             int finalMaxSize = maxSize;
             filtered.removeIf(g -> g.size() < finalMaxSize);
 
-            for (Set<Pattern.Pair> p : filtered) {
-                this.words = p;
-                for (Pattern.Pair g : p) {
-                    return g.pattern;
+            if (filtered.size() == 1) {
+                for (Set<Pattern.Pair> p : filtered) {
+                    this.words = p;
+                    for (Pattern.Pair g : p) {
+                        return g.pattern;
+                    }
+                }
+            } else {
+                // return set with the fewest words
+                for (Set<Pattern.Pair> p : filtered) {
+                    for (Pattern.Pair g : p) {
+                        if (g.pattern.getNumberOfMasks() < 1) {
+                            this.words = p;
+                            return g.pattern;
+                        }
+                        break;
+                    }
+                }
+                //Set with least letters
+                int least = 0;
+                for (Set<Pattern.Pair> p : filtered) {
+                    for (Pattern.Pair g : p) {
+                        if (least > wordLength - g.pattern.getNumberOfMasks())
+                            least = wordLength - g.pattern.getNumberOfMasks();
+                        break;
+                    }
                 }
             }
         }
@@ -151,9 +180,12 @@ public class EvilHangman implements IEvilHangmanGame {
 
     @Override
     public void startGame(File dictionary, int wordLength) {
-        EvilHangman evilHangman = new EvilHangman(
-                DictionaryLoader.loadDictionary(dictionary.toPath()), wordLength, 1000
-        );
+//        EvilHangman evilHangman = new EvilHangman(
+//                DictionaryLoader.loadDictionary(dictionary.toPath()), wordLength, 1000
+//        );
+        Set<String> words = DictionaryLoader.loadDictionary(dictionary.toPath());
+        for (String str : words)
+            this.words.add(new Pattern.Pair(null, str));
     }
 
     Set<String> wordsToList() {
