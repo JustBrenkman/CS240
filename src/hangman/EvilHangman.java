@@ -124,14 +124,15 @@ public class EvilHangman implements IEvilHangmanGame {
                 int leastSi = least;
                 filtered.removeIf(g -> {
                     for (Pattern.Pair p : g) {
-                        return p.pattern.getNumberOfMasks() < leastSi;
+                        return p.pattern.getNumberOfMasks() > leastSi;
                     }
-                    return true;
+                    return false;
                 });
-            }
-            for (Set<Pattern.Pair> p : filtered) {
-                for (Pattern.Pair g : p) {
-                    return g.pattern;
+                for (Set<Pattern.Pair> p : filtered) {
+                    this.words = p;
+                    for (Pattern.Pair g : p) {
+                        return g.pattern;
+                    }
                 }
             }
         }
@@ -149,6 +150,7 @@ public class EvilHangman implements IEvilHangmanGame {
 
     public void takeGuess() {
         Scanner input = new Scanner(System.in);
+//        input.useDelimiter("/^[a-z]+$/i");
         while (guesses.size() < numGuess) {
 //            System.out.printf("There are %s many words", this.words.size());
             System.out.printf("You have %s guesses left\n", numGuess - guesses.size());
@@ -161,10 +163,15 @@ public class EvilHangman implements IEvilHangmanGame {
             boolean runAgain = true;
             do {
                 System.out.print("Enter a guess: ");
-                character = input.next();
+                character = input.next().toLowerCase();
                 c = character.charAt(0);
                 if (guesses.contains(c)) {
                     System.out.println("You have already used that letter");
+                    continue;
+                }
+                if (!character.matches(".*[a-z]+.*")) {
+                    System.out.println("Try again, invalid input");
+                    runAgain = true;
                     continue;
                 }
                 try {
@@ -214,6 +221,7 @@ public class EvilHangman implements IEvilHangmanGame {
         if (guesses.contains(guess))
             throw new GuessAlreadyMadeException();
         guesses.add(guess);
+        guesses.sort(Character::compareTo);
         Pattern patternToApply = filterWords(guess, wordLength);
         if (patternToApply != null) {
             word.applyPattern(patternToApply);
