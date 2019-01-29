@@ -113,13 +113,25 @@ public class EvilHangman implements IEvilHangmanGame {
                     }
                 }
                 //Set with least letters
-                int least = 0;
+                int least = 1000000000;
                 for (Set<Pattern.Pair> p : filtered) {
                     for (Pattern.Pair g : p) {
-                        if (least > wordLength - g.pattern.getNumberOfMasks())
-                            least = wordLength - g.pattern.getNumberOfMasks();
+                        if (least > g.pattern.getNumberOfMasks())
+                            least = g.pattern.getNumberOfMasks();
                         break;
                     }
+                }
+                int leastSi = least;
+                filtered.removeIf(g -> {
+                    for (Pattern.Pair p : g) {
+                        return p.pattern.getNumberOfMasks() < leastSi;
+                    }
+                    return true;
+                });
+            }
+            for (Set<Pattern.Pair> p : filtered) {
+                for (Pattern.Pair g : p) {
+                    return g.pattern;
                 }
             }
         }
