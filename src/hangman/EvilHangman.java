@@ -138,20 +138,6 @@ public class EvilHangman implements IEvilHangmanGame {
                         }
                     }
                 }
-                // Rightmost letter
-//                Set<Pattern.Pair> selected = null;
-//                for (Set<Pattern.Pair> p : filtered) {
-//                    for (Pattern.Pair g : p) {
-//                        if (g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() - 1) > right) {
-//                            selected = p;
-//                            right = g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() -1);
-//                            found = true;
-//                        }
-//                        if (g.pattern.mask.getListOfMasks().get(g.pattern.mask.getListOfMasks().size() - 1) == right)
-//                            found = false;
-//                        break;
-//                    }
-//                }
                 Set<Pattern.Pair> NEW = new HashSet<>();
                 Set<Pattern.Pair> clone = new HashSet<>();
 
