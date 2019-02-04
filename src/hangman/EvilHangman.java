@@ -24,11 +24,13 @@ public class EvilHangman implements IEvilHangmanGame {
     private int numGuess;
     Pattern word;
     List<Character> guesses;
+    int guessesLeft;
 
 
     public EvilHangman(Set<String> words, int wordLength, int numGuess) {
         this.wordLength = wordLength;
         this.numGuess = numGuess;
+        this.guessesLeft = numGuess;
         this.words = new HashSet<>();
         guesses = new ArrayList<>();
 
@@ -113,13 +115,54 @@ public class EvilHangman implements IEvilHangmanGame {
                     }
                 }
                 //Set with least letters
-                int least = 0;
+                int least = 1000000000;
                 for (Set<Pattern.Pair> p : filtered) {
                     for (Pattern.Pair g : p) {
-                        if (least > wordLength - g.pattern.getNumberOfMasks())
-                            least = wordLength - g.pattern.getNumberOfMasks();
+                        if (least > g.pattern.getNumberOfMasks())
+                            least = g.pattern.getNumberOfMasks();
                         break;
                     }
+                }
+                int leastSi = least;
+                filtered.removeIf(g -> {
+                    for (Pattern.Pair p : g) {
+                        return p.pattern.getNumberOfMasks() > leastSi;
+                    }
+                    return false;
+                });
+                if (filtered.size() == 1) {
+                    for (Set<Pattern.Pair> p : filtered) {
+                        this.words = p;
+                        for (Pattern.Pair g : p) {
+                            return g.pattern;
+                        }
+                    }
+                }
+                Set<Pattern.Pair> NEW = new HashSet<>();
+                Set<Pattern.Pair> clone = new HashSet<>();
+
+                for (Set<Pattern.Pair> p : filtered) {
+                    for (Pattern.Pair g : p){
+                        clone.add(g);
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < wordLength; i ++) {
+                    NEW = new HashSet<>();
+                    for (Pattern.Pair p : clone) {
+                        if (p.pattern.mask.get(wordLength - i))
+                            NEW.add(p);
+                    }
+                    if (NEW.size() == 1)
+                        break;
+                    if (NEW.size() > 0) {
+                        clone = NEW;
+                    }
+                }
+                this.words = NEW;
+                for (Pattern.Pair g : NEW) {
+                    return g.pattern;
                 }
             }
         }
@@ -137,9 +180,11 @@ public class EvilHangman implements IEvilHangmanGame {
 
     public void takeGuess() {
         Scanner input = new Scanner(System.in);
-        while (guesses.size() < numGuess) {
+//        int guessesLeft = numGuess;
+//        input.useDelimiter("/^[a-z]+$/i");
+        while (guessesLeft > 0) {
 //            System.out.printf("There are %s many words", this.words.size());
-            System.out.printf("You have %s guesses left\n", numGuess - guesses.size());
+            System.out.printf("You have %s guesses left\n", guessesLeft);
             StringBuilder stringBuilder = new StringBuilder(guesses.toString());
             stringBuilder.deleteCharAt(0).deleteCharAt(stringBuilder.length() - 1);
             System.out.println("Used letters: " + stringBuilder.toString());
@@ -149,19 +194,31 @@ public class EvilHangman implements IEvilHangmanGame {
             boolean runAgain = true;
             do {
                 System.out.print("Enter a guess: ");
-                character = input.next();
-                c = character.charAt(0);
+                character = input.nextLine().toLowerCase();
+                character = character.replaceAll("\\s+","");
+                if (character.length() != 0) {
+                    c = character.charAt(0);
+                } else {
+                    c = '!';
+                }
                 if (guesses.contains(c)) {
                     System.out.println("You have already used that letter");
+                    continue;
+                }
+                if (!character.matches(".*[a-z]+.*")) {
+                    System.out.println("Try again, invalid input");
+                    runAgain = true;
                     continue;
                 }
                 try {
                     Set<String> filt = makeGuess(c);
                     if (filt.size() == 1) {
                         for (String f : filt) {
-                            if (f.equals(word.wordToString()))
+                            if (f.equals(word.wordToString())) {
                                 System.out.println("You win!");
+                                System.out.println("The word was: " + word.wordToString());
                                 return;
+                            }
                         }
                     }
                     runAgain = false;
@@ -202,11 +259,13 @@ public class EvilHangman implements IEvilHangmanGame {
         if (guesses.contains(guess))
             throw new GuessAlreadyMadeException();
         guesses.add(guess);
+        guesses.sort(Character::compareTo);
         Pattern patternToApply = filterWords(guess, wordLength);
         if (patternToApply != null) {
             word.applyPattern(patternToApply);
             if (!patternToApply.mask.doesContainMask()) {
                 System.out.printf("Sorry there are no %s\'s\n", guess);
+                guessesLeft--;
                 return wordsToList();
             } else {
                 System.out.printf("Yes there is %d %s\n", patternToApply.getNumberOfMasks(), patternToApply.type);
@@ -214,6 +273,7 @@ public class EvilHangman implements IEvilHangmanGame {
             }
         }
         System.out.printf("Sorry there are no %s\'s\n", guess);
+        guessesLeft--;
         return wordsToList();
     }
 }
