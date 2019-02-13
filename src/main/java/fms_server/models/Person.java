@@ -1,4 +1,4 @@
-package fms_server;
+package fms_server.models;
 
 public class Person {
     private int personID;

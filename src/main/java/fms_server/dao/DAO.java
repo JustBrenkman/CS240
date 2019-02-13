@@ -1,4 +1,4 @@
-package fms_server;
+package fms_server.dao;
 
 import java.util.List;
 

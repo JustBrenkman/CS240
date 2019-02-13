@@ -1,4 +1,6 @@
-package fms_server;
+package fms_server.dao;
+
+import fms_server.models.User;
 
 import java.util.List;
 

@@ -1,12 +1,36 @@
-package fms_server;
+package fms_server.models;
 
+/**
+ * User model
+ */
 public class User {
+    /**
+     * Username variable
+     */
     private String username;
+    /**
+     * Password variable, should be hashed
+     */
     private String password;
+    /**
+     * Email variable, should be a valid email address
+     */
     private String email;
+    /**
+     * First name of user
+     */
     private String firstName;
+    /**
+     * Last name of the user
+     */
     private String lastName;
+    /**
+     * Gender of user
+     */
     private char gender;
+    /**
+     * Person id associated with the user
+     */
     private int peronID;
 
     /**

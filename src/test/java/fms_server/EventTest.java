@@ -1,5 +1,6 @@
 package fms_server;
 
+import fms_server.models.Event;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
