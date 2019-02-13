@@ -15,7 +15,7 @@ public class Event {
      * Event constructor
      * @param eventID - Unique id to the event
      * @param descendant - name of the descendant
-     * @param personID unique id of a person attributed to the event
+     * @param personID unique id of a Person attributed to the event
      * @param latitude - event latitude
      * @param longitude - event longitude
      * @param country - country that event occurred in
@@ -68,16 +68,16 @@ public class Event {
     }
 
     /**
-     * Getter for person id
-     * @return - person id
+     * Getter for Person id
+     * @return - Person id
      */
     public int getPersonID() {
         return personID;
     }
 
     /**
-     * Setter for person id
-     * @param personID - person id
+     * Setter for Person id
+     * @param personID - Person id
      */
     public void setPersonID(int personID) {
         this.personID = personID;
