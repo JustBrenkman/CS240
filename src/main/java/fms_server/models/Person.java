@@ -3,7 +3,7 @@ package fms_server.models;
 /**
  * Person model class
  */
-public class Person extends Model<Integer> {
+public class Person extends IModel<Integer> {
     private String descendant;
     private String firstName;
     private String lastName;

@@ -3,7 +3,7 @@ package fms_server.models;
 /**
  * User model class
  */
-public class User extends Model<Integer> {
+public class User extends IModel<Integer> {
     /**
      * Username variable
      */

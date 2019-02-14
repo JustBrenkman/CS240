@@ -1,0 +1,26 @@
+package fms_server.services;
+
+import fms_server.dao.IDatabaseAccessObject;
+import fms_server.results.ClearResult;
+
+/**
+ * Clear service class
+ */
+public class ClearService extends Service {
+    /**
+     * Constructor for the clear service
+     * @param dao IDatabaseAccessObject
+     */
+    public ClearService(IDatabaseAccessObject dao) {
+        super(dao);
+    }
+
+
+    /**
+     * Clear function
+     * @return ClearResult
+     */
+    public ClearResult clear() {
+        return null;
+    }
+}

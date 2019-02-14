@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Person Database Access Object
  */
-public class PersonDAO implements DatabaseAccessObject<Person, Integer> {
+public class PersonDAO implements IDatabaseAccessObject<Person, Integer> {
     /**
      * Get's person object from database
      * @param id Identifier of object
@@ -62,6 +62,14 @@ public class PersonDAO implements DatabaseAccessObject<Person, Integer> {
      */
     @Override
     public void drop(Integer id) {
+
+    }
+
+    /**
+     * Clears all persons
+     */
+    @Override
+    public void clear() {
 
     }
 

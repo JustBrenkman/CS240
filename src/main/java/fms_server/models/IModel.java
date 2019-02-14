@@ -4,7 +4,7 @@ package fms_server.models;
  * Basic model class
  * @param <T> Type of id
  */
-public abstract class Model<T> {
+public abstract class IModel<T> {
     private T id;
 
     /**

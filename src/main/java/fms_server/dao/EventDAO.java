@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Event Database Access Object
  */
-public class EventDAO implements DatabaseAccessObject<Event, Integer> {
+public class EventDAO implements IDatabaseAccessObject<Event, Integer> {
     /**
      * Gets an event object from database
      * @param id Identifier of object
@@ -62,6 +62,14 @@ public class EventDAO implements DatabaseAccessObject<Event, Integer> {
      */
     @Override
     public void drop(Integer id) {
+
+    }
+
+    /**
+     * Clears all events
+     */
+    @Override
+    public void clear() {
 
     }
 

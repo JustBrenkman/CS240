@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This is the Data Access Object interface, gives a simple interface to be used with all DatabaseAccessObject's
- * @param <T> This is the type of the DatabaseAccessObject
+ * This is the Data Access Object interface, gives a simple interface to be used with all IDatabaseAccessObject's
+ * @param <T> This is the type of the IDatabaseAccessObject
  * @param <V> This is the type of the identifier, can be Integer or String
  */
-public interface DatabaseAccessObject<T, V> {
+public interface IDatabaseAccessObject<T, V> {
     /**
      * This gets the object based on the id, assuming all objects contain an id
      * @param id Identifier of object
@@ -46,6 +46,11 @@ public interface DatabaseAccessObject<T, V> {
      * @param id identifier of the object
      */
     void drop(V id);
+
+    /**
+     * Truncates database
+     */
+    void clear();
 
     /**
      * Returns a list where the query is filter with the map

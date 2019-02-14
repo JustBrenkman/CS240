@@ -3,7 +3,7 @@ package fms_server.models;
 /**
  * Event model class
  */
-public class Event extends Model<Integer> {
+public class Event extends IModel<Integer> {
     private  String descendant;
     private int personID;
     private double latitude;

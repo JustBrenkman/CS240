@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * User Data Access Object for fetching, modifying and adding new objects of User type
  */
-public class UserDAO implements DatabaseAccessObject<User, Integer> {
+public class UserDAO implements IDatabaseAccessObject<User, Integer> {
     /**
      * Table name in the database for users
      */
@@ -72,6 +72,14 @@ public class UserDAO implements DatabaseAccessObject<User, Integer> {
      */
     @Override
     public void drop(Integer id) {
+
+    }
+
+    /**
+     * Clears all users
+     */
+    @Override
+    public void clear() {
 
     }
 
