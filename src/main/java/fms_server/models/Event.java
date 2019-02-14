@@ -1,7 +1,9 @@
 package fms_server.models;
 
-public class Event {
-    private int eventID;
+/**
+ * Event model class
+ */
+public class Event extends Model<Integer> {
     private  String descendant;
     private int personID;
     private double latitude;
@@ -24,7 +26,7 @@ public class Event {
      * @param year - year that
      */
     public Event(int eventID, String descendant, int personID, double latitude, double longitude, String country, String city, String eventType, int year) {
-        this.eventID = eventID;
+        this.setId(eventID);
         this.descendant = descendant;
         this.personID = personID;
         this.latitude = latitude;
@@ -40,7 +42,7 @@ public class Event {
      * @return - event id
      */
     public int getEventID() {
-        return eventID;
+        return this.getId();
     }
 
     /**
@@ -48,7 +50,7 @@ public class Event {
      * @param eventID - event id
      */
     public void setEventID(int eventID) {
-        this.eventID = eventID;
+        this.setId(eventID);
     }
 
     /**

@@ -1,9 +1,9 @@
 package fms_server.models;
 
 /**
- * User model
+ * User model class
  */
-public class User {
+public class User extends Model<Integer> {
     /**
      * Username variable
      */
@@ -28,10 +28,6 @@ public class User {
      * Gender of user
      */
     private char gender;
-    /**
-     * Person id associated with the user
-     */
-    private int peronID;
 
     /**
      * User constructor
@@ -50,7 +46,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
-        this.peronID = peronID;
+        this.setId(peronID);
     }
 
     /**
@@ -155,14 +151,14 @@ public class User {
      * @return - person if of user
      */
     public int getPeronID() {
-        return peronID;
+        return this.getId();
     }
 
     /**
      * Setter for user's person id
-     * @param peronID - peron's id of user
+     * @param personID - peron's id of user
      */
-    public void setPeronID(int peronID) {
-        this.peronID = peronID;
+    public void setPeronID(int personID) {
+        this.setId(personID);
     }
 }

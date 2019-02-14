@@ -1,13 +1,14 @@
 package fms_server.dao;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * This is the Data Access Object interface, gives a simple interface to be used with all DAO's
- * @param <T> This is the type of the DAO
+ * This is the Data Access Object interface, gives a simple interface to be used with all DatabaseAccessObject's
+ * @param <T> This is the type of the DatabaseAccessObject
  * @param <V> This is the type of the identifier, can be Integer or String
  */
-public interface DAO<T, V> {
+public interface DatabaseAccessObject<T, V> {
     /**
      * This gets the object based on the id, assuming all objects contain an id
      * @param id Identifier of object
@@ -45,4 +46,12 @@ public interface DAO<T, V> {
      * @param id identifier of the object
      */
     void drop(V id);
+
+    /**
+     * Returns a list where the query is filter with the map
+     * Map keys are the var name to filter and values are the values that the keys are filtered by
+     * @param queries map of keys and values, must have same names as DAO object entries
+     * @return List of DAO objects
+     */
+    List<T> filter(Map<String, Object> queries);
 }

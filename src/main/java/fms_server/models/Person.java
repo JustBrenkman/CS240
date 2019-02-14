@@ -1,7 +1,9 @@
 package fms_server.models;
 
-public class Person {
-    private int personID;
+/**
+ * Person model class
+ */
+public class Person extends Model<Integer> {
     private String descendant;
     private String firstName;
     private String lastName;
@@ -22,7 +24,7 @@ public class Person {
      * @param spouseID - spouse id of the person
      */
     public Person(int personID, String descendant, String firstName, String lastName, char gender, int fatherID, int motherID, int spouseID) {
-        this.personID = personID;
+        this.setId(personID);
         this.descendant = descendant;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -37,7 +39,7 @@ public class Person {
      * @return - person id
      */
     public int getPersonID() {
-        return personID;
+        return this.getId();
     }
 
     /**
@@ -45,7 +47,7 @@ public class Person {
      * @param personID - person id
      */
     public void setPersonID(int personID) {
-        this.personID = personID;
+        this.setId(personID);
     }
 
     /**

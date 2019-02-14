@@ -3,11 +3,12 @@ package fms_server.dao;
 import fms_server.models.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * User Data Access Object for fetching, modifying and adding new objects of User type
  */
-public class UserDAO implements DAO<User, Integer> {
+public class UserDAO implements DatabaseAccessObject<User, Integer> {
     /**
      * Table name in the database for users
      */
@@ -72,5 +73,24 @@ public class UserDAO implements DAO<User, Integer> {
     @Override
     public void drop(Integer id) {
 
+    }
+
+    /**
+     * Filter user objects
+     * @param queries map of keys and values, must have same names as DAO object entries
+     * @return list of filtered objects
+     */
+    @Override
+    public List<User> filter(Map<String, Object> queries) {
+        return null;
+    }
+
+    /**
+     * Gets a user based on email to check
+     * @param email email of user
+     * @return user object with email as above
+     */
+    public User getUserByEmail(String email) {
+        return null;
     }
 }
