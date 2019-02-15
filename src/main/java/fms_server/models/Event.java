@@ -9,10 +9,6 @@ public class Event extends IModel<Integer> {
      */
     private String descendant;
     /**
-     * Event’s unique ID
-     */
-    private int eventID;
-    /**
      * ID of the person this event belongs to
      */
     private int personID;

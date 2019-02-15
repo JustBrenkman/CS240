@@ -1,0 +1,33 @@
+CREATE TABLE `users` (
+	`personID`	INTEGER NOT NULL UNIQUE,
+	`username`	VARCHAR ( 50 ) NOT NULL,
+	`password`	BINARY ( 128 ) NOT NULL,
+	`firstName`	VARCHAR ( 50 ) NOT NULL,
+	`lastName`	VARCHAR ( 50 ) NOT NULL,
+	`gender`	VARCHAR ( 1 ) NOT NULL,
+	PRIMARY KEY ( `personID` ),
+	FOREIGN KEY ( `personID` ) REFERENCES persons( `personID` )
+);
+
+CREATE TABLE `persons` (
+    `personID`	 INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    `descendant` VARCHAR( 50 ) NOT NULL,
+    `firstName`  VARCHAR( 50 ) NOT NULL,
+    `lastName`   VARCHAR( 50 ) NOT NULL,
+    `gender`     VARCHAR( 1 ) NOT NULL,
+    `fatherID`   INTEGER,
+    `motherID`   INTEGER,
+    `spouseID`   INTEGER
+);
+
+CREATE TABLE `events` (
+    `eventID`    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    `descendant` VARCHAR( 50 ) NOT NULL,
+    `personID`   INTEGER NOT NULL,
+    `latitude`   DOUBLE NOT NULL,
+    `longitude`  DOUBLE NOT NULL,
+    `country`    VARCHAR( 100 ) NOT NULL,
+    `city`       VARCHAR( 100 ) NOT NULL,
+    `eventType`  VARCHAR( 50 ) NOT NULL,
+    `year`       INTEGER NOT NULL
+);
