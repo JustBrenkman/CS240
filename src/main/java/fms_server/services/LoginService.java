@@ -20,7 +20,7 @@ public class LoginService extends Service {
      * Attempts to login the user.
      * @return LoginResult holds the information about the attempt. If it was unsuccessful will may return a null object
      */
-    public LoginResult login() {
+    public LoginResult login(LoginResult request) {
         return null;
     }
 }

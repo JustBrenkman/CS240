@@ -2,6 +2,7 @@ package fms_server.services;
 
 import fms_server.dao.IDatabaseAccessObject;
 import fms_server.models.User;
+import fms_server.requests.RegisterRequest;
 import fms_server.results.RegisterResult;
 
 public class RegisterService extends Service {
@@ -16,10 +17,10 @@ public class RegisterService extends Service {
 
     /**
      * Registers user
-     * @param user
-     * @return
+     * @param user RegisterRequest
+     * @return A RegisterResult that contains the information about the result of the request
      */
-    public RegisterResult register(User user) {
+    public RegisterResult register(RegisterRequest user) {
         return null;
     }
 }

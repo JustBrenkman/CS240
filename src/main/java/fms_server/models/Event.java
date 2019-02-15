@@ -4,13 +4,41 @@ package fms_server.models;
  * Event model class
  */
 public class Event extends IModel<Integer> {
-    private  String descendant;
+    /**
+     * Name of user account this event belongs to
+     */
+    private String descendant;
+    /**
+     * Event’s unique ID
+     */
+    private int eventID;
+    /**
+     * ID of the person this event belongs to
+     */
     private int personID;
-    private double latitude;
-    private double longitude;
+    /**
+     * Latitude of the event’s location
+     */
+    private int latitude;
+    /**
+     * Longitude of the event’s location
+     */
+    private int longitude;
+    /**
+     * Name of country where event occurred
+     */
     private String country;
+    /**
+     * Name of city where event occurred
+     */
     private String city;
+    /**
+     * Type of event
+     */
     private String eventType;
+    /**
+     * Year the event occurred
+     */
     private int year;
 
     /**
@@ -25,7 +53,7 @@ public class Event extends IModel<Integer> {
      * @param eventType - type of event, "death", "birth" etc.
      * @param year - year that
      */
-    public Event(int eventID, String descendant, int personID, double latitude, double longitude, String country, String city, String eventType, int year) {
+    public Event(int eventID, String descendant, int personID, int latitude, int longitude, String country, String city, String eventType, int year) {
         this.setId(eventID);
         this.descendant = descendant;
         this.personID = personID;
@@ -89,7 +117,7 @@ public class Event extends IModel<Integer> {
      * getter for event latitude
      * @return - event latitude
      */
-    public double getLatitude() {
+    public int getLatitude() {
         return latitude;
     }
 
@@ -97,7 +125,7 @@ public class Event extends IModel<Integer> {
      * Setter for event latitude
      * @param latitude - event latitude
      */
-    public void setLatitude(double latitude) {
+    public void setLatitude(int latitude) {
         this.latitude = latitude;
     }
 
@@ -113,7 +141,7 @@ public class Event extends IModel<Integer> {
      * Getter for event longitude
      * @param longitude - event longitude
      */
-    public void setLongitude(double longitude) {
+    public void setLongitude(int longitude) {
         this.longitude = longitude;
     }
 

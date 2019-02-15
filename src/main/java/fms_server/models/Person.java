@@ -4,12 +4,33 @@ package fms_server.models;
  * Person model class
  */
 public class Person extends IModel<Integer> {
+    /**
+     * User (Username) to which this person belongs
+     */
     private String descendant;
+    /**
+     * Person’s first name (non-empty string)
+     */
     private String firstName;
+    /**
+     * Person’s last name (non-empty string)
+     */
     private String lastName;
+    /**
+     *  Person’s gender (char: “f” or “m”)
+     */
     private char gender;
+    /**
+     * ID of person’s father (possibly null)
+     */
     private int fatherID;
+    /**
+     * Mother: ID of person’s mother (possibly null)
+     */
     private int motherID;
+    /**
+     * Spouse: ID of person’s spouse (possibly null)
+     */
     private int spouseID;
 
     /**

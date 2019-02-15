@@ -17,7 +17,7 @@ public class ClearService extends Service {
 
 
     /**
-     * Clear function
+     * Clears(truncates) everything in the database
      * @return ClearResult
      */
     public ClearResult clear() {
