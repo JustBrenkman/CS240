@@ -38,8 +38,7 @@ public interface ITrie {
 	
 	/**
 	 * The toString specification is as follows:
-	 * For each word, in alphabetical order:
-	 * <word>\n
+	 * For each word, in alphabetical order
 	 */
 	@Override
 	public String toString();

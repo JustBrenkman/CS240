@@ -11,6 +11,8 @@ public class RegisterResult extends Result {
     /**
      * Creates new Register result
      * @param token authentication token
+     * @param success successful or not
+     * @param message message about how it went
      */
     public RegisterResult(boolean success, String message, AuthToken token) {
         super(success, message);

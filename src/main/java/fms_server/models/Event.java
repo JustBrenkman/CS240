@@ -19,11 +19,11 @@ public class Event extends IModel<Integer> {
     /**
      * Latitude of the event’s location
      */
-    private int latitude;
+    private double latitude;
     /**
      * Longitude of the event’s location
      */
-    private int longitude;
+    private double longitude;
     /**
      * Name of country where event occurred
      */
@@ -53,7 +53,7 @@ public class Event extends IModel<Integer> {
      * @param eventType - type of event, "death", "birth" etc.
      * @param year - year that
      */
-    public Event(int eventID, String descendant, int personID, int latitude, int longitude, String country, String city, String eventType, int year) {
+    public Event(int eventID, String descendant, int personID, double latitude, double longitude, String country, String city, String eventType, int year) {
         this.setId(eventID);
         this.descendant = descendant;
         this.personID = personID;
@@ -117,7 +117,7 @@ public class Event extends IModel<Integer> {
      * getter for event latitude
      * @return - event latitude
      */
-    public int getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 

@@ -15,6 +15,7 @@ public final class LoginResult extends Result{
      * @param authToken this is a server generated token that contains encrypted information about the user.
      * @param userName username of the person logging in
      * @param personId person ID of the user logging in
+     * @param message message about how it went
      */
     public LoginResult(boolean isSuccessful, String message, String authToken, String userName, String personId) {
         super(isSuccessful, message);

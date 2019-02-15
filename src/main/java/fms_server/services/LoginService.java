@@ -18,6 +18,7 @@ public class LoginService extends Service {
 
     /**
      * Attempts to login the user.
+     * @param request LoginRequest contains username, email, password
      * @return LoginResult holds the information about the attempt. If it was unsuccessful will may return a null object
      */
     public LoginResult login(LoginResult request) {

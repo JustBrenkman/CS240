@@ -17,7 +17,7 @@ public class Person extends IModel<Integer> {
      */
     private String lastName;
     /**
-     *  Person’s gender (char: “f” or “m”)
+     *  Person’s gender (char: 'f' or 'm')
      */
     private char gender;
     /**
