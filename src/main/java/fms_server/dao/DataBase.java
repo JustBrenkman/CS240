@@ -27,7 +27,7 @@ public class DataBase {
             connection = DriverManager.getConnection(CONNECTION_URL);
             if (connection != null) {
                 DatabaseMetaData meta = connection.getMetaData();
-                Logger.info("The driver name is " + meta.getDriverName());
+//                Logger.info("The driver name is " + meta.getDriverName());
                 connection.setAutoCommit(autocommit);
             }
             return connection;
