@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 /**
  * Provides an abstraction to System.out.print that will format the output for better logging
+ * Uses UNICODE to format the output
  * TODO Add functionality to record logs
  * TODO Add custom color scheming
  */
@@ -28,6 +29,11 @@ public class Logger {
      * This is the level that the logs are filtered by
      */
     private static LEVEL logLevel = LEVEL.INFO;
+
+    /**
+     * On some logs, you will want to add a stack trace, but don't want to print it
+     */
+    private static boolean shouldPrintStackTrace = false;
 
     /**
      * Most basic log command
@@ -103,7 +109,9 @@ public class Logger {
      * This is a warn log
      * @param message message to display
      */
-    public static void warn(String message) {
+    public static void warn(String message, Exception e) {
+        if (shouldPrintStackTrace)
+            e.printStackTrace();
         log(LEVEL.WARN, message);
     }
 
@@ -111,7 +119,9 @@ public class Logger {
      * This is a error log
      * @param message message to display
      */
-    public static void error(String message) {
+    public static void error(String message, Exception e) {
+        if (shouldPrintStackTrace)
+            e.printStackTrace();
         log(LEVEL.ERROR, message);
     }
 
@@ -144,6 +154,14 @@ public class Logger {
      */
     public static void line() {
         System.out.print('\n');
+    }
+
+    public static boolean isShouldPrintStackTrace() {
+        return shouldPrintStackTrace;
+    }
+
+    public static void setShouldPrintStackTrace(boolean shouldPrintStackTrace) {
+        Logger.shouldPrintStackTrace = shouldPrintStackTrace;
     }
 
     /**

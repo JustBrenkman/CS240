@@ -3,7 +3,7 @@ package fms_server.models;
 /**
  * Person model class
  */
-public class Person extends IModel<Integer> {
+public class Person extends AbstractModel<Integer> {
     /**
      * User (Username) to which this person belongs
      */

@@ -1,41 +1,43 @@
 package fms_server.models;
 
+import java.util.Objects;
+
 /**
  * Event model class
  */
-public class Event extends IModel<String> {
+public class Event extends AbstractModel<String> {
     /**
      * Name of user account this event belongs to
      */
-    private String descendant;
+    protected String descendant;
     /**
      * ID of the person this event belongs to
      */
-    private String personID;
+    protected String personID;
     /**
      * Latitude of the event’s location
      */
-    private double latitude;
+    protected double latitude;
     /**
      * Longitude of the event’s location
      */
-    private double longitude;
+    protected double longitude;
     /**
      * Name of country where event occurred
      */
-    private String country;
+    protected String country;
     /**
      * Name of city where event occurred
      */
-    private String city;
+    protected String city;
     /**
      * Type of event
      */
-    private String eventType;
+    protected String eventType;
     /**
      * Year the event occurred
      */
-    private int year;
+    protected int year;
 
     /**
      * Event constructor
@@ -59,6 +61,10 @@ public class Event extends IModel<String> {
         this.city = city;
         this.eventType = eventType;
         this.year = year;
+    }
+
+    protected Event() {
+        super();
     }
 
     /**
@@ -203,5 +209,39 @@ public class Event extends IModel<String> {
      */
     public void setYear(int year) {
         this.year = year;
+    }
+
+    @Override
+    public String toString() {
+        return getEventID() +
+                ", " + getPersonID() +
+                ", " + getDescendant() +
+                ", " + getLatitude() +
+                ", " + getLongitude() +
+                ", " + getCountry() +
+                ", " + getCity() +
+                ", " + getEventType() +
+                ", " + getYear();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Event)) return false;
+        if (!super.equals(o)) return false;
+        Event event = (Event) o;
+        return Double.compare(event.latitude, latitude) == 0 &&
+                Double.compare(event.longitude, longitude) == 0 &&
+                year == event.year &&
+                descendant.equals(event.descendant) &&
+                personID.equals(event.personID) &&
+                country.equals(event.country) &&
+                city.equals(event.city) &&
+                eventType.equals(event.eventType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), descendant, personID, latitude, longitude, country, city, eventType, year);
     }
 }

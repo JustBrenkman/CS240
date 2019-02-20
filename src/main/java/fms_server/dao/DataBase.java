@@ -54,11 +54,11 @@ public class DataBase {
         }
     }
 
-    public static void createTables() throws DataBaseException, SQLException {
+    public static void createTables() throws DataBaseException {
         getConnection(false);
         try (Statement stmt = connection.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS `events` (" +
-                    "`eventID`    VARCHAR( 32 ) NOT NULL PRIMARY KEY UNIQUE," +
+                    "`id`    VARCHAR( 32 ) NOT NULL PRIMARY KEY UNIQUE," +
                     "`descendant` VARCHAR( 50 ) NOT NULL," +
                     "`personID`   VARCHAR( 32 ) NOT NULL," +
                     "`latitude`   DOUBLE NOT NULL," +
@@ -72,7 +72,7 @@ public class DataBase {
                     ");";
 
             String sql_persons = "CREATE TABLE IF NOT EXISTS `persons` (\n" +
-                    "`personID`\t VARCHAR( 32 ) NOT NULL PRIMARY KEY UNIQUE,\n" +
+                    "`id`\t VARCHAR( 32 ) NOT NULL PRIMARY KEY UNIQUE,\n" +
                     "`descendant` VARCHAR( 50 ) NOT NULL,\n" +
                     "`firstName`  VARCHAR( 50 ) NOT NULL,\n" +
                     "`lastName`   VARCHAR( 50 ) NOT NULL,\n" +
@@ -91,14 +91,14 @@ public class DataBase {
                     "`lastName`  VARCHAR ( 50 ) NOT NULL,\n" +
                     "`gender`    VARCHAR ( 1 ) NOT NULL,\n" +
                     "PRIMARY KEY ( `personID` ),\n" +
-                    "FOREIGN KEY ( `personID` ) REFERENCES persons( `personID` )\n" +
+                    "FOREIGN KEY ( `personID` ) REFERENCES persons( `id` )\n" +
                     ");";
 
-            Logger.info("Creating events table");
+//            Logger.info("Creating events table");
             stmt.execute(sql);
-            Logger.info("Creating persons table");
+//            Logger.info("Creating persons table");
             stmt.execute(sql_persons);
-            Logger.info("Creating users");
+//            Logger.info("Creating users");
             stmt.execute(sql_users);
         } catch (SQLException e) {
             e.printStackTrace();

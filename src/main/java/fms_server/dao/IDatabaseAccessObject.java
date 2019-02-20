@@ -26,13 +26,13 @@ public interface IDatabaseAccessObject<T, V> {
      * Adds a new object to the database
      * @param t object to add
      */
-    void add(T t) throws DataBaseException;
+    boolean add(T t) throws DataBaseException;
 
     /**
      * Updates the object using the id of the object with the rest of the variables, effectively replacing all variables
      * @param t Object to update
      */
-    void update(T t);
+    boolean update(T t);
 
     /**
      * Checks to see if object with that id exists
@@ -45,7 +45,7 @@ public interface IDatabaseAccessObject<T, V> {
      * Drops an object
      * @param id identifier of the object
      */
-    void drop(V id);
+    void drop(V id) throws DataBaseException;
 
     /**
      * Truncates database
