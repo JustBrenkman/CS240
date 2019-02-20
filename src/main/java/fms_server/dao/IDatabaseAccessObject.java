@@ -26,7 +26,7 @@ public interface IDatabaseAccessObject<T, V> {
      * Adds a new object to the database
      * @param t object to add
      */
-    void add(T t);
+    void add(T t) throws DataBaseException;
 
     /**
      * Updates the object using the id of the object with the rest of the variables, effectively replacing all variables
@@ -50,7 +50,7 @@ public interface IDatabaseAccessObject<T, V> {
     /**
      * Truncates database
      */
-    void clear();
+    void clear() throws DataBaseException;
 
     /**
      * Returns a list where the query is filter with the map

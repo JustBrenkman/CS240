@@ -2,10 +2,8 @@ package fms_server.dao;
 
 import fms_server.models.Event;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.xml.crypto.Data;
+import java.sql.*;
 import java.util.List;
 import java.util.Map;
 
@@ -51,9 +49,31 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
      * @param event Event object to add
      */
     @Override
-    public void add(Event event) {
-        String sql = "INSERT INTO Events (EventID, Descendant, PersonID, Latitude, Longitude, " +
-                "Country, City, EventType, Year) VALUES(?,?,?,?,?,?,?,?,?)";
+    public void add(Event event) throws DataBaseException {
+        String sql = "INSERT INTO events (eventID, descendant, personID, latitude, longitude, " +
+                "country, city, eventType, year) VALUES(?,?,?,?,?,?,?,?,?)";
+        Connection connection = DataBase.getConnection(false);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            //Using the statements built-in set(type) functions we can pick the question mark we want
+            //to fill in and give it a proper value. The first argument corresponds to the first
+            //question mark found in our sql String
+            stmt.setString(1, event.getEventID());
+            stmt.setString(2, event.getDescendant());
+            stmt.setString(3, event.getPersonID());
+            stmt.setDouble(4, event.getLatitude());
+            stmt.setDouble(5, event.getLongitude());
+            stmt.setString(6, event.getCountry());
+            stmt.setString(7, event.getCity());
+            stmt.setString(8, event.getEventType());
+            stmt.setInt(9, event.getYear());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Error encountered while inserting into the database");
+        } finally {
+            DataBase.closeConnection(true);
+        }
     }
 
     /**
@@ -88,8 +108,17 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
      * Clears all events
      */
     @Override
-    public void clear() {
-
+    public void clear() throws DataBaseException {
+        String sql = "DELETE FROM events";
+        Connection connection = DataBase.getConnection(false);
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Unable to truncate table");
+        } finally {
+            DataBase.closeConnection(true);
+        }
     }
 
     /**

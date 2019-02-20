@@ -3,6 +3,7 @@ package fms_server;
 import fms_server.dao.DataBase;
 import fms_server.dao.DataBaseException;
 import fms_server.logging.Logger;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
@@ -10,13 +11,19 @@ import org.junit.jupiter.api.Assertions;
 import java.sql.SQLException;
 
 public class DataBaseTest {
+    @BeforeAll
+    public static void testLogger() {
+        Logger.head("Testing Database");
+    }
+
+    @AfterAll
+    public static void end() {
+        Logger.line();
+    }
+
     @Test
     public void createTables() {
-        Logger.info("Normal");
-        Logger.warn("Warn");
-        Logger.error("Error");
-        Logger.pass("Pass");
-        Logger.fail("Fail");
+        Logger.info("Creating tables");
         try {
             DataBase.createTables();
         } catch (DataBaseException e) {

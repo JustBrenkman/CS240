@@ -12,7 +12,7 @@ public class Logger {
     /**
      * Log levels, logs can be filtered by levels
      */
-    public enum LEVEL {INFO, WARN, ERROR, PASS, FAIL}
+    public enum LEVEL {INFO, WARN, ERROR, PASS, FAIL, HEAD}
 
     /**
      * Color enums, all possible colors with ascii escape codes
@@ -41,6 +41,9 @@ public class Logger {
             return;
         }
         switch (level) {
+            case HEAD:
+                log(level, message, COLOR.NULL, COLOR.NULL, COLOR.NULL, COLOR.NULL);
+                break;
             case INFO:
                 log(level, message, COLOR.CYAN, COLOR.NULL, COLOR.CYAN, COLOR.NULL);
                 break;
@@ -92,6 +95,14 @@ public class Logger {
 
     public static void fail(String message) {
         log(LEVEL.FAIL, message);
+    }
+
+    public static void head(String message) {
+        log(LEVEL.HEAD, message);
+    }
+
+    public static void line() {
+        System.out.println(" ");
     }
 
     /**
