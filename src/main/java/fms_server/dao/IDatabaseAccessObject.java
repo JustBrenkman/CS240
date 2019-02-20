@@ -14,7 +14,7 @@ public interface IDatabaseAccessObject<T, V> {
      * @param id Identifier of object
      * @return Object that has been requested
      */
-    T get(V id) throws DataBaseException;
+    T get(V id) throws DataBaseException, ModelNotFoundException;
 
     /**
      * Returns all objects in the database
@@ -26,13 +26,13 @@ public interface IDatabaseAccessObject<T, V> {
      * Adds a new object to the database
      * @param t object to add
      */
-    boolean add(T t) throws DataBaseException;
+    void add(T t) throws DataBaseException;
 
     /**
      * Updates the object using the id of the object with the rest of the variables, effectively replacing all variables
      * @param t Object to update
      */
-    boolean update(T t);
+    void update(T t) throws ModelNotFoundException;
 
     /**
      * Checks to see if object with that id exists
@@ -45,7 +45,7 @@ public interface IDatabaseAccessObject<T, V> {
      * Drops an object
      * @param id identifier of the object
      */
-    void drop(V id) throws DataBaseException;
+    void delete(V id) throws DataBaseException, ModelNotFoundException;
 
     /**
      * Truncates database

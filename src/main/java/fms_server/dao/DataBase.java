@@ -83,15 +83,15 @@ public class DataBase {
                     ");";
 
             String sql_users = "CREATE TABLE IF NOT EXISTS `users` (\n" +
-                    "`personID`  VARCHAR ( 32 ) NOT NULL UNIQUE,\n" +
-                    "`email`     VARCHAR ( 50) NOT NULL,\n" +
+                    "`id`  VARCHAR ( 32 ) NOT NULL UNIQUE,\n" +
+                    "`email`     VARCHAR ( 50) NOT NULL UNIQUE,\n" +
                     "`username`  VARCHAR ( 50 ) NOT NULL,\n" +
                     "`password`  BINARY  ( 128 ) NOT NULL,\n" +
                     "`firstName` VARCHAR ( 50 ) NOT NULL,\n" +
                     "`lastName`  VARCHAR ( 50 ) NOT NULL,\n" +
                     "`gender`    VARCHAR ( 1 ) NOT NULL,\n" +
-                    "PRIMARY KEY ( `personID` ),\n" +
-                    "FOREIGN KEY ( `personID` ) REFERENCES persons( `id` )\n" +
+                    "PRIMARY KEY ( `id` ),\n" +
+                    "FOREIGN KEY ( `id` ) REFERENCES persons( `id` )\n" +
                     ");";
 
 //            Logger.info("Creating events table");

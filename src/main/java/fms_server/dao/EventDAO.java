@@ -1,7 +1,9 @@
 package fms_server.dao;
 
+import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
 import fms_server.models.Event;
+import fms_server.models.ModelDoesNotFitException;
 
 import javax.xml.crypto.Data;
 import java.sql.*;
@@ -18,7 +20,7 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
      * @return Event object
      */
     @Override
-    public Event get(String id) throws DataBaseException {
+    public Event get(String id) throws DataBaseException, ModelNotFoundException {
         String sql = "SELECT * FROM events WHERE id=?";
         Event event = null;
         Connection connection = DataBase.getConnection(false);
@@ -27,14 +29,20 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 event = AbstractModel.castToModel(Event.class, rs);
-//                event = new Event(rs.getString("eventID"), rs.getString("descendant"), rs.getString("personID"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getString("country"), rs.getString("city"), rs.getString("eventType"), rs.getInt("year"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataBaseException("Failed to do stuff");
+            throw new DataBaseException("Failed to get event, something is wrong with the SQL command: " + sql);
+        } catch (ModelDoesNotFitException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to convert entry to model");
         } finally {
             DataBase.closeConnection(true);
         }
+
+        if (event == null)
+            throw new ModelNotFoundException("Could not find event, likely wrong id");
+
         return event;
     }
 
@@ -52,15 +60,12 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
      * @param event Event object to add
      */
     @Override
-    public boolean add(Event event) throws DataBaseException {
+    public void add(Event event) throws DataBaseException {
         boolean commit = false;
         String sql = "INSERT INTO events (id, descendant, personID, latitude, longitude, " +
                 "country, city, eventType, year) VALUES(?,?,?,?,?,?,?,?,?)";
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            //Using the statements built-in set(type) functions we can pick the question mark we want
-            //to fill in and give it a proper value. The first argument corresponds to the first
-            //question mark found in our sql String
             stmt.setString(1, event.getId());
             stmt.setString(2, event.getDescendant());
             stmt.setString(3, event.getPersonID());
@@ -74,12 +79,12 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
             stmt.executeUpdate();
             commit = true;
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            Logger.warn("Unable to add event, could be identical id", e);
             throw new DataBaseException("Error encountered while inserting into the database");
         } finally {
             DataBase.closeConnection(commit);
         }
-        return commit;
     }
 
     /**
@@ -87,9 +92,7 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
      * @param event event object to add
      */
     @Override
-    public boolean update(Event event) {
-        return false;
-    }
+    public void update(Event event) {}
 
     /**
      * Checks to see if an event object exists
@@ -106,18 +109,21 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
      * @param id identifier of the object
      */
     @Override
-    public void drop(String id) throws DataBaseException {
-        String sql = "DELETE FROM events WHERE eventID=?";
+    public void delete(String id) throws DataBaseException, ModelNotFoundException {
+        String sql = "DELETE FROM events WHERE id=?";
+        boolean commit = false;
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
-            stmt.execute(sql);
+            commit = stmt.executeUpdate() == 1;
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataBaseException("Unable to truncate table");
+            throw new DataBaseException("Unable remove entry");
         } finally {
-            DataBase.closeConnection(true);
+            DataBase.closeConnection(commit);
         }
+        if (!commit)
+            throw new ModelNotFoundException("SQL query did not delete anything");
     }
 
     /**

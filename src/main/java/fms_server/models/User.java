@@ -1,33 +1,35 @@
 package fms_server.models;
 
+import java.util.Objects;
+
 /**
  * User model class
  */
-public class User extends AbstractModel<Integer> {
+public class User extends AbstractModel<String> {
     /**
      * Username variable
      */
-    private String username;
+    protected String username;
     /**
      * Password variable, should be hashed
      */
-    private String password;
+    protected String password;
     /**
      * Email variable, should be a valid email address
      */
-    private String email;
+    protected String email;
     /**
      * First name of user
      */
-    private String firstName;
+    protected String firstName;
     /**
      * Last name of the user
      */
-    private String lastName;
+    protected String lastName;
     /**
      * Gender of user
      */
-    private char gender;
+    protected String gender;
 
     /**
      * User constructor
@@ -39,7 +41,7 @@ public class User extends AbstractModel<Integer> {
      * @param gender - gender of user
      * @param peronID - person id of the user
      */
-    public User(String username, String password, String email, String firstName, String lastName, char gender, int peronID) {
+    public User(String username, String password, String email, String firstName, String lastName, String gender, String peronID) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -47,6 +49,13 @@ public class User extends AbstractModel<Integer> {
         this.lastName = lastName;
         this.gender = gender;
         this.setId(peronID);
+    }
+
+    /**
+     * This is a protected constructor, used only for converting database entries to models
+     */
+    protected User() {
+        super();
     }
 
     /**
@@ -134,7 +143,7 @@ public class User extends AbstractModel<Integer> {
      * Getter for user's gender
      * @return - gender of user
      */
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
@@ -142,7 +151,7 @@ public class User extends AbstractModel<Integer> {
      * Setter for user's gender
      * @param gender - user's gender
      */
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -150,7 +159,7 @@ public class User extends AbstractModel<Integer> {
      * Getter for user's person id
      * @return - person if of user
      */
-    public int getPeronID() {
+    public String getPeronID() {
         return this.getId();
     }
 
@@ -158,7 +167,26 @@ public class User extends AbstractModel<Integer> {
      * Setter for user's person id
      * @param personID - peron's id of user
      */
-    public void setPeronID(int personID) {
+    public void setPeronID(String personID) {
         this.setId(personID);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return gender.equals(user.gender) &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), username, password, email, firstName, lastName, gender);
     }
 }

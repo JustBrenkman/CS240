@@ -67,7 +67,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, Integer> {
      * @param id identifier of the object
      */
     @Override
-    public void drop(Integer id) {
+    public void delete(Integer id) {
 
     }
 

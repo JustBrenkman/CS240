@@ -41,7 +41,7 @@ public abstract class AbstractModel<T> {
      * @param <T> Type of class (model class)
      * @return an instance of the convert result set
      */
-    public static <T extends AbstractModel> T castToModel(Class<T> tClass, ResultSet resultSet) {
+    public static <T extends AbstractModel> T castToModel(Class<T> tClass, ResultSet resultSet) throws ModelDoesNotFitException {
         T model = null;
         try {
             Constructor<T> constructor = tClass.getDeclaredConstructor(); // Gets the protected constructor
@@ -64,10 +64,10 @@ public abstract class AbstractModel<T> {
             }
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
 //            e.printStackTrace();
-            Logger.setShouldPrintStackTrace(true);
+//            Logger.setShouldPrintStackTrace(true);
             Logger.error("Unable to cast, something went wrong with generating the model. Try adding an empty public constructor", e);
-            Logger.setShouldPrintStackTrace(false);
-            return null;
+//            Logger.setShouldPrintStackTrace(false);
+            throw new ModelDoesNotFitException();
         }
         return model;
     }
