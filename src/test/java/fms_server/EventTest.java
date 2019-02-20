@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EventTest {
     @BeforeAll
     static void testLogger() throws DataBaseException {
+        Logger.setLogLevel(Logger.LEVEL.INFO);
         Logger.head("Testing Events");
         Logger.info("Normal");
         Logger.warn("Warn");
