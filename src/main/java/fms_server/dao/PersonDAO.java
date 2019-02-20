@@ -1,6 +1,7 @@
 package fms_server.dao;
 
 import fms_server.models.Person;
+import fms_server.models.User;
 
 import java.util.List;
 import java.util.Map;
@@ -82,4 +83,11 @@ public class PersonDAO implements IDatabaseAccessObject<Person, Integer> {
     public List<Person> filter(Map<String, Object> queries) {
         return null;
     }
+
+    /**
+     * Gets a list of persons that are associated with the user
+     * @param user user that is in question
+     * @return List of person objects
+     */
+    public List<Person> filterByUser(User user) {return null;}
 }
