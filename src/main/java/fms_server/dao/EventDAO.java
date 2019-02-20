@@ -2,21 +2,39 @@ package fms_server.dao;
 
 import fms_server.models.Event;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Event Database Access Object
  */
-public class EventDAO implements IDatabaseAccessObject<Event, Integer> {
+public class EventDAO implements IDatabaseAccessObject<Event, String> {
     /**
      * Gets an event object from database
      * @param id Identifier of object
      * @return Event object
      */
     @Override
-    public Event get(Integer id) {
-        return null;
+    public Event get(String id) throws DataBaseException {
+        String sql = "SELECT * WHERE eventID=?";
+        Event event = null;
+        Connection connection = DataBase.getConnection(false);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                event = new Event(rs.getString("eventID"), rs.getString("descendant"), rs.getString("personID"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getString("country"), rs.getString("city"), rs.getString("eventType"), rs.getInt("year"));
+            }
+            DataBase.closeConnection(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to do stuff");
+        }
+        return event;
     }
 
     /**
@@ -34,7 +52,8 @@ public class EventDAO implements IDatabaseAccessObject<Event, Integer> {
      */
     @Override
     public void add(Event event) {
-
+        String sql = "INSERT INTO Events (EventID, Descendant, PersonID, Latitude, Longitude, " +
+                "Country, City, EventType, Year) VALUES(?,?,?,?,?,?,?,?,?)";
     }
 
     /**
@@ -52,7 +71,7 @@ public class EventDAO implements IDatabaseAccessObject<Event, Integer> {
      * @return boolean
      */
     @Override
-    public boolean doesExist(Integer id) {
+    public boolean doesExist(String id) {
         return false;
     }
 
@@ -61,7 +80,7 @@ public class EventDAO implements IDatabaseAccessObject<Event, Integer> {
      * @param id identifier of the object
      */
     @Override
-    public void drop(Integer id) {
+    public void drop(String id) {
 
     }
 

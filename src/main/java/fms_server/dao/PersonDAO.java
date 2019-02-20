@@ -3,6 +3,11 @@ package fms_server.dao;
 import fms_server.models.Person;
 import fms_server.models.User;
 
+import javax.xml.crypto.Data;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +21,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, Integer> {
      * @return person object
      */
     @Override
-    public Person get(Integer id) {
+    public Person get(Integer id) throws DataBaseException {
         return null;
     }
 

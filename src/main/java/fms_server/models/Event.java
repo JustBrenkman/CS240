@@ -3,7 +3,7 @@ package fms_server.models;
 /**
  * Event model class
  */
-public class Event extends IModel<Integer> {
+public class Event extends IModel<String> {
     /**
      * Name of user account this event belongs to
      */
@@ -11,7 +11,7 @@ public class Event extends IModel<Integer> {
     /**
      * ID of the person this event belongs to
      */
-    private int personID;
+    private String personID;
     /**
      * Latitude of the event’s location
      */
@@ -49,7 +49,7 @@ public class Event extends IModel<Integer> {
      * @param eventType - type of event, "death", "birth" etc.
      * @param year - year that
      */
-    public Event(int eventID, String descendant, int personID, double latitude, double longitude, String country, String city, String eventType, int year) {
+    public Event(String eventID, String descendant, String personID, double latitude, double longitude, String country, String city, String eventType, int year) {
         this.setId(eventID);
         this.descendant = descendant;
         this.personID = personID;
@@ -65,7 +65,7 @@ public class Event extends IModel<Integer> {
      * Getter for the event id
      * @return - event id
      */
-    public int getEventID() {
+    public String getEventID() {
         return this.getId();
     }
 
@@ -73,7 +73,7 @@ public class Event extends IModel<Integer> {
      * Setter for the even tid
      * @param eventID - event id
      */
-    public void setEventID(int eventID) {
+    public void setEventID(String eventID) {
         this.setId(eventID);
     }
 
@@ -97,7 +97,7 @@ public class Event extends IModel<Integer> {
      * Getter for Person id
      * @return - Person id
      */
-    public int getPersonID() {
+    public String getPersonID() {
         return personID;
     }
 
@@ -105,7 +105,7 @@ public class Event extends IModel<Integer> {
      * Setter for Person id
      * @param personID - Person id
      */
-    public void setPersonID(int personID) {
+    public void setPersonID(String personID) {
         this.personID = personID;
     }
 

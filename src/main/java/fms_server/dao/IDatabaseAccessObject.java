@@ -14,7 +14,7 @@ public interface IDatabaseAccessObject<T, V> {
      * @param id Identifier of object
      * @return Object that has been requested
      */
-    T get(V id);
+    T get(V id) throws DataBaseException;
 
     /**
      * Returns all objects in the database

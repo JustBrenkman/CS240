@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"fms_server"},{"l":"fms_server.dao"},{"l":"fms_server.handlers"},{"l":"fms_server.models"},{"l":"fms_server.requests"},{"l":"fms_server.results"},{"l":"fms_server.services"}]
+packageSearchIndex = [{"l":"fms_server"},{"l":"fms_server.dao"},{"l":"fms_server.handlers"},{"l":"fms_server.models"},{"l":"fms_server.requests"},{"l":"fms_server.results"},{"l":"fms_server.services"}]
