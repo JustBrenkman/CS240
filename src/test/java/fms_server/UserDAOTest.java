@@ -2,7 +2,6 @@ package fms_server;
 
 import fms_server.dao.*;
 import fms_server.logging.Logger;
-import fms_server.models.Event;
 import fms_server.models.User;
 import org.junit.jupiter.api.*;
 
@@ -30,7 +29,7 @@ public class UserDAOTest {
         UserDAO userDAO = new UserDAO();
         try {
             User userToAdd = new User("JustBrenkman", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman@gmail.com", "Ben", "Brenkman", "m", "1");
-            User userToAdd1 = new User("JustBrenkman1", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman@gmail.com", "Ben", "Brenkman", "m", "2");
+            User userToAdd1 = new User("JustBrenkman1", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman1@gmail.com", "Ben", "Brenkman", "m", "2");
             userDAO.add(userToAdd);
             userDAO.add(userToAdd1);
         } catch (DataBaseException e) {
@@ -65,8 +64,8 @@ public class UserDAOTest {
         UserDAO userDAO = new UserDAO();
         try {
             User userToAdd = new User("JustBrenkman", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman@gmail.com", "Ben", "Brenkman", "m", "1");
-            User userToAdd1 = new User("JustBrenkman1", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman@gmail.com", "Ben", "Brenkman", "m", "2");
-            User userToAdd2 = new User("JustBrenkman2", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman@gmail.com", "Ben", "Brenkman", "m", "3");
+            User userToAdd1 = new User("JustBrenkman1", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman1@gmail.com", "Ben", "Brenkman", "m", "2");
+            User userToAdd2 = new User("JustBrenkman2", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman2@gmail.com", "Ben", "Brenkman", "m", "3");
             userDAO.add(userToAdd);
             userDAO.add(userToAdd1);
             userDAO.add(userToAdd2);
@@ -155,8 +154,8 @@ public class UserDAOTest {
             try {
                 UserDAO userDAO = new UserDAO();
                 User userToAdd = new User("JustBrenkman", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman@gmail.com", "Ben", "Brenkman", "m", "1");
-                User userToAdd1 = new User("JustBrenkman1", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman@gmail.com", "Ben", "Brenkman", "m", "2");
-                User userToAdd2 = new User("JustBrenkman2", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman@gmail.com", "Ben", "Brenkman", "m", "3");
+                User userToAdd1 = new User("JustBrenkman1", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman1@gmail.com", "Ben", "Brenkman", "m", "2");
+                User userToAdd2 = new User("JustBrenkman2", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman2@gmail.com", "Ben", "Brenkman", "m", "3");
                 userDAO.add(userToAdd);
                 userDAO.add(userToAdd1);
                 userDAO.add(userToAdd2);

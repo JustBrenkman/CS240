@@ -42,7 +42,7 @@ public abstract class AbstractModel<T> {
      * @return an instance of the convert result set
      */
     public static <T extends AbstractModel> T castToModel(Class<T> tClass, ResultSet resultSet) throws ModelDoesNotFitException {
-        T model = null;
+        T model;
         try {
             Constructor<T> constructor = tClass.getDeclaredConstructor(); // Gets the protected constructor
             model = constructor.newInstance((Object[]) null);

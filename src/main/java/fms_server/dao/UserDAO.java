@@ -2,7 +2,6 @@ package fms_server.dao;
 
 import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
-import fms_server.models.Event;
 import fms_server.models.ModelDoesNotFitException;
 import fms_server.models.User;
 

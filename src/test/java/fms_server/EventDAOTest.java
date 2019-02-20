@@ -153,12 +153,8 @@ public class EventDAOTest {
                 eventDAO.add(new Event("1", "ben", "1", -111.25, 40.68, "USA", "Provo", "birth", 2019));
                 eventDAO.add(new Event("3", "ben", "1", -111.25, 40.68, "USA", "Provo", "birth", 2019));
                 eventDAO.clear();
-                Assertions.assertThrows(ModelNotFoundException.class, () -> {
-                    eventDAO.get("1");
-                });
-                Assertions.assertThrows(ModelNotFoundException.class, () -> {
-                    eventDAO.get("3");
-                });
+                Assertions.assertThrows(ModelNotFoundException.class, () -> eventDAO.get("1"));
+                Assertions.assertThrows(ModelNotFoundException.class, () -> eventDAO.get("3"));
             } catch (DataBaseException e) {
                 Logger.fail("Failed to delete all entries");
                 Assertions.fail();

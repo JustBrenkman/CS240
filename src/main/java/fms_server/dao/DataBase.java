@@ -85,7 +85,7 @@ public class DataBase {
             String sql_users = "CREATE TABLE IF NOT EXISTS `users` (\n" +
                     "`id`  VARCHAR ( 32 ) NOT NULL UNIQUE,\n" +
                     "`email`     VARCHAR ( 50) NOT NULL UNIQUE,\n" +
-                    "`username`  VARCHAR ( 50 ) NOT NULL,\n" +
+                    "`username`  VARCHAR ( 50 ) NOT NULL UNIQUE,\n" +
                     "`password`  BINARY  ( 128 ) NOT NULL,\n" +
                     "`firstName` VARCHAR ( 50 ) NOT NULL,\n" +
                     "`lastName`  VARCHAR ( 50 ) NOT NULL,\n" +
