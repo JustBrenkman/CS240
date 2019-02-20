@@ -6,6 +6,7 @@ import java.util.Calendar;
 /**
  * Provides an abstraction to System.out.print that will format the output for better logging
  * TODO Add functionality to record logs
+ * TODO Add custom color scheming
  */
 public class Logger {
     /**
@@ -90,32 +91,59 @@ public class Logger {
         }
     }
 
+    /**
+     * This is a info log
+     * @param message message to display
+     */
     public static void info(String message) {
         log(LEVEL.INFO, message);
     }
 
+    /**
+     * This is a warn log
+     * @param message message to display
+     */
     public static void warn(String message) {
         log(LEVEL.WARN, message);
     }
 
+    /**
+     * This is a error log
+     * @param message message to display
+     */
     public static void error(String message) {
         log(LEVEL.ERROR, message);
     }
 
+    /**
+     * This is a pass log
+     * @param message message to display
+     */
     public static void pass(String message) {
         log(LEVEL.PASS, message);
     }
 
+    /**
+     * This is a fail log
+     * @param message message to display
+     */
     public static void fail(String message) {
         log(LEVEL.FAIL, message);
     }
 
+    /**
+     * This is a header log
+     * @param message message to display
+     */
     public static void head(String message) {
         log(LEVEL.HEAD, message);
     }
 
+    /**
+     * Print a new line
+     */
     public static void line() {
-        System.out.println(" ");
+        System.out.print('\n');
     }
 
     /**
@@ -123,10 +151,13 @@ public class Logger {
      *
      * @param foreground The desired color
      * @param background background color
+     * @param formats    list of formats that must be applied to the string
      * @return formatted escape string
      */
     public static String format(COLOR foreground, COLOR background, FORMATS... formats) {
+        // Escape key
         StringBuilder str = new StringBuilder("\u001B");
+        // Add foreground color
         switch (foreground) {
             case WHITE:
                 str.append("[37");
@@ -156,7 +187,7 @@ public class Logger {
                 str.append("[0");
                 break;
         }
-
+        // Add formats
         for (FORMATS format : formats) {
             str.append(';');
             switch (format) {
@@ -174,9 +205,7 @@ public class Logger {
                     break;
             }
         }
-//        str.append("m");
-
-//        str.append("\u001B");
+        // Add background color
         if (background != COLOR.NULL) {
             str.append(';');
             switch (background) {
@@ -206,6 +235,7 @@ public class Logger {
                     break;
             }
         }
+        // Close the escape sequence
         str.append("m");
         return str.toString();
     }
