@@ -1,7 +1,9 @@
 package fms_server.logging;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Provides an abstraction to System.out.print that will format the output for better logging
@@ -10,10 +12,17 @@ import java.util.Calendar;
  * TODO Add custom color scheming
  */
 public class Logger {
+    private static LogSaver logSaver;
+    private static boolean logClass = false;
+
+    public static void setLogSaver(LogSaver saver) {
+        logSaver = saver;
+    }
+
     /**
      * Log levels, logs can be filtered by levels
      */
-    public enum LEVEL {INFO, PASS, FAIL, HEAD ,WARN, ERROR}
+    public enum LEVEL {INFO, PASS, FAIL, HEAD ,WARN, ERROR, SEVERE}
 
     /**
      * Color enums, all possible colors with ascii escape codes
@@ -76,6 +85,9 @@ public class Logger {
             case ERROR:
                 log(level, message, COLOR.RED, COLOR.NULL, COLOR.RED, COLOR.NULL);
                 break;
+            case SEVERE:
+                log(level, message, COLOR.RED, COLOR.NULL, COLOR.RED, COLOR.NULL);
+                break;
         }
     }
 
@@ -93,7 +105,7 @@ public class Logger {
         if (level.ordinal() >= logLevel.ordinal()) {
             Calendar calendar = Calendar.getInstance();
             String timestamp = new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss:mmm").format(calendar.getTime());
-            System.out.println(format(fg_message, bg_message) + "[" + timestamp + "] " + format(fg_tag, bg_tag, FORMATS.BOLD) + "[" + level.name() + "]" + format(fg_message, bg_message) + ": " + message + format(COLOR.NULL, COLOR.NULL));
+            System.out.println(format(fg_message, bg_message) + "[" + timestamp + "]" + format(fg_tag, bg_tag, FORMATS.BOLD) + "[" + level.name() + "] " + format(fg_message, bg_message) + message + format(COLOR.NULL, COLOR.NULL));
         }
     }
 
@@ -102,35 +114,87 @@ public class Logger {
      * @param message message to display
      */
     public static void info(String message) {
+        if (logClass)
+            message = modifyMessageIncludeClass(Arrays.asList(Thread.currentThread().getStackTrace()), message);
+
         log(LEVEL.INFO, message);
+        saveLog(LEVEL.INFO, message);
+    }
+    public static void info(Class<?> tClass, String message) {
+        message = modifyMessageAddClass(tClass, message);
+        info(message);
     }
 
     /**
      * This is a warn log
      * @param message message to display
      */
+    public static void warn(String message) {warn(message, null);}
     public static void warn(String message, Exception e) {
-        if (shouldPrintStackTrace)
+        if (logClass)
+            message = modifyMessageIncludeClass(Arrays.asList(Thread.currentThread().getStackTrace()), message);
+
+        if (shouldPrintStackTrace && e != null)
             e.printStackTrace();
         log(LEVEL.WARN, message);
+        saveLog(LEVEL.WARN, message, e);
     }
+    public static void warn(Class<?> tClass, String message, Exception e) {
+        message = modifyMessageAddClass(tClass, message);
+        warn(message, e);
+    }
+    public static void warn(Class<?> tClass, String message) {warn(tClass, message, null);}
 
     /**
      * This is a error log
      * @param message message to display
      */
     public static void error(String message, Exception e) {
-        if (shouldPrintStackTrace)
+        if (logClass)
+            message = modifyMessageIncludeClass(Arrays.asList(Thread.currentThread().getStackTrace()), message);
+
+        if (shouldPrintStackTrace && e != null)
             e.printStackTrace();
+
         log(LEVEL.ERROR, message);
+        saveLog(LEVEL.ERROR, message, e);
     }
+    public static void error(Class<?> tClass, String message, Exception e) {
+        message = modifyMessageAddClass(tClass, message);
+        error(message, e);
+    }
+    public static void error(Class<?> tClass, String message) {error(tClass, message, null);}
+
+    public static void severe(String message, Exception e) {
+        if (logClass)
+            message = modifyMessageIncludeClass(Arrays.asList(Thread.currentThread().getStackTrace()), message);
+
+        if (shouldPrintStackTrace && e != null)
+            e.printStackTrace();
+
+        log(LEVEL.SEVERE, message);
+        saveLog(LEVEL.SEVERE, message, e);
+    }
+    public static void severe(Class<?> tClass, String message, Exception e) {
+        message = modifyMessageAddClass(tClass, message);
+        severe(message, e);
+    }
+    public static void severe(Class<?> tClass, String message) {severe(tClass, message, null);}
 
     /**
      * This is a pass log
      * @param message message to display
      */
     public static void pass(String message) {
+        if (logClass)
+            message = modifyMessageIncludeClass(Arrays.asList(Thread.currentThread().getStackTrace()), message);
+
+        saveLog(LEVEL.PASS, message);
         log(LEVEL.PASS, message);
+    }
+    public static void pass(Class<?> tClass, String message) {
+        message = modifyMessageAddClass(tClass, message);
+        pass(message);
     }
 
     /**
@@ -138,7 +202,15 @@ public class Logger {
      * @param message message to display
      */
     public static void fail(String message) {
+        if (logClass)
+            message = modifyMessageIncludeClass(Arrays.asList(Thread.currentThread().getStackTrace()), message);
+
+        saveLog(LEVEL.FAIL, message);
         log(LEVEL.FAIL, message);
+    }
+    public static void fail(Class<?> tClass, String message) {
+        message = modifyMessageAddClass(tClass, message);
+        fail(message);
     }
 
     /**
@@ -146,7 +218,35 @@ public class Logger {
      * @param message message to display
      */
     public static void head(String message) {
+        if (logClass)
+            message = modifyMessageIncludeClass(Arrays.asList(Thread.currentThread().getStackTrace()), message);
+
+        saveLog(LEVEL.HEAD, message);
         log(LEVEL.HEAD, message);
+    }
+    public static void head(Class<?> tClass, String message) {
+        message = modifyMessageAddClass(tClass, message);
+        head(message);
+    }
+
+    public static String modifyMessageIncludeClass(List<StackTraceElement> stackTrace, String message) {
+        StackTraceElement lastElement = stackTrace.get(stackTrace.size() - 1);
+        String className = null;
+        try {
+            Class<?> tClass = Class.forName(lastElement.getClassName());
+            className = tClass.getSimpleName();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        StringBuilder str = new StringBuilder();
+        str.append("[").append(className).append("] ").append(message);
+        return str.toString();
+    }
+    public static String modifyMessageAddClass(Class<?> tClass, String message) {
+        String className = tClass.getSimpleName().toUpperCase();
+        StringBuilder str = new StringBuilder();
+        str.append("[").append(className).append("] ").append(message);
+        return null;
     }
 
     /**
@@ -261,8 +361,38 @@ public class Logger {
     public static LEVEL getLogLevel() {
         return logLevel;
     }
-
     public static void setLogLevel(LEVEL logLevel) {
         Logger.logLevel = logLevel;
+    }
+
+    public static void setUpLogSaver() {
+        if (logSaver == null)
+            logSaver = new LogSaver("logs");
+    }
+
+    private static void saveLog(LEVEL level, String message, Exception e) {
+        if (logSaver != null)
+            logSaver.log(level, message, e);
+    }
+    private static void saveLog(LEVEL level, String message) {
+        saveLog(level, message, null);
+    }
+
+    /**
+     * Flushes the logger to make sure all the logs are saved
+     */
+    public static void flush() {
+        if (logSaver != null)
+            logSaver.flush();
+    }
+    public static LogSaver getLogSaver() {
+        return logSaver;
+    }
+
+    public static boolean isLogClass() {
+        return logClass;
+    }
+    public static void setLogClass(boolean logClass) {
+        Logger.logClass = logClass;
     }
 }

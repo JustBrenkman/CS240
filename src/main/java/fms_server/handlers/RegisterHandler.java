@@ -1,6 +1,7 @@
 package fms_server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
+import fms_server.logging.Logger;
 
 import java.io.IOException;
 
@@ -15,6 +16,8 @@ public class RegisterHandler implements Handler {
      */
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-
+        Logger.info(RegisterHandler.class, "/user/register");
+        exchange.getResponseBody().write(202);
+        exchange.close();
     }
 }

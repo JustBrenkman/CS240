@@ -7,6 +7,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -46,7 +48,7 @@ public abstract class AbstractModel<T> {
         try {
             Constructor<T> constructor = tClass.getDeclaredConstructor(); // Gets the protected constructor
             model = constructor.newInstance((Object[]) null);
-            Field[] fields = tClass.getDeclaredFields();
+            List<Field> fields = Arrays.asList(tClass.getDeclaredFields());
             Field[] superFields = tClass.getSuperclass().getDeclaredFields();
             for (Field field : fields) {
                 try {
@@ -63,10 +65,7 @@ public abstract class AbstractModel<T> {
                 }
             }
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-//            e.printStackTrace();
-//            Logger.setShouldPrintStackTrace(true);
             Logger.error("Unable to cast, something went wrong with generating the model. Try adding an empty public constructor", e);
-//            Logger.setShouldPrintStackTrace(false);
             throw new ModelDoesNotFitException();
         }
         return model;

@@ -14,6 +14,10 @@ public class UserDAOTest {
         DataBase.createTables();
     }
 
+    /**
+     * Clear the tables before each test
+     * @throws DataBaseException If something goes wrong
+     */
     @BeforeEach
     void clearTables() throws DataBaseException {
         UserDAO userDAO = new UserDAO();

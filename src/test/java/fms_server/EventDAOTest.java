@@ -11,6 +11,7 @@ import org.junit.jupiter.api.*;
 public class EventDAOTest {
     @BeforeAll
     static void setup() throws DataBaseException {
+        Logger.setUpLogSaver();
         Logger.setLogLevel(Logger.LEVEL.INFO);
         Logger.setShouldPrintStackTrace(false);
         Logger.head("Testing EventDAO test cases");
@@ -166,5 +167,6 @@ public class EventDAOTest {
     @AfterAll
     public static void end() {
         Logger.line();
+        Logger.flush();
     }
 }
