@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * /fill extension handler
  */
-public class FillHandler implements Handler {
+public class FillHandler extends Handler {
     /**
      * Handles the httpexchange information to fill the database with generated information
      * @param exchange HttpExchange that has information about the request

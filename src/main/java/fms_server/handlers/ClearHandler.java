@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * Handles the clear extension
  */
-public class ClearHandler implements Handler {
+public class ClearHandler extends Handler {
     /**
      * This function will handle the /clear path. Will clear all information in the databases
      * @param exchange The HttpExchange information

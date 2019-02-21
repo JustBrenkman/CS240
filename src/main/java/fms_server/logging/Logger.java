@@ -230,11 +230,20 @@ public class Logger {
     }
 
     public static String modifyMessageIncludeClass(List<StackTraceElement> stackTrace, String message) {
-        StackTraceElement lastElement = stackTrace.get(stackTrace.size() - 1);
+        StackTraceElement lastElement = null;
+        for (StackTraceElement element : stackTrace) {
+            if (!element.getClassName().toLowerCase().contains("logger") && !element.getClassName().toLowerCase().contains("thread")) {
+                lastElement = element;
+                break;
+            }
+        }
         String className = null;
         try {
-            Class<?> tClass = Class.forName(lastElement.getClassName());
-            className = tClass.getSimpleName();
+            Class<?> tClass = null;
+            if (lastElement != null) {
+                tClass = Class.forName(lastElement.getClassName());
+                className = tClass.getSimpleName();
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -243,10 +252,10 @@ public class Logger {
         return str.toString();
     }
     public static String modifyMessageAddClass(Class<?> tClass, String message) {
-        String className = tClass.getSimpleName().toUpperCase();
+        String className = tClass.getSimpleName();
         StringBuilder str = new StringBuilder();
         str.append("[").append(className).append("] ").append(message);
-        return null;
+        return str.toString();
     }
 
     /**

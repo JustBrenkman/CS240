@@ -6,7 +6,10 @@ import fms_server.logging.LogSaver;
 import fms_server.logging.Logger;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 public class FMSServer {
     private int port;
@@ -16,10 +19,17 @@ public class FMSServer {
         FMSServer server = new FMSServer();
         server.setupLogging();
         try {
-            server.startServer();
+            server.startServer(4201);
             Logger.head("Started server listening on http://localhost:" + server.getPort() + "/");
+            StringBuilder str = new StringBuilder();
+            for (String add : server.getMachineAddresses())
+                str.append(", http://").append(add).append(":").append(server.getPort()).append("/");
+            Logger.head("Running on machine at these addresses" + str.toString());
+            Logger.warn("Server is running in production mode, this could result in unnecessary changes to the database");
         } catch (IOException e) {
             Logger.severe("Unable to start server, check the log file to see what went wrong", e);
+        } finally {
+            Logger.flush();
         }
     }
 
@@ -48,6 +58,29 @@ public class FMSServer {
         if (inetSocketAddress == null)
             return null;
         return inetSocketAddress.getHostName();
+    }
+
+    public List<String> getMachineAddresses() throws SocketException {
+        List<String> addresses = new ArrayList<>();
+        for (
+                final Enumeration< NetworkInterface > interfaces =
+                NetworkInterface.getNetworkInterfaces( );
+                interfaces.hasMoreElements( );
+        ) {
+            final NetworkInterface cur = interfaces.nextElement();
+            if (cur.isLoopback()) {
+                continue;
+            }
+            for (final InterfaceAddress addr : cur.getInterfaceAddresses()) {
+                final InetAddress inet_addr = addr.getAddress();
+
+                if (!(inet_addr instanceof Inet4Address)) {
+                    continue;
+                }
+                addresses.add(inet_addr.getHostAddress());
+            }
+        }
+        return addresses;
     }
 
     private void setupLogging() {
