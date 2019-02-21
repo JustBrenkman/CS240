@@ -229,6 +229,12 @@ public class Logger {
         head(message);
     }
 
+    /**
+     * This uses the stack trace to get the class that called the logger
+     * @param stackTrace Thread stack trace, will filter Thread and Logger classes from it
+     * @param message message to modify
+     * @return the modified message
+     */
     public static String modifyMessageIncludeClass(List<StackTraceElement> stackTrace, String message) {
         StackTraceElement lastElement = null;
         for (StackTraceElement element : stackTrace) {
@@ -251,6 +257,13 @@ public class Logger {
         str.append("[").append(className).append("] ").append(message);
         return str.toString();
     }
+
+    /**
+     * Adds a class tag to the message string
+     * @param tClass class to add to message
+     * @param message message to modify
+     * @return modified message
+     */
     public static String modifyMessageAddClass(Class<?> tClass, String message) {
         String className = tClass.getSimpleName();
         StringBuilder str = new StringBuilder();
