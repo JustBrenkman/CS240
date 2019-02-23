@@ -6,6 +6,7 @@ import fms_server.models.ModelDoesNotFitException;
 import fms_server.models.User;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,24 +58,24 @@ public class UserDAO implements IDatabaseAccessObject<User, String> {
 
     /**
      * Gets a user based on email to check
-     * @param email email of user
+     * @param username email of user
      * @return user object with email as above
      */
-    public User getUserByEmail(String email) throws DataBaseException, ModelNotFoundException {
-        String sql = "SELECT * FROM users WHERE email=?";
+    public User getUserByUsername(String username) throws DataBaseException, ModelNotFoundException {
+        String sql = "SELECT * FROM users WHERE username=?";
         User user = null;
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, email);
+            stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 user = AbstractModel.castToModel(User.class, rs);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new DataBaseException("Failed to get user, something is wrong with the SQL command: " + sql);
         } catch (ModelDoesNotFitException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new DataBaseException("Failed to convert entry to model");
         } finally {
             DataBase.closeConnection(true);
@@ -91,8 +92,29 @@ public class UserDAO implements IDatabaseAccessObject<User, String> {
      * @return list of all users in database
      */
     @Override
-    public List<User> getAll() {
-        return null;
+    public List<User> getAll() throws DataBaseException, ModelNotFoundException {
+        String sql = "SELECT * FROM users";
+        List<User> users = new ArrayList<>();
+        Connection connection = DataBase.getConnection(false);
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                users.add(AbstractModel.castToModel(User.class, rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to get user, something is wrong with the SQL command: " + sql);
+        } catch (ModelDoesNotFitException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to convert entry to model");
+        } finally {
+            DataBase.closeConnection(true);
+        }
+
+        if (users.isEmpty())
+            throw new ModelNotFoundException("Could not find user, likely wrong id");
+
+        return users;
     }
 
     /**
@@ -116,6 +138,7 @@ public class UserDAO implements IDatabaseAccessObject<User, String> {
 
             stmt.executeUpdate();
             commit = true;
+            Logger.info("Added: " + user.toString());
         } catch (SQLException e) {
 //            e.printStackTrace();
             Logger.warn("Failed to add user object, check password or could be identical", e);

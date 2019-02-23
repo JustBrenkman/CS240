@@ -4,7 +4,7 @@ public class LoginRequest {
     /**
      * Username of the user attempting to login
      */
-    private final String userName;
+    private final String username;
     /**
      * Password of the user attempting to login, un-hashed
      */
@@ -16,12 +16,12 @@ public class LoginRequest {
      * @param password password of the user attempting to login not null
      */
     public LoginRequest(String userName, String password) {
-        this.userName = userName;
+        this.username = userName;
         this.password = password;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {

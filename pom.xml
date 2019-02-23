@@ -68,6 +68,14 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.8.11</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>27.0.1-jre</version>
+        </dependency>
+
     </dependencies>
     
 </project>

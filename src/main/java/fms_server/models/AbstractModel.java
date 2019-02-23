@@ -83,4 +83,32 @@ public abstract class AbstractModel<T> {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    /**
+     * Converts any arbitrary object to string.
+     * @return String representation of the object
+     */
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append( this.getClass().getSimpleName() );
+        Field[] fields = this.getClass().getDeclaredFields();
+        Field[] superfields = this.getClass().getSuperclass().getDeclaredFields();
+        for ( Field field : superfields) {
+            result.append(", ");
+            try {
+                result.append( field.getName()).append(": ").append( field.get(this));
+            } catch ( IllegalAccessException ex ) {
+                Logger.warn("Unable to access field: " + field.getName());
+            }
+        }
+        for ( Field field : fields ) {
+            result.append(", ");
+            try {
+                result.append( field.getName()).append(": ").append( field.get(this));
+            } catch ( IllegalAccessException ex ) {
+                Logger.warn("Unable to access field: " + field.getName());
+            }
+        }
+        return result.toString();
+    }
 }

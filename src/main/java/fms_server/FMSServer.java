@@ -1,12 +1,18 @@
 package fms_server;
 
 import com.sun.net.httpserver.HttpServer;
+import fms_server.handlers.ClearHandler;
+import fms_server.handlers.LoginHandler;
+import fms_server.handlers.PersonsHandler;
 import fms_server.handlers.RegisterHandler;
 import fms_server.logging.LogSaver;
 import fms_server.logging.Logger;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 import java.io.IOException;
 import java.net.*;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -14,6 +20,20 @@ import java.util.List;
 public class FMSServer {
     private int port;
     private InetSocketAddress inetSocketAddress;
+    private final String registerURL = "/user/register";
+    private final String clearURL = "/clear";
+    private final String loginURL = "/user/login";
+    private final String personsURL = "/person";
+    private final String eventsURL = "/event";
+    private static final Key key;
+
+    static {
+        key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    }
+
+    public static Key getKey() {
+        return key;
+    }
 
     public static void main(String...args) {
         FMSServer server = new FMSServer();
@@ -46,8 +66,11 @@ public class FMSServer {
     }
 
     private void registerHandlers(HttpServer server) {
-        server.createContext("/user/register", new RegisterHandler());
-        Logger.info("Added register handler");
+        Logger.info("Creating handlers");
+        server.createContext(registerURL, new RegisterHandler(registerURL));
+        server.createContext(clearURL, new ClearHandler(clearURL));
+        server.createContext(loginURL, new LoginHandler(loginURL));
+        server.createContext(personsURL, new PersonsHandler(personsURL));
     }
 
     public int getPort() {
@@ -88,5 +111,13 @@ public class FMSServer {
         Logger.setShouldPrintStackTrace(false);
         Logger.setLogClass(true);
         Logger.setLogSaver(new LogSaver("logs"));
+    }
+
+    public InetSocketAddress getInetSocketAddress() {
+        return inetSocketAddress;
+    }
+
+    public String getRegisterURL() {
+        return registerURL;
     }
 }

@@ -15,7 +15,7 @@ public class EventRequest extends AuthenticatedRequest {
      * @param eventID id of the event that is in question
      */
     public EventRequest(AuthToken token, int eventID) {
-        super(token);
+        super(token.getAuthTokenString());
         this.eventID = eventID;
     }
 

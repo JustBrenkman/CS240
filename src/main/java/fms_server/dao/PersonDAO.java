@@ -1,28 +1,50 @@
 package fms_server.dao;
 
+import fms_server.logging.Logger;
+import fms_server.models.AbstractModel;
+import fms_server.models.ModelDoesNotFitException;
 import fms_server.models.Person;
 import fms_server.models.User;
 
-import javax.xml.crypto.Data;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Person Database Access Object
  */
-public class PersonDAO implements IDatabaseAccessObject<Person, Integer> {
+public class PersonDAO implements IDatabaseAccessObject<Person, String> {
     /**
      * Get's person object from database
      * @param id Identifier of object
      * @return person object
      */
     @Override
-    public Person get(Integer id) throws DataBaseException {
-        return null;
+    public Person get(String id) throws DataBaseException, ModelNotFoundException {
+        String sql = "SELECT * FROM persons WHERE id=?";
+        Person person = null;
+        Connection connection = DataBase.getConnection(false);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                person = AbstractModel.castToModel(Person.class, rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to get person, something is wrong with the SQL command: " + sql);
+        } catch (ModelDoesNotFitException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to convert entry to model");
+        } finally {
+            DataBase.closeConnection(true);
+        }
+
+        if (person == null)
+            throw new ModelNotFoundException("Could not find person, likely wrong id");
+
+        return person;
     }
 
     /**
@@ -30,8 +52,29 @@ public class PersonDAO implements IDatabaseAccessObject<Person, Integer> {
      * @return List of person objects
      */
     @Override
-    public List<Person> getAll() {
-        return null;
+    public List<Person> getAll() throws DataBaseException, ModelNotFoundException {
+        String sql = "SELECT * FROM persons";
+        List<Person> persons = new ArrayList<>();
+        Connection connection = DataBase.getConnection(false);
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                persons.add(AbstractModel.castToModel(Person.class, rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to get person, something is wrong with the SQL command: " + sql);
+        } catch (ModelDoesNotFitException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to convert entry to model");
+        } finally {
+            DataBase.closeConnection(true);
+        }
+
+        if (persons.isEmpty())
+            throw new ModelNotFoundException("Could not find person, likely wrong id");
+
+        return persons;
     }
 
     /**
@@ -39,8 +82,31 @@ public class PersonDAO implements IDatabaseAccessObject<Person, Integer> {
      * @param person person object
      */
     @Override
-    public void add(Person person) {
+    public void add(Person person) throws DataBaseException {
+        boolean commit = false;
+        String sql = "INSERT INTO persons (id, descendant, firstName, lastName, gender, fatherID, motherID, spouseID)" +
+                "VALUES (?,?,?,?,?,?,?,?)";
+        Connection connection = DataBase.getConnection(false);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, person.getId());
+            stmt.setString(2, person.getDescendant());
+            stmt.setString(3, person.getFirstName());
+            stmt.setString(4, person.getLastName());
+            stmt.setObject(5, person.getGender());
+            stmt.setObject(6, person.getFatherID());
+            stmt.setObject(7, person.getMotherID());
+            stmt.setObject(8, person.getSpouseID());
 
+            stmt.executeUpdate();
+            commit = true;
+            Logger.info("Added: " + person.toString());
+        } catch (SQLException e) {
+//            e.printStackTrace();
+            Logger.warn("Failed to add person object, check password or could be identical", e);
+            throw new DataBaseException("Unable to perform query");
+        } finally {
+            DataBase.closeConnection(commit);
+        }
     }
 
     /**
@@ -58,7 +124,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, Integer> {
      * @return boolean
      */
     @Override
-    public boolean doesExist(Integer id) {
+    public boolean doesExist(String id) {
         return false;
     }
 
@@ -67,16 +133,38 @@ public class PersonDAO implements IDatabaseAccessObject<Person, Integer> {
      * @param id identifier of the object
      */
     @Override
-    public void delete(Integer id) {
-
+    public void delete(String id) throws DataBaseException, ModelNotFoundException {
+        String sql = "DELETE FROM persons WHERE id=?";
+        boolean commit = false;
+        Connection connection = DataBase.getConnection(false);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            commit = stmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Unable remove entry");
+        } finally {
+            DataBase.closeConnection(commit);
+        }
+        if (!commit)
+            throw new ModelNotFoundException("SQL query did not delete anything");
     }
 
     /**
      * Clears all persons
      */
     @Override
-    public void clear() {
-
+    public void clear() throws DataBaseException {
+        String sql = "DELETE FROM persons";
+        Connection connection = DataBase.getConnection(false);
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Unable to truncate table");
+        } finally {
+            DataBase.closeConnection(true);
+        }
     }
 
     /**
@@ -90,9 +178,9 @@ public class PersonDAO implements IDatabaseAccessObject<Person, Integer> {
     }
 
     /**
-     * Gets a list of persons that are associated with the user
-     * @param user user that is in question
+     * Gets a list of persons that are associated with the person
+     * @param person person that is in question
      * @return List of person objects
      */
-    public List<Person> filterByUser(User user) {return null;}
+    public List<Person> filterByUser(User person) {return null;}
 }

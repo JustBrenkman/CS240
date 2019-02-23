@@ -1,37 +1,41 @@
 package fms_server.models;
 
+import fms_server.requests.RegisterRequest;
+
+import java.util.UUID;
+
 /**
  * Person model class
  */
-public class Person extends AbstractModel<Integer> {
+public class Person extends AbstractModel<String> {
     /**
      * User (Username) to which this person belongs
      */
-    private String descendant;
+    protected String descendant;
     /**
      * Person’s first name (non-empty string)
      */
-    private String firstName;
+    protected String firstName;
     /**
      * Person’s last name (non-empty string)
      */
-    private String lastName;
+    protected String lastName;
     /**
      *  Person’s gender (char: 'f' or 'm')
      */
-    private char gender;
+    protected String gender;
     /**
      * ID of person’s father (possibly null)
      */
-    private int fatherID;
+    protected String fatherID;
     /**
      * Mother: ID of person’s mother (possibly null)
      */
-    private int motherID;
+    protected String motherID;
     /**
      * Spouse: ID of person’s spouse (possibly null)
      */
-    private int spouseID;
+    protected String spouseID;
 
     /**
      * Constructor for the person object
@@ -44,7 +48,7 @@ public class Person extends AbstractModel<Integer> {
      * @param motherID - mother id of the person
      * @param spouseID - spouse id of the person
      */
-    public Person(int personID, String descendant, String firstName, String lastName, char gender, int fatherID, int motherID, int spouseID) {
+    public Person(String personID, String descendant, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
         this.setId(personID);
         this.descendant = descendant;
         this.firstName = firstName;
@@ -55,11 +59,21 @@ public class Person extends AbstractModel<Integer> {
         this.spouseID = spouseID;
     }
 
+    public Person(RegisterRequest request) {
+        this.setId(UUID.randomUUID().toString());
+        this.descendant = request.getUsername();
+        this.firstName = request.getFirstName();
+        this.lastName = request.getLastName();
+        this.gender = request.getGender();
+    }
+
+    protected Person() {}
+
     /**
      * Getter for the person id
      * @return - person id
      */
-    public int getPersonID() {
+    public String getPersonID() {
         return this.getId();
     }
 
@@ -67,7 +81,7 @@ public class Person extends AbstractModel<Integer> {
      * Setter for person id
      * @param personID - person id
      */
-    public void setPersonID(int personID) {
+    public void setPersonID(String personID) {
         this.setId(personID);
     }
 
@@ -123,7 +137,7 @@ public class Person extends AbstractModel<Integer> {
      * Getter for the gender of the person
      * @return - gender of the person
      */
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
@@ -131,7 +145,7 @@ public class Person extends AbstractModel<Integer> {
      * Setter for the gender of the person
      * @param gender - person's gender
      */
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -139,7 +153,7 @@ public class Person extends AbstractModel<Integer> {
      * Getter for father's id
      * @return - id of the father
      */
-    public int getFatherID() {
+    public String getFatherID() {
         return fatherID;
     }
 
@@ -147,7 +161,7 @@ public class Person extends AbstractModel<Integer> {
      * Setter for the father
      * @param fatherID - father's id
      */
-    public void setFatherID(int fatherID) {
+    public void setFatherID(String fatherID) {
         this.fatherID = fatherID;
     }
 
@@ -155,7 +169,7 @@ public class Person extends AbstractModel<Integer> {
      * Getter for mother's id
      * @return - mother's id
      */
-    public int getMotherID() {
+    public String getMotherID() {
         return motherID;
     }
 
@@ -163,7 +177,7 @@ public class Person extends AbstractModel<Integer> {
      * Setter for mother's id
      * @param motherID - mother's id
      */
-    public void setMotherID(int motherID) {
+    public void setMotherID(String motherID) {
         this.motherID = motherID;
     }
 
@@ -171,7 +185,7 @@ public class Person extends AbstractModel<Integer> {
      * Getter for spouse's id
      * @return spouse's id
      */
-    public int getSpouseID() {
+    public String getSpouseID() {
         return spouseID;
     }
 
@@ -179,7 +193,7 @@ public class Person extends AbstractModel<Integer> {
      * Setter for spouse's id
      * @param spouseID - spouse's id
      */
-    public void setSpouseID(int spouseID) {
+    public void setSpouseID(String spouseID) {
         this.spouseID = spouseID;
     }
 }

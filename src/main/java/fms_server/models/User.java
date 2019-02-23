@@ -1,6 +1,11 @@
 package fms_server.models;
 
+import com.google.common.hash.Hashing;
+import fms_server.requests.RegisterRequest;
+
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * User model class
@@ -56,6 +61,16 @@ public class User extends AbstractModel<String> {
      */
     protected User() {
         super();
+    }
+
+    public User(String personId, RegisterRequest request) {
+        this.setId(personId);
+        this.username = request.getUsername();
+        this.password = Hashing.sha256().hashString(request.getPassword(), StandardCharsets.UTF_8).toString();
+        this.email = request.getEmail();
+        this.firstName = request.getFirstName();
+        this.lastName = request.getLastName();
+        this.gender = String.valueOf(request.getGender());
     }
 
     /**

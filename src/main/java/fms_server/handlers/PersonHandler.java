@@ -4,11 +4,8 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 
-/**
- * /fill extension handler
- */
-public class FillHandler extends Handler {
-    FillHandler(String url) {
+public class PersonHandler extends Handler {
+    public PersonHandler(String url) {
         super(url);
     }
 

@@ -105,7 +105,7 @@ public class Logger {
         if (level.ordinal() >= logLevel.ordinal()) {
             Calendar calendar = Calendar.getInstance();
             String timestamp = new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss:mmm").format(calendar.getTime());
-            System.out.println(format(fg_message, bg_message) + "[" + timestamp + "]" + format(fg_tag, bg_tag, FORMATS.BOLD) + "[" + level.name() + "] " + format(fg_message, bg_message) + message + format(COLOR.NULL, COLOR.NULL));
+            System.out.println(format(fg_message, bg_message) + "[" + timestamp + "]" + format(fg_tag, bg_tag, FORMATS.BOLD) + "[" + level.name() + "]" + format(fg_message, bg_message) + " " + message + format(COLOR.NULL, COLOR.NULL));
         }
     }
 

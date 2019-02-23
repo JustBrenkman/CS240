@@ -95,7 +95,7 @@ public class UserDAOTest {
         User userToCheck = new User("JustBrenkman", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman@gmail.com", "Ben", "Brenkman", "m", "1");
         try {
             userDAO.add(userToCheck);
-            Assertions.assertEquals(userToCheck, userDAO.getUserByEmail("JustBrenkman@gmail.com"));
+            Assertions.assertEquals(userToCheck, userDAO.getUserByUsername("JustBrenkman"));
         } catch (DataBaseException | ModelNotFoundException e) {
             Logger.fail("Failed to retrieve user by email");
             Assertions.fail();

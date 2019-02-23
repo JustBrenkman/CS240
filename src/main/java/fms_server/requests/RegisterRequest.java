@@ -1,30 +1,30 @@
 package fms_server.requests;
 
-public class RegisterRequest {
+public class RegisterRequest extends Request {
     /**
      * User Name of the user being registered, not null
      */
-    private final String userName;
+    protected final String username;
     /**
      * Password un hashed of the user, not null
      */
-    private final String password;
+    protected final String password;
     /**
      * Email address, not null
      */
-    private final String email;
+    protected final String email;
     /**
      * First name of the user, not ull
      */
-    private final String firstName;
+    protected final String firstName;
     /**
      * Last name of the user, not null
      */
-    private final String lastName;
+    protected final String lastName;
     /**
      * Gender of the person, not null
      */
-    private final char gender;
+    protected final String gender;
 
     /**
      * Constructor of the register request
@@ -35,8 +35,8 @@ public class RegisterRequest {
      * @param lastName last name of the user not null
      * @param gender gender of the user not null
      */
-    public RegisterRequest(String userName, String password, String email, String firstName, String lastName, char gender) {
-        this.userName = userName;
+    public RegisterRequest(String userName, String password, String email, String firstName, String lastName, String gender) {
+        this.username = userName;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
@@ -44,8 +44,8 @@ public class RegisterRequest {
         this.gender = gender;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
@@ -64,7 +64,7 @@ public class RegisterRequest {
         return lastName;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 }

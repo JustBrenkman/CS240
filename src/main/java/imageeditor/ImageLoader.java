@@ -50,17 +50,14 @@ class ImageLoader {
                 switch (state) {
                     case 0:
                         width = Integer.valueOf(next);
-//                        System.out.printf("Width: %d \n", width);
                         state = 1;
                         break;
                     case 1:
                         heigth = Integer.valueOf(next);
-//                        System.out.printf("Height: %d \n", heigth);
                         state = 2;
                         break;
                     case 2:
                         maxVal = Integer.valueOf(next);
-//                        System.out.printf("Max Val: %d \n", maxVal);
                         state = 3;
                         break;
                     case 3:

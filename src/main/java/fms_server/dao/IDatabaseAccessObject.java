@@ -20,7 +20,7 @@ public interface IDatabaseAccessObject<T, V> {
      * Returns all objects in the database
      * @return a list of all the objects in the database
      */
-    List<T> getAll();
+    List<T> getAll() throws DataBaseException, ModelNotFoundException;
 
     /**
      * Adds a new object to the database

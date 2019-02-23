@@ -6,7 +6,7 @@ import fms_server.models.AuthToken;
  * This is the register result class
  */
 public class RegisterResult extends Result {
-    private final AuthToken authToken;
+    private final String authToken;
 
     /**
      * Creates new Register result
@@ -16,14 +16,14 @@ public class RegisterResult extends Result {
      */
     public RegisterResult(boolean success, String message, AuthToken token) {
         super(success, message);
-        this.authToken = token;
+        this.authToken = (token == null)? null : token.getAuthTokenString();
     }
 
     /**
      * Gets the authentication token
      * @return AuthToken
      */
-    public AuthToken getAuthToken() {
+    public String getAuthToken() {
         return authToken;
     }
 }

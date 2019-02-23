@@ -8,13 +8,15 @@ public class AuthToken {
      * Authentication token
      */
     private String authToken;
-
+    private String subject;
     /**
      * Constructor for the authentication token
      * @param authToken authentication string
+     * @param subject Authdata to include in authtoken
      */
-    public AuthToken(String authToken) {
+    public AuthToken(String authToken, String subject) {
         this.authToken = authToken;
+        this.subject = subject;
     }
 
     /**
@@ -23,11 +25,7 @@ public class AuthToken {
      */
     public boolean isAuthenticated(){return true;}
 
-    public String getAuthToken() {
+    public String getAuthTokenString() {
         return authToken;
-    }
-
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
     }
 }

@@ -58,7 +58,7 @@ public class DataBase {
         getConnection(false);
         try (Statement stmt = connection.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS `events` (" +
-                    "`id`    VARCHAR( 32 ) NOT NULL PRIMARY KEY UNIQUE," +
+                    "`id`    VARCHAR( 36 )NOT NULL PRIMARY KEY UNIQUE," +
                     "`descendant` VARCHAR( 50 ) NOT NULL," +
                     "`personID`   VARCHAR( 32 ) NOT NULL," +
                     "`latitude`   DOUBLE NOT NULL," +
@@ -72,7 +72,7 @@ public class DataBase {
                     ");";
 
             String sql_persons = "CREATE TABLE IF NOT EXISTS `persons` (\n" +
-                    "`id`\t VARCHAR( 32 ) NOT NULL PRIMARY KEY UNIQUE,\n" +
+                    "`id`\t VARCHAR( 36 ) NOT NULL PRIMARY KEY UNIQUE,\n" +
                     "`descendant` VARCHAR( 50 ) NOT NULL,\n" +
                     "`firstName`  VARCHAR( 50 ) NOT NULL,\n" +
                     "`lastName`   VARCHAR( 50 ) NOT NULL,\n" +
@@ -83,7 +83,7 @@ public class DataBase {
                     ");";
 
             String sql_users = "CREATE TABLE IF NOT EXISTS `users` (\n" +
-                    "`id`  VARCHAR ( 32 ) NOT NULL UNIQUE,\n" +
+                    "`id`  VARCHAR ( 36 ) NOT NULL UNIQUE,\n" +
                     "`email`     VARCHAR ( 50) NOT NULL UNIQUE,\n" +
                     "`username`  VARCHAR ( 50 ) NOT NULL UNIQUE,\n" +
                     "`password`  BINARY  ( 128 ) NOT NULL,\n" +

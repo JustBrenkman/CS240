@@ -8,7 +8,7 @@ public class AuthenticatedRequest {
     /**
      * Authentication token
      */
-    private final AuthToken token;
+    private final String token;
 
 //    /**
 //     * Additional parameters
@@ -20,12 +20,11 @@ public class AuthenticatedRequest {
      * @param token authentication token
 //     * @param params additional parameters in request
      */
-    public AuthenticatedRequest(AuthToken token) {
+    public AuthenticatedRequest(String token) {
         this.token = token;
-//        this.params = params;
     }
 
-    public AuthToken getToken() {
+    public String getToken() {
         return token;
     }
 
