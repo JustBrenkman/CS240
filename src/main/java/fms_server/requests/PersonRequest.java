@@ -4,27 +4,31 @@ public class PersonRequest {
     /**
      * Authentication token
      */
-    private final String authToken;
+    private String authToken;
     /**
      * Person ID to get information about
      */
-    private final int personID;
+    private final String personID;
 
     /**
      * Constructor for the person request
      * @param authToken authentication token
      * @param personID person id
      */
-    public PersonRequest(String authToken, int personID) {
+    public PersonRequest(String authToken, String personID) {
         this.authToken = authToken;
         this.personID = personID;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 
     public String getAuthToken() {
         return authToken;
     }
 
-    public int getPersonID() {
+    public String getPersonID() {
         return personID;
     }
 }

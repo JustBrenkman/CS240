@@ -15,8 +15,7 @@ import java.io.IOException;
 public class LoginHandler extends Handler {
     LoginService service;
 
-    public LoginHandler(String url) {
-        super(url);
+    public LoginHandler() {
         service = new LoginService(new UserDAO());
     }
 

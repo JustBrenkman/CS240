@@ -8,8 +8,7 @@ import java.io.IOException;
  * /fill extension handler
  */
 public class FillHandler extends Handler {
-    FillHandler(String url) {
-        super(url);
+    FillHandler() {
     }
 
     @Override

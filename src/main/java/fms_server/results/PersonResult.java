@@ -1,5 +1,7 @@
 package fms_server.results;
 
+import fms_server.models.Person;
+
 public class PersonResult extends Result {
     /**
      * Descendant of person
@@ -8,7 +10,7 @@ public class PersonResult extends Result {
     /**
      * Peron's id
      */
-    private final int personID;
+    private final String personID;
     /**
      * Person's first name
      */
@@ -20,19 +22,19 @@ public class PersonResult extends Result {
     /**
      * Person's gender
      */
-    private final char gender;
+    private final String gender;
     /**
      * Father's id
      */
-    private final int fatherID;
+    private final String fatherID;
     /**
      * Mother's ID
      */
-    private final int motherID;
+    private final String motherID;
     /**
      * Spouse's id
      */
-    private final int spouseID;
+    private final String spouseID;
 
 
     /**
@@ -48,7 +50,7 @@ public class PersonResult extends Result {
      * @param motherID mother's id can be null
      * @param spouseID spouse's id can be null
      */
-    public PersonResult(boolean success, String message, String descendant, int personID, String firstName, String lastName, char gender, int fatherID, int motherID, int spouseID) {
+    public PersonResult(boolean success, String message, String descendant, String personID, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
         super(success, message);
         this.descendant = descendant;
         this.personID = personID;
@@ -60,11 +62,34 @@ public class PersonResult extends Result {
         this.spouseID = spouseID;
     }
 
+    public PersonResult(boolean success, String message, Person person) {
+        super(success, message);
+        if (person != null) {
+            this.descendant = person.getDescendant();
+            this.personID = person.getId();
+            this.firstName = person.getFirstName();
+            this.lastName = person.getLastName();
+            this.gender = person.getGender();
+            this.fatherID = person.getFatherID();
+            this.motherID = person.getMotherID();
+            this.spouseID = person.getSpouseID();
+        } else {
+            this.descendant = null;
+            this.personID = null;
+            this.firstName = null;
+            this.lastName = null;
+            this.gender = null;
+            this.fatherID = null;
+            this.motherID = null;
+            this.spouseID = null;
+        }
+    }
+
     public String getDescendant() {
         return descendant;
     }
 
-    public int getPersonID() {
+    public String getPersonID() {
         return personID;
     }
 
@@ -76,19 +101,19 @@ public class PersonResult extends Result {
         return lastName;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public int getFatherID() {
+    public String getFatherID() {
         return fatherID;
     }
 
-    public int getMotherID() {
+    public String getMotherID() {
         return motherID;
     }
 
-    public int getSpouseID() {
+    public String getSpouseID() {
         return spouseID;
     }
 }

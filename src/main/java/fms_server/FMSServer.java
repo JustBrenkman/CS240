@@ -1,10 +1,7 @@
 package fms_server;
 
 import com.sun.net.httpserver.HttpServer;
-import fms_server.handlers.ClearHandler;
-import fms_server.handlers.LoginHandler;
-import fms_server.handlers.PersonsHandler;
-import fms_server.handlers.RegisterHandler;
+import fms_server.handlers.*;
 import fms_server.logging.LogSaver;
 import fms_server.logging.Logger;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,7 +20,7 @@ public class FMSServer {
     private final String registerURL = "/user/register";
     private final String clearURL = "/clear";
     private final String loginURL = "/user/login";
-    private final String personsURL = "/person";
+    private final String personURL = "/person";
     private final String eventsURL = "/event";
     private static final Key key;
 
@@ -67,10 +64,11 @@ public class FMSServer {
 
     private void registerHandlers(HttpServer server) {
         Logger.info("Creating handlers");
-        server.createContext(registerURL, new RegisterHandler(registerURL));
-        server.createContext(clearURL, new ClearHandler(clearURL));
-        server.createContext(loginURL, new LoginHandler(loginURL));
-        server.createContext(personsURL, new PersonsHandler(personsURL));
+        server.createContext(registerURL, new RegisterHandler());
+        server.createContext(clearURL, new ClearHandler());
+        server.createContext(loginURL, new LoginHandler());
+        server.createContext(personURL, new PersonHandler());
+        server.createContext(eventsURL, new EventsHandler());
     }
 
     public int getPort() {

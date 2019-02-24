@@ -16,8 +16,7 @@ import java.io.IOException;
 public class RegisterHandler extends Handler {
     private RegisterService service;
 
-    public RegisterHandler(String url) {
-        super(url);
+    public RegisterHandler() {
         service = new RegisterService(new UserDAO(), new PersonDAO());
     }
 

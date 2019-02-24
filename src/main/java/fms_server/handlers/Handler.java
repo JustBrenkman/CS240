@@ -1,26 +1,27 @@
 package fms_server.handlers;
 
 import com.google.gson.Gson;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import fms_server.logging.Logger;
+import fms_server.services.NotAuthenticatedException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class Handler implements HttpHandler {
     /**
      * Gson instance to convert json string into objects
      */
     Gson gson;
-    /**
-     * URL of the handler
-     */
-    private String url;
 
-    public Handler(String url) {
+    public Handler() {
         gson = new Gson();
-        this.url = url;
     }
 
     /**
@@ -31,7 +32,7 @@ public abstract class Handler implements HttpHandler {
      * @return formatted string
      */
     private String getServerCallLog(String handler, HttpExchange exchange, int returnVal) {
-        return " -- " + exchange.getRemoteAddress().getHostName() + " -- \"" + exchange.getRequestMethod() + "\" " + url + " " + exchange.getProtocol() + " " + returnVal;
+        return " -- " + exchange.getRemoteAddress().getHostName() + " -- \"" + exchange.getRequestMethod() + "\" " + exchange.getRequestURI().getPath() + " " + exchange.getProtocol() + " " + returnVal;
     }
 
     /**
@@ -73,7 +74,7 @@ public abstract class Handler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         handleRequest(exchange);
-        Logger.info(getServerCallLog(url, exchange, exchange.getResponseCode()));
+        Logger.head(getServerCallLog(exchange.getRequestURI().getPath(), exchange, exchange.getResponseCode()));
     }
 
     /**
@@ -82,4 +83,18 @@ public abstract class Handler implements HttpHandler {
      * @throws IOException if we are unable to login through exception
      */
     public abstract void handleRequest(HttpExchange exchange) throws IOException;
+
+    public String getAuthToken(Headers headers) throws NotAuthenticatedException {
+//        Logger.info(Arrays.toString(headers.entrySet().toArray()));
+        Set<Map.Entry<String, List<String>>> head = headers.entrySet();
+        for (Map.Entry<String, List<String>> entry : head) {
+            if (entry.getKey().toLowerCase().equals("auth_token")) {
+                if (!entry.getValue().isEmpty()) {
+                    Logger.info("auth_token: " + entry.getValue().get(0));
+                    return entry.getValue().get(0);
+                }
+            }
+        }
+        throw new NotAuthenticatedException("There is no auth_token");
+    }
 }

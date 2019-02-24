@@ -15,8 +15,7 @@ import java.io.IOException;
 public class ClearHandler extends Handler {
     private ClearService service;
 
-    public ClearHandler(String url) {
-        super(url);
+    public ClearHandler() {
         service = new ClearService(new UserDAO(), new EventDAO(), new PersonDAO());
     }
 
