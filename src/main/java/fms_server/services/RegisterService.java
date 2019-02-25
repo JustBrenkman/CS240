@@ -5,7 +5,9 @@ import fms_server.logging.Logger;
 import fms_server.models.Person;
 import fms_server.models.User;
 import fms_server.requests.RegisterRequest;
+import fms_server.results.LoginResult;
 import fms_server.results.RegisterResult;
+import fms_server.results.Result;
 
 import java.util.Random;
 
@@ -26,7 +28,7 @@ public class RegisterService extends Service {
      * @param user RegisterRequest
      * @return A RegisterResult that contains the information about the result of the request
      */
-    public RegisterResult register(RegisterRequest user) {
+    public Result register(RegisterRequest user) {
         Person person = new Person(user);
         User userToAdd = new User(person.getId(), user);
         try {
@@ -36,6 +38,6 @@ public class RegisterService extends Service {
             Logger.error("Unable to add user", e);
             return new RegisterResult(false, "Already a user", null);
         }
-        return new RegisterResult(true, "Successfully register user", generateAuthToken(userToAdd));
+        return new LoginResult(true, "Successfully register user", generateAuthToken(userToAdd).getAuthTokenString(), user.getUsername(), person.getId());
     }
 }

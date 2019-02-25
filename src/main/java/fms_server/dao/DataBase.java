@@ -19,6 +19,12 @@ public class DataBase {
         }
     }
 
+    /**
+     * Gets a connection, there can only be one connection to the database
+     * @param autocommit whether or not to autocommit
+     * @return a SQL connection
+     * @throws DataBaseException throws error when the previous connection was not closed
+     */
     public static Connection getConnection(boolean autocommit) throws DataBaseException {
         if (connection != null)
             throw new DataBaseException("Connection already in user", DataBaseException.ERROR_TYPE.CONNECTION_ALREADY_IN_USE);
@@ -38,6 +44,11 @@ public class DataBase {
         }
     }
 
+    /**
+     * Closes the current connection and can either throw away changes or commit changes
+     * @param commit whether or not to commit changes made to the database
+     * @throws DataBaseException If there was no connection opened
+     */
     public static void closeConnection(boolean commit) throws DataBaseException {
         if (connection == null)
             throw new DataBaseException("Connection is already closed", DataBaseException.ERROR_TYPE.CLOSED_CONNECTION);
@@ -59,7 +70,7 @@ public class DataBase {
         try (Statement stmt = connection.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS `events` (" +
                     "`id`    VARCHAR( 36 )NOT NULL PRIMARY KEY UNIQUE," +
-                    "`descendant` VARCHAR( 50 ) NOT NULL," +
+                    "`descendant` VARCHAR( 50 )," +
                     "`personID`   VARCHAR( 32 ) NOT NULL," +
                     "`latitude`   DOUBLE NOT NULL," +
                     "`longitude`  DOUBLE NOT NULL," +
@@ -73,7 +84,7 @@ public class DataBase {
 
             String sql_persons = "CREATE TABLE IF NOT EXISTS `persons` (\n" +
                     "`id`\t VARCHAR( 36 ) NOT NULL PRIMARY KEY UNIQUE,\n" +
-                    "`descendant` VARCHAR( 50 ) NOT NULL,\n" +
+                    "`descendant` VARCHAR( 50 ),\n" +
                     "`firstName`  VARCHAR( 50 ) NOT NULL,\n" +
                     "`lastName`   VARCHAR( 50 ) NOT NULL,\n" +
                     "`gender`     VARCHAR( 1 ) NOT NULL,\n" +

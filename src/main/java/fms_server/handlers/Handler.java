@@ -49,6 +49,8 @@ public abstract class Handler implements HttpHandler {
         T instance = null;
         try {
             instance = gson.fromJson(byteArrayToJSONString(inputStream.readAllBytes()), tClass);
+            if (instance == null)
+                throw new BadRequestException("Unable to create request instance");
             instance.checkForProperInstantiation();
         } catch (IOException e) {
             throw new BadRequestException("Unable to read data from input stream");

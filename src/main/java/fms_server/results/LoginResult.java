@@ -6,7 +6,7 @@ package fms_server.results;
  */
 public final class LoginResult extends Result{
     private final String authToken;
-    private final String userName;
+    private final String username;
     private final String personId;
 
     /**
@@ -20,7 +20,7 @@ public final class LoginResult extends Result{
     public LoginResult(boolean isSuccessful, String message, String authToken, String userName, String personId) {
         super(isSuccessful, message);
         this.authToken = authToken;
-        this.userName = userName;
+        this.username = userName;
         this.personId = personId;
     }
 
@@ -28,8 +28,8 @@ public final class LoginResult extends Result{
         return authToken;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getPersonId() {

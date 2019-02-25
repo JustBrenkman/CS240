@@ -112,6 +112,9 @@ public abstract class AbstractModel<T> {
         return result.toString();
     }
 
+    /**
+     * Checks to make sure that the class has no null variables. Null variables mean that is was not instantiated properly
+     */
     public void checkForProperInstantiation() {
         Field[] fields = this.getClass().getDeclaredFields();
         for (Field field : fields) {

@@ -40,7 +40,7 @@ public class LoginService extends Service {
                 return new LoginResult(true, "Found user", generateAuthToken(user).getAuthTokenString(), user.getUsername(), user.getPeronID());
             }
         } catch (DataBaseException | ModelNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             Logger.warn("Unable to login user", e);
             return new LoginResult(false, "Failed to find user", null, null, null);
         }

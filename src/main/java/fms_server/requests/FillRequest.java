@@ -1,6 +1,6 @@
 package fms_server.requests;
 
-public class FillRequest {
+public class FillRequest extends Request {
     /**
      * Username of the fill request
      */

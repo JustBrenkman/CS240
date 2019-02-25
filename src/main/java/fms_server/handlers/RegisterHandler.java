@@ -6,6 +6,7 @@ import fms_server.dao.UserDAO;
 import fms_server.logging.Logger;
 import fms_server.requests.RegisterRequest;
 import fms_server.results.RegisterResult;
+import fms_server.results.Result;
 import fms_server.services.RegisterService;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class RegisterHandler extends Handler {
     @Override
     public void handleRequest(HttpExchange exchange) throws IOException {
         try {
-            RegisterResult registerResult = service.register(convertToRequest(exchange.getRequestBody(), RegisterRequest.class));
+            Result registerResult = service.register(convertToRequest(exchange.getRequestBody(), RegisterRequest.class));
             String result = gson.toJson(registerResult);
             exchange.sendResponseHeaders(registerResult.isSuccess() ? 200 : 202, result.getBytes().length);
             exchange.getResponseBody().write(result.getBytes());

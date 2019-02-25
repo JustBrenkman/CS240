@@ -1,9 +1,11 @@
 package fms_server.logging;
 
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Provides an abstraction to System.out.print that will format the output for better logging
@@ -22,7 +24,7 @@ public class Logger {
     /**
      * Log levels, logs can be filtered by levels
      */
-    public enum LEVEL {INFO, PASS, FAIL, HEAD ,WARN, ERROR, SEVERE}
+    public enum LEVEL {FINE, INFO, PASS, FAIL, HEAD ,WARN, ERROR, SEVERE}
 
     /**
      * Color enums, all possible colors with ascii escape codes
@@ -67,6 +69,9 @@ public class Logger {
             return;
         }
         switch (level) {
+            case FINE:
+                log(level, message, COLOR.NULL, COLOR.NULL, COLOR.NULL, COLOR.NULL);
+                break;
             case HEAD:
                 log(level, message, COLOR.CYAN, COLOR.NULL, COLOR.CYAN, COLOR.NULL);
                 break;
@@ -104,7 +109,7 @@ public class Logger {
     public static void log(LEVEL level, String message, COLOR fg_tag, COLOR bg_tag, COLOR fg_message, COLOR bg_message) {
         if (level.ordinal() >= logLevel.ordinal()) {
             Calendar calendar = Calendar.getInstance();
-            String timestamp = new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss:mmm").format(calendar.getTime());
+            String timestamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:mmm").format(calendar.getTime());
             System.out.println(format(fg_message, bg_message) + "[" + timestamp + "]" + format(fg_tag, bg_tag, FORMATS.BOLD) + "[" + level.name() + "]" + format(fg_message, bg_message) + " " + message + format(COLOR.NULL, COLOR.NULL));
         }
     }
@@ -123,6 +128,22 @@ public class Logger {
     public static void info(Class<?> tClass, String message) {
         message = modifyMessageAddClass(tClass, message);
         info(message);
+    }
+
+    /**
+     * This is a fine log, log for a lot of random output
+     * @param message message to display
+     */
+    public static void fine(String message) {
+        if (logClass)
+            message = modifyMessageIncludeClass(Arrays.asList(Thread.currentThread().getStackTrace()), message);
+
+        log(LEVEL.FINE, message);
+//        saveLog(LEVEL.FINE, message);
+    }
+    public static void fine(Class<?> tClass, String message) {
+        message = modifyMessageAddClass(tClass, message);
+        fine(message);
     }
 
     /**
@@ -416,5 +437,13 @@ public class Logger {
     }
     public static void setLogClass(boolean logClass) {
         Logger.logClass = logClass;
+    }
+
+    public static void enter(Class<?> tClass, Method method) {
+        fine("Entering CLASS: " + tClass.getSimpleName() + ", METHOD: " + method.getName());
+    }
+
+    public static void exit(Class<?> tClass, Method method) {
+        fine("Entering CLASS: " + tClass.getSimpleName() + ", METHOD: " + method.getName());
     }
 }
