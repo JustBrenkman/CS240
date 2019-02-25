@@ -80,8 +80,15 @@ public abstract class Handler implements HttpHandler {
      */
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        handleRequest(exchange);
-        Logger.head(getServerCallLog(exchange.getRequestURI().getPath(), exchange, exchange.getResponseCode()));
+        try {
+            handleRequest(exchange);
+        } catch (Exception e) {
+            Logger.error("Something went wrong during the handle", e);
+            if (e instanceof IOException) // Throw the exception, the server might still expect it
+                throw e;
+        } finally {
+            Logger.head(getServerCallLog(exchange.getRequestURI().getPath(), exchange, exchange.getResponseCode()));
+        }
     }
 
     /**
@@ -92,10 +99,10 @@ public abstract class Handler implements HttpHandler {
     public abstract void handleRequest(HttpExchange exchange) throws IOException;
 
     public String getAuthToken(Headers headers) throws NotAuthenticatedException {
-//        Logger.info(Arrays.toString(headers.entrySet().toArray()));
+        Logger.fine(Arrays.toString(headers.entrySet().toArray()));
         Set<Map.Entry<String, List<String>>> head = headers.entrySet();
         for (Map.Entry<String, List<String>> entry : head) {
-            if (entry.getKey().toLowerCase().equals("auth_token")) {
+            if (entry.getKey().toLowerCase().equals("authorization") || entry.getKey().toLowerCase().equals("auth_token")) {
                 if (!entry.getValue().isEmpty()) {
                     Logger.info("auth_token: " + entry.getValue().get(0));
                     return entry.getValue().get(0);

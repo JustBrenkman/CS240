@@ -117,15 +117,15 @@
 	{
 		window.scrollTo(0,document.body.scrollHeight);
 		document.getElementById("handleBox").value = "/user/login";
-		document.getElementById("requestBox").value = formatJson("{\"userName\":\"username\",\"password\":\"password\"}");
+		document.getElementById("requestBox").value = formatJson("{\"username\":\"JustBrenkman\",\"password\":\"ix002225\"}");
 	}
 
 	function register()
 	{
 		window.scrollTo(0,document.body.scrollHeight);
 		document.getElementById("handleBox").value = "/user/register";
-		document.getElementById("requestBox").value = formatJson("{\"userName\":\"username\",\"password\":\"password\"," +
-		"\"email\":\"email\",\"firstName\":\"firstname\",\"lastName\":\"lastname\", \"gender\":\"m/f\"}");
+		document.getElementById("requestBox").value = formatJson("{\"username\":\"JustBrenkman\",\"password\":\"ix002225\"," +
+		"\"email\":\"JustBrenkman@gmail.com\",\"firstName\":\"Ben\",\"lastName\":\"Brenkman\", \"gender\":\"m\"}");
 	}
 
 	function clear()
@@ -139,7 +139,21 @@
 	{
 		window.scrollTo(0,document.body.scrollHeight);
 		document.getElementById("handleBox").value = "/load/";
-		document.getElementById("requestBox").value = formatJson("{\"users\":[],\"persons\":[],\"events\":[]}");
+        document.getElementById("requestBox").value = formatJson("{\"events\": [ { \"id\": \"1\", \"descendant\": " +
+    "\"JustBrenkman\", \"personId\": \"115b8012-2790-494f-9f21-90b653af74d3\", \"latitude\": -111.26, \"longitude\": " +
+    "40.25, \"country\": \"USA\", \"city\": \"Provo\", \"eventType\": \"random\", \"year\": 2019 }, { \"id\": \"2\", " +
+    "\"descendant\": \"JustBrenkman\", \"personId\": \"115b8012-2790-494f-9f21-90b653af74d3\", \"latitude\": -111.26, "+
+    "\"longitude\": 40.25, \"country\": \"USA\", \"city\": \"Provo\", \"eventType\": \"random\", \"year\": 2019 } ], " +
+    "\"users\": [ { \"username\": \"JustBrenkman1\", \"firstName\": \"Ben\", \"lastName\": \"Brenkman\", \"gender\": " +
+    "\"m\", \"email\": \"JustBrenkman1@gmail.com\", \"password\": \"blahblahblah\", \"id\": " +
+    "\"115b8012-2790-494f-9f21-90b653af74d3\" }, { \"username\": \"Someotherdude\", \"firstName\": \"Benjamin\", " +
+    "\"lastName\": \"Franklin\", \"gender\": \"m\", \"email\": \"brenkmanb664@gmail.com\", \"password\": " +
+    "\"blahblahblah\", \"id\": \"115b8012-2790-494f-9f21-90b653af74d2\" } ], \"persons\": [ { \"descendant\": " +
+    "\"JustBrenkman\", \"firstName\": \"Ben\", \"lastName\": \"Brenkman\", \"gender\": \"m\", \"id\": " +
+    "\"115b8012-2790-494f-9f21-90b653af74d3\" }, { \"descendant\": \"JustBrenkman\", \"firstName\": \"Ben\", " +
+    "\"lastName\": \"Brenkman\", \"gender\": \"m\", \"id\": \"115b8012-2790-494f-9f21-90b653af74d2\" }, { " +
+    "\"descendant\": \"JustBrenkman\", \"firstName\": \"Ben\", \"lastName\": \"Brenkman\", \"gender\": \"m\", " +
+    "\"id\": \"115b8012-2790-494f-9f21-90b653af74d1\" } ] }");
 	}
 
 	function getAllEvents()

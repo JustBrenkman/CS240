@@ -41,9 +41,9 @@ public class EventService extends Service {
             EventsResult result = new EventsResult(!list.isEmpty(), "", listr);
             return result;
         } catch (DataBaseException | ModelNotFoundException e) {
-            Logger.error("Something went wrong getting the list of persons", e);
+            Logger.error("Something went wrong getting the list of events", e);
+            return null;
         }
-        return null;
     }
 
     /**

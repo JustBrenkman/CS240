@@ -93,6 +93,7 @@ public class FMSServer {
      * @param server server to register handler with
      */
     private void registerHandlers(HttpServer server) {
+        server.createContext("/", new FileHandler());
         server.createContext(registerURL, new RegisterHandler());
         server.createContext(clearURL, new ClearHandler());
         server.createContext(loginURL, new LoginHandler());
