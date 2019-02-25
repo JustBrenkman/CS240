@@ -1,14 +1,14 @@
 package fms_server.requests;
 
-public class LoginRequest {
+public class LoginRequest extends Request {
     /**
      * Username of the user attempting to login
      */
-    private final String username;
+    protected final String username;
     /**
      * Password of the user attempting to login, un-hashed
      */
-    private final String password;
+    protected final String password;
 
     /**
      * Constructor for the login request

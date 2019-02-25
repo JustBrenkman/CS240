@@ -2,19 +2,19 @@ package fms_server.requests;
 
 import fms_server.models.*;
 
-public class LoadRequest {
+public class LoadRequest extends Request {
     /**
      * List of person objects to load
      */
-    private final Person[] persons;
+    protected final Person[] persons;
     /**
      * List of user objects to load
      */
-    private final User[] users;
+    protected final User[] users;
     /**
      * List of event objects to load
      */
-    private final Event[] events;
+    protected final Event[] events;
 
     /**
      * Constructor for load request

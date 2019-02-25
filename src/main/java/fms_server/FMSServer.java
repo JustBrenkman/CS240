@@ -18,10 +18,10 @@ public class FMSServer {
     private int port;
     private InetSocketAddress inetSocketAddress;
     private final String registerURL = "/user/register";
-    private final String clearURL = "/clear";
     private final String loginURL = "/user/login";
     private final String personURL = "/person";
     private final String eventsURL = "/event";
+    private final String loadURL = "/load";
     private static final Key key;
 
     static {
@@ -65,10 +65,12 @@ public class FMSServer {
     private void registerHandlers(HttpServer server) {
         Logger.info("Creating handlers");
         server.createContext(registerURL, new RegisterHandler());
+        String clearURL = "/clear";
         server.createContext(clearURL, new ClearHandler());
         server.createContext(loginURL, new LoginHandler());
         server.createContext(personURL, new PersonHandler());
         server.createContext(eventsURL, new EventsHandler());
+        server.createContext(loadURL, new LoadHandler());
     }
 
     public int getPort() {

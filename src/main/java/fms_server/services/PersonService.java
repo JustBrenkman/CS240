@@ -11,8 +11,6 @@ import fms_server.requests.PersonRequest;
 import fms_server.results.PersonResult;
 import fms_server.results.PersonsResult;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,7 +32,7 @@ public class PersonService extends Service {
      * @return return a list of all person objects in the database
      */
     public PersonsResult getAllPersons(AuthenticatedRequest request) throws NotAuthenticatedException {
-        if (!authenticateToken(request.getToken()))
+        if (authenticateToken(request.getToken()))
             throw new NotAuthenticatedException();
 
         List<Person> list;
@@ -56,7 +54,7 @@ public class PersonService extends Service {
      * @return a person object
      */
     public PersonResult getPerson(PersonRequest request) throws NotAuthenticatedException, ModelNotFoundException, DataBaseException {
-        if (!authenticateToken(request.getAuthToken()))
+        if (authenticateToken(request.getAuthToken()))
             throw new NotAuthenticatedException();
         return new PersonResult(true, "Got em", ((PersonDAO) getDao()).get(request.getPersonID()));
     }

@@ -5,10 +5,12 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import fms_server.logging.Logger;
+import fms_server.requests.Request;
 import fms_server.services.NotAuthenticatedException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -43,16 +45,19 @@ public abstract class Handler implements HttpHandler {
      * @return instance of request
      * @throws IOException if something goes wrong
      */
-    <T> T convertToRequest(InputStream inputStream, Class<T> tClass) throws BadRequestException {
+    <T extends Request> T convertToRequest(InputStream inputStream, Class<T> tClass) throws BadRequestException {
         T instance = null;
         try {
-            instance =  gson.fromJson(byteArrayToJSONString(inputStream.readAllBytes()), tClass);
+            instance = gson.fromJson(byteArrayToJSONString(inputStream.readAllBytes()), tClass);
+            instance.checkForProperInstantiation();
         } catch (IOException e) {
             throw new BadRequestException("Unable to read data from input stream");
         }
+
         if (instance == null) {
             throw new BadRequestException("Didn't have the required information to convert into request");
         }
+
         return instance;
     }
 

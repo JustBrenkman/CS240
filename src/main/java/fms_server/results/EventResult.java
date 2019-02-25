@@ -1,5 +1,7 @@
 package fms_server.results;
 
+import fms_server.models.Event;
+
 public class EventResult extends Result {
     /**
      * Name of user account this event belongs to
@@ -8,19 +10,19 @@ public class EventResult extends Result {
     /**
      * Event’s unique ID
      */
-    private final int eventID;
+    private final String eventID;
     /**
      * ID of the person this event belongs to
      */
-    private final int personID;
+    private final String personID;
     /**
      * Latitude of the event’s location
      */
-    private final int latitude;
+    private final double latitude;
     /**
      * Longitude of the event’s location
      */
-    private final int longitude;
+    private final double longitude;
     /**
      * Name of country where event occurred
      */
@@ -52,7 +54,7 @@ public class EventResult extends Result {
      * @param eventType Type of event
      * @param year Year the event occurred
      */
-    public EventResult(boolean success, String message, String descendant, int eventID, int personID, int latitude, int longitude, String country, String city, String eventType, int year) {
+    public EventResult(boolean success, String message, String descendant, String eventID, String personID, double latitude, double longitude, String country, String city, String eventType, int year) {
         super(success, message);
         this.descendant = descendant;
         this.eventID = eventID;
@@ -63,5 +65,18 @@ public class EventResult extends Result {
         this.city = city;
         this.eventType = eventType;
         this.year = year;
+    }
+
+    public EventResult(boolean success, String message, Event event) {
+        super(success, message);
+        this.descendant = event.getDescendant();
+        this.eventID = event.getEventID();
+        this.personID = event.getPersonID();
+        this.latitude = event.getLatitude();
+        this.longitude = event.getLongitude();
+        this.country = event.getCountry();
+        this.city = event.getCity();
+        this.eventType = event.getEventType();
+        this.year = event.getYear();
     }
 }

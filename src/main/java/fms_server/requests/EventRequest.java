@@ -6,7 +6,7 @@ public class EventRequest extends AuthenticatedRequest {
     /**
      * ID of the event that we want information about
      */
-    private final int eventID;
+    private final String eventID;
 
     /**
      * Constructor for authentication request
@@ -14,12 +14,12 @@ public class EventRequest extends AuthenticatedRequest {
      * @param token  authentication token
      * @param eventID id of the event that is in question
      */
-    public EventRequest(AuthToken token, int eventID) {
-        super(token.getAuthTokenString());
+    public EventRequest(String token, String eventID) {
+        super(token);
         this.eventID = eventID;
     }
 
-    public int getEventID() {
+    public String getEventID() {
         return eventID;
     }
 }

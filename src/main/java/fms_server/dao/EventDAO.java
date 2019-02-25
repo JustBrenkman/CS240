@@ -4,8 +4,10 @@ import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
 import fms_server.models.Event;
 import fms_server.models.ModelDoesNotFitException;
+import fms_server.models.Person;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,8 +52,29 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
      * @return List of Event's
      */
     @Override
-    public List<Event> getAll() {
-        return null;
+    public List<Event> getAll() throws DataBaseException, ModelNotFoundException {
+        String sql = "SELECT * FROM events";
+        List<Event> events = new ArrayList<>();
+        Connection connection = DataBase.getConnection(false);
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                events.add(AbstractModel.castToModel(Event.class, rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to get person, something is wrong with the SQL command: " + sql);
+        } catch (ModelDoesNotFitException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to convert entry to model");
+        } finally {
+            DataBase.closeConnection(true);
+        }
+
+        if (events.isEmpty())
+            throw new ModelNotFoundException("Could not find person, likely wrong id");
+
+        return events;
     }
 
     /**
@@ -61,7 +84,7 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
     @Override
     public void add(Event event) throws DataBaseException {
         boolean commit = false;
-        String sql = "INSERT INTO events (id, descendant, personID, latitude, longitude, " +
+        String sql = "INSERT INTO events (id, descendant, personId, latitude, longitude, " +
                 "country, city, eventType, year) VALUES(?,?,?,?,?,?,?,?,?)";
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

@@ -11,7 +11,6 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Base class for all services
@@ -40,13 +39,13 @@ public class Service {
         return new AuthToken(jws, user.getUsername());
     }
 
-    public boolean authenticateToken(String token) {
+    boolean authenticateToken(String token) {
         Jws<Claims> jws;
         try {
             jws = Jwts.parser().setSigningKey(FMSServer.getKey()).parseClaimsJws(token);
         } catch (JwtException e) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }

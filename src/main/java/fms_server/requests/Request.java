@@ -1,6 +1,7 @@
 package fms_server.requests;
 
 import fms_server.logging.Logger;
+import fms_server.models.AbstractModel;
 
 import java.lang.reflect.Field;
 
@@ -24,5 +25,22 @@ public class Request {
             }
         }
         return result.toString();
+    }
+
+    public void checkForProperInstantiation() {
+        Field[] fields = this.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                if (field.get(this) == null)
+                    Logger.warn("Could not find value to instantiate: " + field.getName() + ", on class: " + this.getClass().getSimpleName() + "; this could result in failure to complete request");
+                if (field.get(this) instanceof AbstractModel)
+                    ((AbstractModel) field.get(this)).checkForProperInstantiation();
+                if (field.get(this) instanceof AbstractModel[])
+                    for (AbstractModel entry : (AbstractModel[]) field.get(this))
+                        entry.checkForProperInstantiation();
+            } catch (IllegalAccessException e) {
+                Logger.warn("Unable to read request field, please make sure that it is protected", e);
+            }
+        }
     }
 }

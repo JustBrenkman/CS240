@@ -13,7 +13,7 @@ public class Event extends AbstractModel<String> {
     /**
      * ID of the person this event belongs to
      */
-    protected String personID;
+    protected String personId;
     /**
      * Latitude of the event’s location
      */
@@ -54,7 +54,7 @@ public class Event extends AbstractModel<String> {
     public Event(String eventID, String descendant, String personID, double latitude, double longitude, String country, String city, String eventType, int year) {
         this.setId(eventID);
         this.descendant = descendant;
-        this.personID = personID;
+        this.personId = personID;
         this.latitude = latitude;
         this.longitude = longitude;
         this.country = country;
@@ -104,15 +104,15 @@ public class Event extends AbstractModel<String> {
      * @return - Person id
      */
     public String getPersonID() {
-        return personID;
+        return personId;
     }
 
     /**
      * Setter for Person id
-     * @param personID - Person id
+     * @param personId - Person id
      */
-    public void setPersonID(String personID) {
-        this.personID = personID;
+    public void setPersonID(String personId) {
+        this.personId = personId;
     }
 
     /**
@@ -234,7 +234,7 @@ public class Event extends AbstractModel<String> {
                 Double.compare(event.longitude, longitude) == 0 &&
                 year == event.year &&
                 descendant.equals(event.descendant) &&
-                personID.equals(event.personID) &&
+                personId.equals(event.personId) &&
                 country.equals(event.country) &&
                 city.equals(event.city) &&
                 eventType.equals(event.eventType);
@@ -242,6 +242,6 @@ public class Event extends AbstractModel<String> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), descendant, personID, latitude, longitude, country, city, eventType, year);
+        return Objects.hash(super.hashCode(), descendant, personId, latitude, longitude, country, city, eventType, year);
     }
 }

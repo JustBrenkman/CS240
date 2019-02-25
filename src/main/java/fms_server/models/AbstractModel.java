@@ -111,4 +111,27 @@ public abstract class AbstractModel<T> {
         }
         return result.toString();
     }
+
+    public void checkForProperInstantiation() {
+        Field[] fields = this.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                if (field.get(this) == null)
+                    Logger.warn("Could not find value to instantiate: " + field.getName() + ", on class: " + this.getClass().getSimpleName() + "; this could result in failure to complete request");
+            } catch (IllegalAccessException e) {
+                Logger.warn("Unable to read request field, please make sure that it is protected", e);
+            }
+        }
+        if (!this.getClass().getSimpleName().equals(AbstractModel.class.getSimpleName())) {
+            Field[] superfields = this.getClass().getSuperclass().getDeclaredFields();
+            for (Field field : superfields) {
+                try {
+                    if (field.get(this) == null)
+                        Logger.warn("Could not find value to instantiate: " + field.getName() + ", on class: " + this.getClass().getSimpleName() + "; this could result in failure to complete request");
+                } catch (IllegalAccessException e) {
+                    Logger.warn("Unable to read request field, please make sure that it is protected", e);
+                }
+            }
+        }
+    }
 }

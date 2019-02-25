@@ -1,9 +1,14 @@
 package fms_server.services;
 
-import fms_server.dao.IDatabaseAccessObject;
+import fms_server.dao.*;
+import fms_server.logging.Logger;
 import fms_server.models.Event;
+import fms_server.models.Person;
 import fms_server.requests.AuthenticatedRequest;
 import fms_server.requests.EventRequest;
+import fms_server.results.EventResult;
+import fms_server.results.EventsResult;
+import fms_server.results.PersonsResult;
 
 import java.util.List;
 
@@ -24,7 +29,20 @@ public class EventService extends Service {
      * @param request authentication request, must be authenticated
      * @return list of event objects
      */
-    public List<Event> getEventList(AuthenticatedRequest request) {
+    public EventsResult getEventList(AuthenticatedRequest request) throws NotAuthenticatedException {
+        if (authenticateToken(request.getToken()))
+            throw new NotAuthenticatedException();
+
+        List<Event> list;
+        try {
+            list = ((EventDAO) getDao()).getAll();
+            Event[] listr = new Event[list.size()];
+            listr = list.toArray(listr);
+            EventsResult result = new EventsResult(!list.isEmpty(), "", listr);
+            return result;
+        } catch (DataBaseException | ModelNotFoundException e) {
+            Logger.error("Something went wrong getting the list of persons", e);
+        }
         return null;
     }
 
@@ -33,7 +51,16 @@ public class EventService extends Service {
      * @param request EventRequest contains event id that we want
      * @return an event object
      */
-    public Event getEvent(EventRequest request) {
-        return null;
+    public EventResult getEvent(EventRequest request) throws NotAuthenticatedException {
+        if (authenticateToken(request.getToken()))
+            throw new NotAuthenticatedException();
+
+        Event event = null;
+        try {
+            event = ((EventDAO) getDao()).get(request.getEventID());
+        } catch (ModelNotFoundException | DataBaseException e) {
+            Logger.error("Something went wrong, could not find the model", e);
+        }
+        return new EventResult(event != null, event == null ? "Could not find the model" : "Got it", event);
     }
 }
