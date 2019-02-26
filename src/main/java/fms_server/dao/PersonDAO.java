@@ -33,9 +33,10 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
                 stmt.setObject(8, person.getSpouseID());
 
                 stmt.executeUpdate();
-                Logger.info("Added: " + person.toString());
+                Logger.fine("Added: " + person.toString());
             }
             commit = true;
+            Logger.head("Successfully added " + list.size() + " people to the database");
         } catch (SQLException e) {
             Logger.warn("Failed to add person object, check password or could be identical", e);
             throw new DataBaseException("Unable to perform query");
@@ -91,10 +92,12 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
                 persons.add(AbstractModel.castToModel(Person.class, rs));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            Logger.error("SQL statement not correct", e);
             throw new DataBaseException("Failed to get person, something is wrong with the SQL command: " + sql);
         } catch (ModelDoesNotFitException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            Logger.warn("Unable to find person", e);
             throw new DataBaseException("Failed to convert entry to model");
         } finally {
             DataBase.closeConnection(true);
@@ -128,7 +131,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
 
             stmt.executeUpdate();
             commit = true;
-            Logger.info("Added: " + person.toString());
+            Logger.fine("Added: " + person.toString());
         } catch (SQLException e) {
 //            e.printStackTrace();
             Logger.warn("Failed to add person object, check password or could be identical", e);
@@ -189,7 +192,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
             stmt.setString(1, id);
             commit = stmt.executeUpdate() == 1;
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new DataBaseException("Unable remove entry");
         } finally {
             DataBase.closeConnection(commit);
@@ -208,7 +211,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new DataBaseException("Unable to truncate table");
         } finally {
             DataBase.closeConnection(true);

@@ -10,6 +10,7 @@ public class LogSaver {
     private Path path;
     private Deque<String> messageQueue;
     private String timestamp;
+    private static boolean logging = false;
 
     public LogSaver(String path) {
         this.path = Paths.get(path);
@@ -23,7 +24,6 @@ public class LogSaver {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        Logger.info("Created new log saver");
     }
 
     public static String exceptionStacktraceToString(Exception e)
@@ -48,11 +48,12 @@ public class LogSaver {
         if (e != null)
             messageQueue.add(exceptionStacktraceToString(e));
 
-        if (messageQueue.size() > 10)
+        if (messageQueue.size() > 10 && !logging)
             new Thread(this::writeLogQueueToFile).start();
     }
 
     private void writeLogQueueToFile() {
+        logging = true;
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(String.valueOf(path + "/" + timestamp + ".txt"), true));
             PrintWriter printWriter = new PrintWriter(writer);
@@ -60,8 +61,9 @@ public class LogSaver {
                 printWriter.println(messageQueue.pop());
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.warn("Missed a log, to much logging taking place");
         }
+        logging = false;
     }
 
     public void flush() {

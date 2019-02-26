@@ -36,7 +36,7 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 event = AbstractModel.castToModel(Event.class, rs);
-                Logger.info("Added: " + event.toString());
+                Logger.fine("Added: " + event.toString());
 
             }
         } catch (SQLException e) {
