@@ -114,8 +114,27 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
      * @param person object to update
      */
     @Override
-    public void update(Person person) {
-
+    public void update(Person person) throws DataBaseException {
+        String sql = "UPDATE persons SET descendant=?, firstname=?, lastName=?, gender=?, fatherID=?, motherID=?, SpouseID=? WHERE id=?";
+        boolean commit = false;
+        Connection connection = DataBase.getConnection(false);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, person.getDescendant());
+            stmt.setString(2, person.getFirstName());
+            stmt.setString(3, person.getLastName());
+            stmt.setString(4, person.getGender());
+            stmt.setString(5, person.getFatherID());
+            stmt.setString(6, person.getMotherID());
+            stmt.setString(7, person.getSpouseID());
+            stmt.setString(8, person.getId());
+            stmt.executeUpdate();
+            commit = true;
+        } catch (SQLException e) {
+            Logger.warn("Unable to update the person information", e);
+            throw new DataBaseException("Unable to update person information");
+        } finally {
+            DataBase.closeConnection(commit);
+        }
     }
 
     /**

@@ -32,7 +32,7 @@ public interface IDatabaseAccessObject<T, V> {
      * Updates the object using the id of the object with the rest of the variables, effectively replacing all variables
      * @param t Object to update
      */
-    void update(T t) throws ModelNotFoundException;
+    void update(T t) throws ModelNotFoundException, DataBaseException;
 
     /**
      * Checks to see if object with that id exists
