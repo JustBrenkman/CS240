@@ -40,9 +40,9 @@ public class FillService extends Service {
             User user = userDAO.getUserByUsername(request.getUserName());
             Person person = personDAO.get(user.getId());
             Person spouse = Generator.generateSpouse(person);
-            List<Person> ancestors = Generator.generateGenerations(Arrays.asList(person, spouse), 5);
-            personDAO.addAll(ancestors);
+            List<Person> ancestors = Generator.generateGenerations(Arrays.asList(person, spouse), request.getGenerations());
             personDAO.add(spouse);
+            personDAO.addAll(ancestors);
             personDAO.update(person);
         } catch (ModelNotFoundException e) {
             e.printStackTrace();

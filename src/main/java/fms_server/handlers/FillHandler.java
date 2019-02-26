@@ -26,9 +26,9 @@ public class FillHandler extends Handler {
         String[] args = exchange.getRequestURI().getPath().split("/");
         Logger.fine("Number or args: " + args.length);
         try {
-            if (args.length >= 4) {
+            if (args.length >= 3) {
                 String username = args[2];
-                int generations = Integer.valueOf(args[3]);
+                int generations = (args.length >= 4) ? Integer.valueOf(args[3]) : 4;
                 Logger.fine("Username: " + username + ", generations: " + generations);
                 FillResult result = service.fill(new FillRequest(username, generations));
                 String json = gson.toJson(result);

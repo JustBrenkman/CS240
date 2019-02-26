@@ -11,10 +11,7 @@ import fms_server.services.NotAuthenticatedException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class Handler implements HttpHandler {
     /**
@@ -33,8 +30,8 @@ public abstract class Handler implements HttpHandler {
      * @param returnVal response code of the exchange
      * @return formatted string
      */
-    private String getServerCallLog(String handler, HttpExchange exchange, int returnVal) {
-        return " -- " + exchange.getRemoteAddress().getHostName() + " -- \"" + exchange.getRequestMethod() + "\" " + exchange.getRequestURI().getPath() + " " + exchange.getProtocol() + " " + returnVal;
+    private String getServerCallLog(String handler, HttpExchange exchange, int returnVal, double time) {
+        return " -- " + exchange.getRemoteAddress().getHostName() + " -- \"" + exchange.getRequestMethod() + "\" " + exchange.getRequestURI().getPath() + " " + exchange.getProtocol() + " " + returnVal + " " + time + "s";
     }
 
     /**
@@ -80,6 +77,7 @@ public abstract class Handler implements HttpHandler {
      */
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        long startTime = new Date().getTime();
         try {
             handleRequest(exchange);
         } catch (Exception e) {
@@ -87,7 +85,9 @@ public abstract class Handler implements HttpHandler {
             if (e instanceof IOException) // Throw the exception, the server might still expect it
                 throw e;
         } finally {
-            Logger.head(getServerCallLog(exchange.getRequestURI().getPath(), exchange, exchange.getResponseCode()));
+            long endTime = new Date().getTime();
+            double difference = (endTime - startTime) / 1000.0;
+            Logger.head(getServerCallLog(exchange.getRequestURI().getPath(), exchange, exchange.getResponseCode(), difference));
         }
     }
 

@@ -17,8 +17,31 @@ import java.util.Map;
 public class PersonDAO implements IDatabaseAccessObject<Person, String> {
     @Override
     public void addAll(List<Person> list) throws DataBaseException {
-        for (Person person : list)
-            add(person);
+        boolean commit = false;
+        String sql = "INSERT INTO persons (id, descendant, firstName, lastName, gender, fatherID, motherID, spouseID)" +
+                "VALUES (?,?,?,?,?,?,?,?)";
+        Connection connection = DataBase.getConnection(false);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (Person person : list) {
+                stmt.setString(1, person.getId());
+                stmt.setString(2, person.getDescendant());
+                stmt.setString(3, person.getFirstName());
+                stmt.setString(4, person.getLastName());
+                stmt.setObject(5, person.getGender());
+                stmt.setObject(6, person.getFatherID());
+                stmt.setObject(7, person.getMotherID());
+                stmt.setObject(8, person.getSpouseID());
+
+                stmt.executeUpdate();
+                Logger.info("Added: " + person.toString());
+            }
+            commit = true;
+        } catch (SQLException e) {
+            Logger.warn("Failed to add person object, check password or could be identical", e);
+            throw new DataBaseException("Unable to perform query");
+        } finally {
+            DataBase.closeConnection(commit);
+        }
     }
 
     /**
