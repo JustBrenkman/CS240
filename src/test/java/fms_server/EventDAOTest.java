@@ -12,6 +12,7 @@ public class EventDAOTest {
     @BeforeAll
     static void setup() throws DataBaseException {
         Logger.setUpLogSaver();
+        Logger.setLogClass(true);
         Logger.setLogLevel(Logger.LEVEL.INFO);
         Logger.setShouldPrintStackTrace(false);
         Logger.head("Testing EventDAO test cases");

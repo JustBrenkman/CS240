@@ -10,6 +10,7 @@ public class PersonDAOTest {
     @BeforeAll
     static void setup() throws DataBaseException {
         Logger.setLogLevel(Logger.LEVEL.INFO);
+        Logger.setLogClass(true);
         Logger.setShouldPrintStackTrace(false);
         Logger.head("Testing personDAO test cases");
         DataBase.createTables();

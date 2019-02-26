@@ -11,7 +11,7 @@ public class DataBase {
         connection = null;
         try {
             //This is how we set up the driver for our database
-            Logger.info("Getting drivers");
+            Logger.fine("Getting drivers");
             final String driver = "org.sqlite.JDBC";
             Class.forName(driver);
         } catch (ClassNotFoundException e) {

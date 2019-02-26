@@ -143,7 +143,7 @@ public class UserDAO implements IDatabaseAccessObject<User, String> {
 
             stmt.executeUpdate();
             commit = true;
-            Logger.info("Added: " + user.toString());
+            Logger.fine("Added: " + user.toString());
         } catch (SQLException e) {
 //            e.printStackTrace();
             Logger.warn("Failed to add user object, check password or could be identical", e);

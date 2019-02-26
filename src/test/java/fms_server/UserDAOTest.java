@@ -9,6 +9,7 @@ public class UserDAOTest {
     @BeforeAll
     static void setup() throws DataBaseException {
         Logger.setLogLevel(Logger.LEVEL.INFO);
+        Logger.setLogClass(true);
         Logger.setShouldPrintStackTrace(false);
         Logger.head("Testing UserDAO test cases");
         DataBase.createTables();
