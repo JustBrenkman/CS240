@@ -51,6 +51,7 @@ public class FillService extends Service {
             eventDAO.addAll(events);
         } catch (ModelNotFoundException e) {
             e.printStackTrace();
+            return new FillResult(false, "Unable to generate for user, user may not exist");
         }
         return new FillResult(true, "Generations are filled");
     }
