@@ -24,6 +24,11 @@ public class UserDAO implements IDatabaseAccessObject<User, String> {
      */
     public UserDAO() {super();}
 
+    @Override
+    public void addAll(List<User> list) throws DataBaseException {
+
+    }
+
     /**
      * Gets a user object with id
      * @param id Identifier of object

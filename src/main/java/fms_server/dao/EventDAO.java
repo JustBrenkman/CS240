@@ -15,6 +15,12 @@ import java.util.Map;
  * Event Database Access Object
  */
 public class EventDAO implements IDatabaseAccessObject<Event, String> {
+    @Override
+    public void addAll(List<Event> list) throws DataBaseException {
+        for (Event event : list)
+            add(event);
+    }
+
     /**
      * Gets an event object from database
      * @param id Identifier of object

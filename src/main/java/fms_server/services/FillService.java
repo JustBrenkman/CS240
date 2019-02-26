@@ -6,10 +6,7 @@ import fms_server.models.User;
 import fms_server.requests.FillRequest;
 import fms_server.results.FillResult;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Fill service class
@@ -34,7 +31,7 @@ public class FillService extends Service {
     }
 
     /**
-     * Will generate and fill database with random information
+     * Will generate and fill database with random information. TODO get spouse if already exists
      * @param request FillRequest
      * @return whether fill was successful
      */
@@ -42,18 +39,11 @@ public class FillService extends Service {
         try {
             User user = userDAO.getUserByUsername(request.getUserName());
             Person person = personDAO.get(user.getId());
-            List<Person> personList = Generator.generateImmediateGeneration(person);
-            Person spouse = Generator.getSpouse(person, personList);
-            spouse.setSpouseID(person.getId());
-            List<Person> spouseFamily = Generator.generateImmediateGeneration(spouse);
-            for (Person person1 : personList)
-                personDAO.add(person1);
-            for (Person person1 : spouseFamily)
-                personDAO.add(person1);
+            Person spouse = Generator.generateSpouse(person);
+            List<Person> ancestors = Generator.generateGenerations(Arrays.asList(person, spouse), 5);
+            personDAO.addAll(ancestors);
+            personDAO.add(spouse);
             personDAO.update(person);
-//            Logger.fine("Person to update: " + person.toString());
-//            Logger.fine(personDAO.get(person.getId()).toString());
-//            Logger.fine(String.valueOf(person));
         } catch (ModelNotFoundException e) {
             e.printStackTrace();
         }
@@ -68,13 +58,13 @@ public class FillService extends Service {
 
         static Person generateMalePerson() {
             Random random = new Random();
-            String firstName = firstMaleNames[(firstMaleNames.length - 1) % random.nextInt(30)];
+            String firstName = firstMaleNames[random.nextInt(firstMaleNames.length - 1)];
             return generatePerson(firstName, "m", random);
         }
 
         static Person generateFemalePerson() {
             Random random = new Random();
-            String firstName = firstFemaleNames[(firstMaleNames.length - 1) % random.nextInt(30)];
+            String firstName = firstFemaleNames[random.nextInt(firstFemaleNames.length - 1)];
             return generatePerson(firstName, "f", random);
         }
 
@@ -83,7 +73,7 @@ public class FillService extends Service {
                     UUID.randomUUID().toString(),
                     null,
                     firstname,
-                    lastNames[(lastNames.length - 1) % random.nextInt(30)],
+                    lastNames[random.nextInt(lastNames.length - 1)],
                     gender,
                     null,
                     null,
@@ -101,22 +91,49 @@ public class FillService extends Service {
            return spouse;
         }
 
+        public static Person generateSpouse(Person person) {
+            Person spouse = person.getSpouseID() == null? person.getGender().equals("m") ? generateFemalePerson() : generateMalePerson() : null;
+            if (spouse != null) {
+                person.setSpouseID(spouse.getId());
+                spouse.setSpouseID(person.getId());
+            }
+            return spouse;
+        }
+
         private static List<Person> generateImmediateGeneration(Person person) {
             if (person == null)
                 return new ArrayList<>();
-//            Logger.fine(String.valueOf(person));
             Person mother = generateFemalePerson();
             Person father = generateMalePerson();
-            Person spouse = person.getGender().equals("m") ? generateFemalePerson() : generateMalePerson();
+            Person spouse = generateSpouse(person);
             person.setMotherID(mother.getId());
             person.setFatherID(father.getId());
-            person.setSpouseID(spouse.getId());
+            father.setSpouseID(mother.getId());
+            mother.setSpouseID(father.getId());
+            if (spouse != null)
+                person.setSpouseID(spouse.getId());
             List<Person> personList = new ArrayList<>();
             personList.add(mother);
             personList.add(father);
-            personList.add(spouse);
-//            Logger.fine("Updated person: " + person.toString());
+            if (spouse != null)
+                personList.add(spouse);
             return personList;
+        }
+
+        public static List<Person> generateGenerations(List<Person> people, int depth) {
+            return gGDive(people, depth, 0);
+        }
+
+        private static List<Person> gGDive(List<Person> people, int depth, int current) {
+            current++;
+            if (current > depth)
+                return new ArrayList<>();
+            List<Person> generated = new ArrayList<>();
+            for (Person person : people) {
+                generated.addAll(generateImmediateGeneration(person));
+            }
+            generated.addAll(gGDive(generated, depth, current));
+            return generated;
         }
 
 //        public static List<Event> generateEvents(Person person) {

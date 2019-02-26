@@ -10,6 +10,12 @@ import java.util.Map;
  */
 public interface IDatabaseAccessObject<T, V> {
     /**
+     * Adds a list of items one by one
+     * @param list list of items to add
+     * @throws DataBaseException if something happens it will stop and not commit
+     */
+    void addAll(List<T> list) throws DataBaseException;
+    /**
      * This gets the object based on the id, assuming all objects contain an id
      * @param id Identifier of object
      * @return Object that has been requested

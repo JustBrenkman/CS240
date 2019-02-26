@@ -15,6 +15,12 @@ import java.util.Map;
  * Person Database Access Object
  */
 public class PersonDAO implements IDatabaseAccessObject<Person, String> {
+    @Override
+    public void addAll(List<Person> list) throws DataBaseException {
+        for (Person person : list)
+            add(person);
+    }
+
     /**
      * Get's person object from database
      * @param id Identifier of object
