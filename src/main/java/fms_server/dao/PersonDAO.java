@@ -36,7 +36,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
                 Logger.fine("Added: " + person.toString());
             }
             commit = true;
-            Logger.head("Successfully added " + list.size() + " people to the database");
+            Logger.info("Successfully added " + list.size() + " people to the database");
         } catch (SQLException e) {
             Logger.warn("Failed to add person object, check password or could be identical", e);
             throw new DataBaseException("Unable to perform query");
@@ -91,6 +91,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
             while (rs.next()) {
                 persons.add(AbstractModel.castToModel(Person.class, rs));
             }
+            Logger.fine("Got: " + persons.size() + " from the database");
         } catch (SQLException e) {
 //            e.printStackTrace();
             Logger.error("SQL statement not correct", e);

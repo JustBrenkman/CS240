@@ -1,6 +1,7 @@
 package fms_server.services;
 
 import fms_server.dao.*;
+import fms_server.models.Event;
 import fms_server.models.Person;
 import fms_server.models.User;
 import fms_server.requests.FillRequest;
@@ -41,9 +42,13 @@ public class FillService extends Service {
             Person person = personDAO.get(user.getId());
             Person spouse = Generator.generateSpouse(person);
             List<Person> ancestors = Generator.generateGenerations(Arrays.asList(person, spouse), request.getGenerations());
+            List<Event> events = Generator.generateEvents(ancestors);
+            events.addAll(Generator.generateEvents(person));
+            events.addAll(Generator.generateEvents(spouse));
             personDAO.add(spouse);
             personDAO.addAll(ancestors);
             personDAO.update(person);
+            eventDAO.addAll(events);
         } catch (ModelNotFoundException e) {
             e.printStackTrace();
         }
@@ -136,13 +141,30 @@ public class FillService extends Service {
             return generated;
         }
 
-//        public static List<Event> generateEvents(Person person) {
-//            List<Event> events = new ArrayList<>();
-//            for (String type : eventTypes) {
-//                events.add(new Event(
-//
-//                ));
-//            }
-//        }
+        public static List<Event> generateEvents(List<Person> people) {
+            List<Event> events = new ArrayList<>();
+            for (Person person : people)
+                events.addAll(generateEvents(person));
+            return events;
+        }
+
+        public static List<Event> generateEvents(Person person) {
+            List<Event> events = new ArrayList<>();
+            Random random = new Random();
+            for (String type : eventTypes) {
+                events.add(new Event(
+                        UUID.randomUUID().toString(),
+                        null,
+                        person.getPersonID(),
+                        random.nextDouble() * (360),
+                        random.nextDouble() * (360),
+                        "USA",
+                        "Provo",
+                        type,
+                        random.nextInt(2019)
+                ));
+            }
+            return events;
+        }
     }
 }

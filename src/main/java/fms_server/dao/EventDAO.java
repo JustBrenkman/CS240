@@ -17,8 +17,34 @@ import java.util.Map;
 public class EventDAO implements IDatabaseAccessObject<Event, String> {
     @Override
     public void addAll(List<Event> list) throws DataBaseException {
-        for (Event event : list)
-            add(event);
+        boolean commit = false;
+        String sql = "INSERT INTO events (id, descendant, personId, latitude, longitude, " +
+                "country, city, eventType, year) VALUES(?,?,?,?,?,?,?,?,?)";
+        Connection connection = DataBase.getConnection(false);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (Event event : list) {
+                stmt.setString(1, event.getId());
+                stmt.setString(2, event.getDescendant());
+                stmt.setString(3, event.getPersonID());
+                stmt.setDouble(4, event.getLatitude());
+                stmt.setDouble(5, event.getLongitude());
+                stmt.setString(6, event.getCountry());
+                stmt.setString(7, event.getCity());
+                stmt.setString(8, event.getEventType());
+                stmt.setInt(9, event.getYear());
+
+                stmt.executeUpdate();
+                Logger.fine("Added: " + event.toString());
+            }
+            Logger.info("Successfully added " + list.size() + " events");
+            commit = true;
+        } catch (SQLException e) {
+//            e.printStackTrace();
+            Logger.warn("Unable to add event, could be identical id", e);
+            throw new DataBaseException("Error encountered while inserting into the database");
+        } finally {
+            DataBase.closeConnection(commit);
+        }
     }
 
     /**
