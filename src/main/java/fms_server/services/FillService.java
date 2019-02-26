@@ -1,7 +1,6 @@
 package fms_server.services;
 
 import fms_server.dao.*;
-import fms_server.logging.Logger;
 import fms_server.models.Person;
 import fms_server.models.User;
 import fms_server.requests.FillRequest;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Fill service class
@@ -97,10 +95,6 @@ public class FillService extends Service {
             if (person.getSpouseID() == null)
                 return null;
            Person spouse = null;
-//           persons.forEach((entry) -> {
-//               if (entry.getId().equals(person.getSpouseID()))
-//                   spouse.set(entry);
-//           });
            for (Person sp : persons)
                if (sp.getId().equals(person.getSpouseID()))
                    spouse = sp;
