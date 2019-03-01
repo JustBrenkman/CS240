@@ -17,16 +17,49 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class FMSServer {
+    /**
+     * The port location of the server
+     */
     private int port;
+    /**
+     * Instance of the server
+     */
     private HttpServer server;
+    /**
+     * InetSocketAddress of the server, holds information about the port and ip address
+     */
     private InetSocketAddress inetSocketAddress;
+    /**
+     * Register url
+     */
     private final String registerURL = "/user/register";
+    /**
+     * Login url
+     */
     private final String loginURL = "/user/login";
+    /**
+     * Persons url
+     */
     private final String personURL = "/person";
+    /**
+     * Events url
+     */
     private final String eventsURL = "/event";
+    /**
+     * Load url
+     */
     private final String loadURL = "/load";
+    /**
+     * fill url
+     */
     private final String fillURL = "/fill";
+    /**
+     * clear url
+     */
     private final String clearURL = "/clear";
+    /**
+     * Secret key for the server
+     */
     private static final Key key;
 
     static {
@@ -36,17 +69,9 @@ public class FMSServer {
     public FMSServer() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             Logger.head("Closing down Server...");
-            try {
-                stopServer();
-            } catch (IOException e) {
-                Logger.severe("Unable to stop server", e);
-            }
+            stopServer();
             Logger.flush();
         }));
-    }
-
-    public static Key getKey() {
-        return key;
     }
 
     public static void main(String...args) {
@@ -55,10 +80,13 @@ public class FMSServer {
         try {
             server.startServer(4201);
             Logger.head("Started server listening on http://localhost:" + server.getPort() + "/");
+
+            // Print the list of addresses for the machine
             StringBuilder str = new StringBuilder();
             for (String add : server.getMachineAddresses())
                 str.append(", http://").append(add).append(":").append(server.getPort()).append("/");
             Logger.head("Running on machine at these addresses" + str.toString());
+
             Logger.warn("Server is running in production mode, this could result in unnecessary changes to the database");
             DataBase.createTables();
         } catch (IOException e) {
@@ -70,6 +98,11 @@ public class FMSServer {
         }
     }
 
+    /**
+     * Starts a server on a port
+     * @param port port to start server on
+     * @throws IOException if port os already in use
+     */
     private void startServer(int port) throws IOException {
         inetSocketAddress = new InetSocketAddress(port);
         HttpServer server = HttpServer.create(inetSocketAddress, 10);
@@ -79,11 +112,18 @@ public class FMSServer {
         this.port = port;
     }
 
+    /**
+     * Starts server on port 80
+     * @throws IOException if port is already in use
+     */
     private void startServer() throws IOException {
         startServer(80);
     }
 
-    private void stopServer() throws IOException {
+    /**
+     * Stops server
+     */
+    private void stopServer() {
         if (server != null)
             server.stop(0);
     }
@@ -103,16 +143,21 @@ public class FMSServer {
         server.createContext(fillURL, new FillHandler());
     }
 
-    public int getPort() {
-        return port;
-    }
-
+    /**
+     * Gets the current address
+     * @return address name
+     */
     public String getAddress() {
         if (inetSocketAddress == null)
             return null;
         return inetSocketAddress.getHostName();
     }
 
+    /**
+     * Gets a list of address of the machine for all the interfaces
+     * @return list of address
+     * @throws SocketException unable to get addresses
+     */
     public List<String> getMachineAddresses() throws SocketException {
         List<String> addresses = new ArrayList<>();
         for (
@@ -125,17 +170,20 @@ public class FMSServer {
                 continue;
             }
             for (final InterfaceAddress addr : cur.getInterfaceAddresses()) {
-                final InetAddress inet_addr = addr.getAddress();
+                final InetAddress inetAddr = addr.getAddress();
 
-                if (!(inet_addr instanceof Inet4Address)) {
+                if (!(inetAddr instanceof Inet4Address)) {
                     continue;
                 }
-                addresses.add(inet_addr.getHostAddress());
+                addresses.add(inetAddr.getHostAddress());
             }
         }
         return addresses;
     }
 
+    /**
+     * Sets up logging fot the server
+     */
     private void setupLogging() {
         Logger.setLogLevel(Logger.LEVEL.FINE);
         Logger.setShouldPrintStackTrace(false);
@@ -149,5 +197,13 @@ public class FMSServer {
 
     public String getRegisterURL() {
         return registerURL;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public static Key getKey() {
+        return key;
     }
 }

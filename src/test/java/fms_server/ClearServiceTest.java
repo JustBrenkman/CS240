@@ -32,7 +32,7 @@ public class ClearServiceTest {
     @Test
     @DisplayName("Clear database contains data")
     void clearAll() {
-        ClearResult result = service.clear();
+        ClearResult result = service.clear(null);
         if (result.isSuccess())
             Logger.pass("Passed clear all");
         Assertions.assertTrue(result.isSuccess());

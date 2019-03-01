@@ -1,12 +1,20 @@
 package fms_server.services;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import fms_server.dao.*;
+import fms_server.logging.Logger;
 import fms_server.models.Event;
 import fms_server.models.Person;
 import fms_server.models.User;
 import fms_server.requests.FillRequest;
 import fms_server.results.FillResult;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -56,11 +64,26 @@ public class FillService extends Service {
         return new FillResult(true, "Generations are filled");
     }
 
+    /**
+     * This generates the events and ancestors for a person
+     */
     public static class Generator {
         private static String[] firstMaleNames = {"Liam", "Noah", "William", "James", "Logan", "Benjamin", "Mason", "Elijah", "Oliver", "Jacob", "Lucas", "Michael","Alexander","Ethan","Daniel","Matthew","Aiden","Henry","Joseph","Jackson"};
         private static String[] firstFemaleNames = {"Emma","Olivia","Ava","Isabella","Sophia","Mia","Charlotte","Amelia","Evelyn","Abigail","Harper","Emily","Elizabeth","Avery","Sofia","Ella","Madison","Scarlett","Victoria","Aria"};
         private static String[] lastNames = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson"};
         private static String[] eventTypes = {"birth", "death", "travel", "marriage"};
+        private static List<LinkedTreeMap<String, Object>> locations;
+
+        static {
+            Type type = new TypeToken<LinkedTreeMap<String, List<LinkedTreeMap<String, Object>>>>(){}.getType();
+            try {
+                LinkedTreeMap<String, List<LinkedTreeMap<String, Object>>> data = (new Gson()).fromJson(new String(Files.readAllBytes(Paths.get("res/json/locations.json"))), type);
+                locations = data.get("data");
+                Logger.fine(Arrays.toString(locations.toArray()));
+            } catch (Exception e) {
+                Logger.error("Unable to get location data", e);
+            }
+        }
 
         static Person generateMalePerson() {
             Random random = new Random();
@@ -153,14 +176,15 @@ public class FillService extends Service {
             List<Event> events = new ArrayList<>();
             Random random = new Random();
             for (String type : eventTypes) {
+                Map<String, Object> loc = locations.get(random.nextInt(locations.size() - 1));
                 events.add(new Event(
                         UUID.randomUUID().toString(),
                         null,
                         person.getPersonID(),
-                        random.nextDouble() * (360),
-                        random.nextDouble() * (360),
-                        "USA",
-                        "Provo",
+                        (double) loc.getOrDefault("latitude", -111.6509753),
+                        (double) loc.getOrDefault("longitude", 40.245769),
+                        String.valueOf(loc.getOrDefault("country", "USA")),
+                        String.valueOf(loc.getOrDefault("city", "Provo")),
                         type,
                         random.nextInt(2019)
                 ));

@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import fms_server.dao.EventDAO;
 import fms_server.dao.PersonDAO;
 import fms_server.dao.UserDAO;
+import fms_server.logging.Logger;
 import fms_server.results.ClearResult;
 import fms_server.services.ClearService;
 
@@ -26,10 +27,16 @@ public class ClearHandler extends Handler {
      */
     @Override
     public void handleRequest(HttpExchange exchange) throws IOException {
-        ClearResult clearResult = service.clear();
-        String response = gson.toJson(clearResult);
-        exchange.sendResponseHeaders(clearResult.isSuccess()? 200: 202, response.getBytes().length);
-        exchange.getResponseBody().write(response.getBytes());
-        exchange.close();
+        try {
+            ClearResult clearResult = service.call(ClearResult.class, null);
+            String response = gson.toJson(clearResult);
+            exchange.sendResponseHeaders(clearResult.isSuccess()? 200: 202, response.getBytes().length);
+            exchange.getResponseBody().write(response.getBytes());
+        } catch (NoSuchMethodException e) {
+            Logger.severe("Unable to clear tables", e);
+            exchange.sendResponseHeaders(500, 0);
+        } finally {
+            exchange.close();
+        }
     }
 }

@@ -32,8 +32,8 @@ public class DataBase {
             final String CONNECTION_URL = "jdbc:sqlite:familymap.db";
             connection = DriverManager.getConnection(CONNECTION_URL);
             if (connection != null) {
-                DatabaseMetaData meta = connection.getMetaData();
-//                Logger.info("The driver name is " + meta.getDriverName());
+//                DatabaseMetaData meta = connection.getMetaData();
+//                Logger.fine("The driver name is " + meta.getDriverName());
                 connection.setAutoCommit(autocommit);
             }
             return connection;

@@ -3,7 +3,9 @@ package fms_server.services;
 import fms_server.dao.DataBaseException;
 import fms_server.dao.IDatabaseAccessObject;
 import fms_server.logging.Logger;
+import fms_server.requests.Request;
 import fms_server.results.ClearResult;
+import fms_server.results.Result;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,14 +23,14 @@ public class ClearService extends Service {
     public ClearService(IDatabaseAccessObject...dao) {
         super(dao[0]);
         this.daos = Arrays.asList(dao);
+        registerServiceCall(ClearResult.class, this::clear);
     }
-
 
     /**
      * Clears(truncates) everything in the database
      * @return ClearResult
      */
-    public ClearResult clear() {
+    public ClearResult clear(Request request) {
         AtomicBoolean cleared = new AtomicBoolean(true);
         daos.forEach((item) -> {
             try {

@@ -3,14 +3,19 @@ package fms_server.services;
 import com.google.gson.Gson;
 import fms_server.FMSServer;
 import fms_server.dao.IDatabaseAccessObject;
+import fms_server.logging.Logger;
 import fms_server.models.AuthToken;
 import fms_server.models.User;
+import fms_server.requests.Request;
+import fms_server.results.Result;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.function.Function;
 
 /**
  * Base class for all services
@@ -18,10 +23,12 @@ import java.util.Calendar;
 public class Service {
     private IDatabaseAccessObject dao;
     private Gson gson;
+    private HashMap<Class<?>, Function<Request, Result>> serviceCalls; // This is an experimental feature
 
     public Service(IDatabaseAccessObject dao) {
         this.dao = dao;
         this.gson = new Gson();
+        serviceCalls = new HashMap<>();
     }
 
     /**
@@ -32,6 +39,27 @@ public class Service {
         return dao;
     }
 
+    <T extends Result> void registerServiceCall(Class<T> tClass, Function<Request, Result> function) {
+        if (serviceCalls.containsKey(tClass))
+            Logger.warn("Already set that service call, rewriting the old call");
+        serviceCalls.put(tClass, function);
+    }
+
+    public <T extends Result, U extends Request> T call(Class<T> tClass, U request) throws NoSuchMethodException {
+        try {
+            if (serviceCalls.containsKey(tClass))
+                return (T) serviceCalls.get(tClass).apply(request);
+            throw new NoSuchMethodException("There is no service call that is defined by that class");
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Creates a AuthToken
+     * @param user
+     * @return
+     */
     public AuthToken generateAuthToken(User user) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR_OF_DAY, 1);
@@ -39,6 +67,11 @@ public class Service {
         return new AuthToken(jws, user.getUsername());
     }
 
+    /**
+     * Authenticates an authtoken
+     * @param token token string
+     * @return if token is authenticated
+     */
     boolean authenticateToken(String token) {
         Jws<Claims> jws;
         try {
