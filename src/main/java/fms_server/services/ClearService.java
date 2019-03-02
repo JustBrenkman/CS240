@@ -5,7 +5,6 @@ import fms_server.dao.IDatabaseAccessObject;
 import fms_server.logging.Logger;
 import fms_server.requests.Request;
 import fms_server.results.ClearResult;
-import fms_server.results.Result;
 
 import java.util.Arrays;
 import java.util.List;

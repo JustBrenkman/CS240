@@ -18,6 +18,8 @@ public class LoadService extends Service {
     UserDAO userDAO;
     PersonDAO personDAO;
 
+    ClearService clearService;
+
     /**
      * Load service constructor
      * @param eventDAO IDatabaseObject
@@ -29,6 +31,7 @@ public class LoadService extends Service {
         this.eventDAO = eventDAO;
         this.userDAO = userDAO;
         this.personDAO = personDAO;
+        clearService = new ClearService(eventDAO, userDAO, personDAO);
     }
 
     /**
@@ -37,6 +40,10 @@ public class LoadService extends Service {
      * @return if fill was successful or not
      */
     public LoadResult load(LoadRequest request) {
+        clearService.clear(null);
+        for (User user : request.getUsers()) {
+            user.hashPassword();
+        }
         boolean allLoaded = true;
             try {
                 for (Event event : request.getEvents())
@@ -50,6 +57,6 @@ public class LoadService extends Service {
                 allLoaded = false;
 //                return new LoadResult(false, "Unable to load the data");
             }
-        return new LoadResult(allLoaded, allLoaded ? "Loaded everything into the databases" : "Unable to load the data");
+        return new LoadResult(allLoaded, allLoaded ? "Loaded " + request.getPersons().length + " users, " + request.getPersons().length + " persons, " + request.getEvents().length + " events" + " into the databases" : "Unable to load the data");
     }
 }

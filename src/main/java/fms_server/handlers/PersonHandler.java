@@ -39,8 +39,8 @@ public class PersonHandler extends Handler {
                 exchange.getResponseBody().write(json.getBytes());
             }
         } catch (Exception e) {
-            Logger.warn("Not authenticated", e);
-            String result = gson.toJson(new PersonResult(false, "Not authorized", null));
+            Logger.warn(e instanceof ModelNotFoundException? "User not found" : "Not authenticated", e);
+            String result = gson.toJson(new PersonResult(false, e instanceof ModelNotFoundException? "User not found" : "Not authorized", null));
             exchange.sendResponseHeaders(401, result.getBytes().length);
             exchange.getResponseBody().write(result.getBytes());
         } finally {

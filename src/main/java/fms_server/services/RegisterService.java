@@ -2,6 +2,7 @@ package fms_server.services;
 
 import fms_server.dao.*;
 import fms_server.logging.Logger;
+import fms_server.models.Event;
 import fms_server.models.Person;
 import fms_server.models.User;
 import fms_server.requests.RegisterRequest;
@@ -9,18 +10,20 @@ import fms_server.results.LoginResult;
 import fms_server.results.RegisterResult;
 import fms_server.results.Result;
 
-import java.util.Random;
+import java.util.*;
 
 public class RegisterService extends Service {
     private IDatabaseAccessObject<Person, String> personDAO;
+    private EventDAO eventDAO;
 
     /**
      * Constructor for the register service
      * @param userDAO UserDAO
      */
-    public RegisterService(IDatabaseAccessObject<User, String> userDAO, IDatabaseAccessObject<Person, String> personDAO) {
+    public RegisterService(UserDAO userDAO, PersonDAO personDAO, EventDAO eventDAO) {
         super(userDAO);
         this.personDAO = personDAO;
+        this.eventDAO = eventDAO;
     }
 
     /**
@@ -30,10 +33,23 @@ public class RegisterService extends Service {
      */
     public Result register(RegisterRequest user) {
         Person person = new Person(user);
+        List<Event> events = new ArrayList<>();
         User userToAdd = new User(person.getId(), user);
         try {
+            if (user.getUsername() == null)
+                return new RegisterResult(false, "Bad request, username needs to be lowercase", null);
             personDAO.add(person);
             ((UserDAO) getDao()).add(userToAdd);
+            Person spouse = FillService.Generator.generateSpouse(person);
+            List<Person> people = FillService.Generator.generateGenerations(Arrays.asList(person, spouse), 4, events, 2019 - 35);
+            HashMap<String, Person> map = new HashMap<>();
+            map.put("mother", spouse);
+            map.put("father", person);
+            List<Event> coupleEvents = FillService.Generator.generateEventsForCouple(map, 2019);
+            personDAO.add(spouse);
+            personDAO.addAll(people);
+            eventDAO.addAll(events);
+            eventDAO.addAll(coupleEvents);
         } catch (DataBaseException e) {
             Logger.error("Unable to add user", e);
             return new RegisterResult(false, "Already a user", null);

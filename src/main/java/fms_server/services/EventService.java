@@ -2,6 +2,7 @@ package fms_server.services;
 
 import fms_server.dao.*;
 import fms_server.logging.Logger;
+import fms_server.models.AuthToken;
 import fms_server.models.Event;
 import fms_server.models.Person;
 import fms_server.requests.AuthenticatedRequest;
@@ -9,6 +10,7 @@ import fms_server.requests.EventRequest;
 import fms_server.results.EventResult;
 import fms_server.results.EventsResult;
 import fms_server.results.PersonsResult;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.List;
 
@@ -32,17 +34,17 @@ public class EventService extends Service {
     public EventsResult getEventList(AuthenticatedRequest request) throws NotAuthenticatedException {
         if (authenticateToken(request.getToken()))
             throw new NotAuthenticatedException();
-
+        AuthToken token = new AuthToken(request.getToken());
         List<Event> list;
         try {
-            list = ((EventDAO) getDao()).getAll();
+            list = ((EventDAO) getDao()).getAllFromDescendant(token.getUserName());
             Event[] listr = new Event[list.size()];
             listr = list.toArray(listr);
             EventsResult result = new EventsResult(!list.isEmpty(), "", listr);
             return result;
         } catch (DataBaseException | ModelNotFoundException e) {
             Logger.error("Something went wrong getting the list of events", e);
-            return null;
+            return new EventsResult(false, "Failed to get list of events", null);
         }
     }
 
@@ -55,9 +57,12 @@ public class EventService extends Service {
         if (authenticateToken(request.getToken()))
             throw new NotAuthenticatedException();
 
+        AuthToken token = new AuthToken(request.getToken());
         Event event = null;
         try {
             event = ((EventDAO) getDao()).get(request.getEventID());
+            if (!event.getDescendant().equals(token.getUserName()))
+                return new EventResult(false, "Could not find the model", null);
         } catch (ModelNotFoundException | DataBaseException e) {
             Logger.error("Something went wrong, could not find the model", e);
         }

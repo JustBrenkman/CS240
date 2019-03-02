@@ -1,6 +1,7 @@
 package fms_server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
+import fms_server.dao.EventDAO;
 import fms_server.dao.PersonDAO;
 import fms_server.dao.UserDAO;
 import fms_server.logging.Logger;
@@ -18,7 +19,7 @@ public class RegisterHandler extends Handler {
     private RegisterService service;
 
     public RegisterHandler() {
-        service = new RegisterService(new UserDAO(), new PersonDAO());
+        service = new RegisterService(new UserDAO(), new PersonDAO(), new EventDAO());
     }
 
     /**

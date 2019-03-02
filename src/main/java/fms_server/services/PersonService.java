@@ -5,9 +5,11 @@ import fms_server.dao.IDatabaseAccessObject;
 import fms_server.dao.ModelNotFoundException;
 import fms_server.dao.PersonDAO;
 import fms_server.logging.Logger;
+import fms_server.models.AuthToken;
 import fms_server.models.Person;
 import fms_server.requests.AuthenticatedRequest;
 import fms_server.requests.PersonRequest;
+import fms_server.results.EventResult;
 import fms_server.results.PersonResult;
 import fms_server.results.PersonsResult;
 
@@ -56,6 +58,10 @@ public class PersonService extends Service {
     public PersonResult getPerson(PersonRequest request) throws NotAuthenticatedException, ModelNotFoundException, DataBaseException {
         if (authenticateToken(request.getAuthToken()))
             throw new NotAuthenticatedException();
-        return new PersonResult(true, "Got em", ((PersonDAO) getDao()).get(request.getPersonID()));
+        Person person = ((PersonDAO) getDao()).get(request.getPersonID());
+        AuthToken token = new AuthToken(request.getAuthToken());
+        if (!person.getDescendant().equals(token.getUserName()))
+            return new PersonResult(false, "Could not find the model", null);
+        return new PersonResult(true, "Got em", person);
     }
 }

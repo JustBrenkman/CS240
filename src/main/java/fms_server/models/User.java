@@ -204,4 +204,8 @@ public class User extends AbstractModel<String> {
     public int hashCode() {
         return Objects.hash(super.hashCode(), username, password, email, firstName, lastName, gender);
     }
+
+    public void hashPassword() {
+        password = Hashing.sha256().hashString(getPassword(), StandardCharsets.UTF_8).toString();
+    }
 }

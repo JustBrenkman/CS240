@@ -62,10 +62,10 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
                 person = AbstractModel.castToModel(Person.class, rs);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new DataBaseException("Failed to get person, something is wrong with the SQL command: " + sql);
         } catch (ModelDoesNotFitException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new DataBaseException("Failed to convert entry to model");
         } finally {
             DataBase.closeConnection(true);

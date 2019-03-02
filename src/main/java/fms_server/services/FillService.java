@@ -45,12 +45,14 @@ public class FillService extends Service {
      * @return whether fill was successful
      */
     public FillResult fill(FillRequest request) throws DataBaseException {
+        List<Person> ancestors;
+        List<Event> events = new ArrayList<>();
         try {
             User user = userDAO.getUserByUsername(request.getUserName());
             Person person = personDAO.get(user.getId());
             Person spouse = Generator.generateSpouse(person);
-            List<Person> ancestors = Generator.generateGenerations(Arrays.asList(person, spouse), request.getGenerations());
-            List<Event> events = Generator.generateEvents(ancestors);
+            ancestors = Generator.generateGenerations(Arrays.asList(person, spouse), request.getGenerations(), events, 2019);
+            events = Generator.generateEvents(ancestors);
             events.addAll(Generator.generateEvents(person));
             events.addAll(Generator.generateEvents(spouse));
             personDAO.add(spouse);
@@ -58,10 +60,11 @@ public class FillService extends Service {
             personDAO.update(person);
             eventDAO.addAll(events);
         } catch (ModelNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            Logger.error("Cannot find user", e);
             return new FillResult(false, "Unable to generate for user, user may not exist");
         }
-        return new FillResult(true, "Generations are filled");
+        return new FillResult(true, "Successfully added " + ancestors.size() + " persons and " + events.size() + " events to database");
     }
 
     /**
@@ -71,7 +74,7 @@ public class FillService extends Service {
         private static String[] firstMaleNames = {"Liam", "Noah", "William", "James", "Logan", "Benjamin", "Mason", "Elijah", "Oliver", "Jacob", "Lucas", "Michael","Alexander","Ethan","Daniel","Matthew","Aiden","Henry","Joseph","Jackson"};
         private static String[] firstFemaleNames = {"Emma","Olivia","Ava","Isabella","Sophia","Mia","Charlotte","Amelia","Evelyn","Abigail","Harper","Emily","Elizabeth","Avery","Sofia","Ella","Madison","Scarlett","Victoria","Aria"};
         private static String[] lastNames = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson"};
-        private static String[] eventTypes = {"birth", "death", "travel", "marriage"};
+        private static String[] eventTypes = {"birth", "travel", "death"};
         private static List<LinkedTreeMap<String, Object>> locations;
 
         static {
@@ -129,9 +132,9 @@ public class FillService extends Service {
             return spouse;
         }
 
-        private static List<Person> generateImmediateGeneration(Person person) {
+        private static HashMap<String, Person> generateImmediateGeneration(Person person) {
             if (person == null)
-                return new ArrayList<>();
+                return new HashMap<>();
             Person mother = generateFemalePerson();
             Person father = generateMalePerson();
             Person spouse = generateSpouse(person);
@@ -141,28 +144,123 @@ public class FillService extends Service {
             mother.setSpouseID(father.getId());
             if (spouse != null)
                 person.setSpouseID(spouse.getId());
-            List<Person> personList = new ArrayList<>();
-            personList.add(mother);
-            personList.add(father);
+            HashMap<String, Person> personList = new HashMap<>();
+            personList.put("mother", mother);
+            personList.put("father", father);
             if (spouse != null)
-                personList.add(spouse);
+                personList.put("spouse", spouse);
             return personList;
         }
 
-        public static List<Person> generateGenerations(List<Person> people, int depth) {
-            return gGDive(people, depth, 0);
+        public static List<Person> generateGenerations(List<Person> people, int depth, List<Event> events, int year) {
+            return gGDive(people, depth, 0, events, year);
         }
 
-        private static List<Person> gGDive(List<Person> people, int depth, int current) {
+        private static List<Person> gGDive(List<Person> people, int depth, int current, List<Event> events, int year) {
             current++;
             if (current > depth)
                 return new ArrayList<>();
             List<Person> generated = new ArrayList<>();
             for (Person person : people) {
-                generated.addAll(generateImmediateGeneration(person));
+                HashMap<String, Person> peopleToAdd = generateImmediateGeneration(person);
+                events.addAll(generateEventsForCouple(peopleToAdd, year));
+                generated.addAll(peopleToAdd.values());
             }
-            generated.addAll(gGDive(generated, depth, current));
+            year -= 50;
+            generated.addAll(gGDive(generated, depth, current, events, year));
             return generated;
+        }
+
+        public static List<Event> generateEventsForCouple(HashMap<String, Person> couples, int year) {
+            List<Event> events = new ArrayList<>();
+            Random random = new Random();
+            Map<String, Object> loc = locations.get(random.nextInt(locations.size() - 1));
+
+            loc = locations.get(random.nextInt(locations.size() - 1));
+            Event birth = new Event(
+                    UUID.randomUUID().toString(),
+                    null,
+                    couples.get("mother").getPersonID(),
+                    (double) loc.getOrDefault("latitude", -111.6509753),
+                    (double) loc.getOrDefault("longitude", 40.245769),
+                    String.valueOf(loc.getOrDefault("country", "USA")),
+                    String.valueOf(loc.getOrDefault("city", "Provo")),
+                    "birth",
+                    random.nextInt(5) + year - 30
+            );
+
+            loc = locations.get(random.nextInt(locations.size() - 1));
+            Event birth1 = new Event(
+                    UUID.randomUUID().toString(),
+                    null,
+                    couples.get("father").getPersonID(),
+                    (double) loc.getOrDefault("latitude", -111.6509753),
+                    (double) loc.getOrDefault("longitude", 40.245769),
+                    String.valueOf(loc.getOrDefault("country", "USA")),
+                    String.valueOf(loc.getOrDefault("city", "Provo")),
+                    "birth",
+                    random.nextInt(5) + year - 30
+            );
+
+            loc = locations.get(random.nextInt(locations.size() - 1));
+            Event travel1 = new Event(
+                    UUID.randomUUID().toString(),
+                    null,
+                    couples.get("father").getPersonID(),
+                    (double) loc.getOrDefault("latitude", -111.6509753),
+                    (double) loc.getOrDefault("longitude", 40.245769),
+                    String.valueOf(loc.getOrDefault("country", "USA")),
+                    String.valueOf(loc.getOrDefault("city", "Provo")),
+                    "travel",
+                    random.nextInt(5) + year - 20
+            );
+
+            loc = locations.get(random.nextInt(locations.size() - 1));
+            Event travel2 = new Event(
+                    UUID.randomUUID().toString(),
+                    null,
+                    couples.get("mother").getPersonID(),
+                    (double) loc.getOrDefault("latitude", -111.6509753),
+                    (double) loc.getOrDefault("longitude", 40.245769),
+                    String.valueOf(loc.getOrDefault("country", "USA")),
+                    String.valueOf(loc.getOrDefault("city", "Provo")),
+                    "travel",
+                    random.nextInt(5) + year - 20
+            );
+
+            loc = locations.get(random.nextInt(locations.size() - 1));
+            int marraigeYear = random.nextInt(2) + year;
+            Event marriage1 = new Event(
+                    UUID.randomUUID().toString(),
+                    null,
+                    couples.get("mother").getPersonID(),
+                    (double) loc.getOrDefault("latitude", -111.6509753),
+                    (double) loc.getOrDefault("longitude", 40.245769),
+                    String.valueOf(loc.getOrDefault("country", "USA")),
+                    String.valueOf(loc.getOrDefault("city", "Provo")),
+                    "marriage",
+                    marraigeYear
+            );
+
+            Event marriage2 = new Event(
+                    UUID.randomUUID().toString(),
+                    null,
+                    couples.get("father").getPersonID(),
+                    (double) loc.getOrDefault("latitude", -111.6509753),
+                    (double) loc.getOrDefault("longitude", 40.245769),
+                    String.valueOf(loc.getOrDefault("country", "USA")),
+                    String.valueOf(loc.getOrDefault("city", "Provo")),
+                    "marriage",
+                    marraigeYear
+            );
+
+            events.add(birth);
+            events.add(birth1);
+            events.add(marriage1);
+            events.add(marriage2);
+            events.add(travel1);
+            events.add(travel2);
+            return events;
         }
 
         public static List<Event> generateEvents(List<Person> people) {
@@ -192,4 +290,5 @@ public class FillService extends Service {
             return events;
         }
     }
+
 }

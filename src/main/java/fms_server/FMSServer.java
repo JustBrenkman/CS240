@@ -185,7 +185,7 @@ public class FMSServer {
      * Sets up logging fot the server
      */
     private void setupLogging() {
-        Logger.setLogLevel(Logger.LEVEL.FINE);
+        Logger.setLogLevel(Logger.LEVEL.INFO);
         Logger.setShouldPrintStackTrace(false);
         Logger.setLogClass(true);
         Logger.setLogSaver(new LogSaver("logs"));
