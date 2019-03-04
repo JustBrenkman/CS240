@@ -10,7 +10,7 @@ import fms_server.services.NotAuthenticatedException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
 import java.util.*;
 
 public abstract class Handler implements HttpHandler {
@@ -82,6 +82,7 @@ public abstract class Handler implements HttpHandler {
             handleRequest(exchange);
         } catch (Exception e) {
             Logger.error("Something went wrong during the handle", e);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             if (e instanceof IOException) // Throw the exception, the server might still expect it
                 throw e;
         } finally {
@@ -98,6 +99,13 @@ public abstract class Handler implements HttpHandler {
      */
     public abstract void handleRequest(HttpExchange exchange) throws IOException;
 
+    /**
+     * Retrieves the auth token from the header
+     *
+     * @param headers request header
+     * @return auth token
+     * @throws NotAuthenticatedException if there is no auth token the request is not authorized
+     */
     public String getAuthToken(Headers headers) throws NotAuthenticatedException {
         Logger.fine(Arrays.toString(headers.entrySet().toArray()));
         Set<Map.Entry<String, List<String>>> head = headers.entrySet();

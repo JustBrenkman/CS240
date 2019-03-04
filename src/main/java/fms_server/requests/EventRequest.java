@@ -1,7 +1,5 @@
 package fms_server.requests;
 
-import fms_server.models.AuthToken;
-
 public class EventRequest extends AuthenticatedRequest {
     /**
      * ID of the event that we want information about

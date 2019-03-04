@@ -1,5 +1,7 @@
 package fms_server.dao;
 
+import fms_server.annotation.Unimplemented;
+
 import java.util.List;
 import java.util.Map;
 
@@ -64,5 +66,6 @@ public interface IDatabaseAccessObject<T, V> {
      * @param queries map of keys and values, must have same names as DAO object entries
      * @return List of DAO objects
      */
+    @Unimplemented
     List<T> filter(Map<String, Object> queries);
 }

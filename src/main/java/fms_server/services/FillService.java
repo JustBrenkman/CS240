@@ -14,7 +14,6 @@ import fms_server.results.FillResult;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.GeneralSecurityException;
 import java.util.*;
 
 /**
@@ -48,22 +47,27 @@ public class FillService extends Service {
         List<Person> ancestors;
         List<Event> events = new ArrayList<>();
         try {
-            User user = userDAO.getUserByUsername(request.getUserName());
+            User user = userDAO.getUserByUsername(request.getUserName()); // Get the user
+
+            // Delete existing data about user
             Generator.setUser(user.getUsername());
             personDAO.deleteAll(user.getUsername(), user.getId());
             eventDAO.deleteAll(user.getUsername());
+
+            // Get person from user and generate additional information
             Person person = personDAO.get(user.getId());
             Person spouse = Generator.generateSpouse(person);
             ancestors = Generator.generateGenerations(Arrays.asList(person, spouse), request.getGenerations(), events, 2019);
             events = Generator.generateEvents(ancestors);
+
+            // Add generated events
             events.addAll(Generator.generateEvents(person));
             events.addAll(Generator.generateEvents(spouse));
             personDAO.add(spouse);
             personDAO.addAll(ancestors);
-            personDAO.update(person);
+            personDAO.update(person); // Update person information
             eventDAO.addAll(events);
         } catch (ModelNotFoundException e) {
-//            e.printStackTrace();
             Logger.error("Cannot find user", e);
             return new FillResult(false, "Unable to generate for user, user may not exist");
         }
@@ -79,8 +83,14 @@ public class FillService extends Service {
         private static String[] lastNames = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson"};
         private static String[] eventTypes = {"birth", "travel", "death"};
         private static List<LinkedTreeMap<String, Object>> locations;
+        /**
+         * Current user to fill data in
+         */
         private static String user;
 
+        /*
+          Get a list of random information
+         */
         static {
             Type type = new TypeToken<LinkedTreeMap<String, List<LinkedTreeMap<String, Object>>>>(){}.getType();
             try {
@@ -178,7 +188,7 @@ public class FillService extends Service {
         public static List<Event> generateEventsForCouple(HashMap<String, Person> couples, int year) {
             List<Event> events = new ArrayList<>();
             Random random = new Random();
-            Map<String, Object> loc = locations.get(random.nextInt(locations.size() - 1));
+            Map<String, Object> loc;
 
             loc = locations.get(random.nextInt(locations.size() - 1));
             Event birth = new Event(

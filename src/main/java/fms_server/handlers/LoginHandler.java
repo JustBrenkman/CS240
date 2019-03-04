@@ -8,6 +8,7 @@ import fms_server.results.LoginResult;
 import fms_server.services.LoginService;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 /**
  * This is the login handler class, it will handle the login url extension
@@ -30,11 +31,11 @@ public class LoginHandler extends Handler {
             LoginResult result = service.login(convertToRequest(exchange.getRequestBody(), LoginRequest.class));
             String json = gson.toJson(result);
 //            Logger.info("Returning: " + json);
-            exchange.sendResponseHeaders(result.isSuccess()? 200: 202, json.getBytes().length);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
             exchange.getResponseBody().write(json.getBytes());
         } catch (BadRequestException e) {
             Logger.error("Bad request, couldn't complete request", e);
-            exchange.sendResponseHeaders(400, 0);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
         } finally {
             exchange.close();
         }

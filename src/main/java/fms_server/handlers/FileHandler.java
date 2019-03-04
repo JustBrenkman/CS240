@@ -7,11 +7,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class FileHandler extends Handler {
     private String webPath = "res/web";
+
+    /**
+     * Get files that are requested
+     *
+     * @param exchange Data about the request
+     * @throws IOException if file cannot be found
+     */
     @Override
     public void handleRequest(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
@@ -23,12 +31,12 @@ public class FileHandler extends Handler {
             File file = new File(path);
             if (!file.exists())
                 throw new FileNotFoundException();
-            exchange.sendResponseHeaders(200, Files.size(Paths.get(path)));
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, Files.size(Paths.get(path)));
             OutputStream out = exchange.getResponseBody();
             Files.copy(Paths.get(path), out);
         } catch (Exception e) {
             Logger.error("Unable to find file", e);
-            exchange.sendResponseHeaders(401, 0);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, 0);
         } finally {
             exchange.close();
         }

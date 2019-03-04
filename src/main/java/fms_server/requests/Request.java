@@ -27,6 +27,9 @@ public class Request {
         return result.toString();
     }
 
+    /**
+     * Checks to see if the class has any null variables
+     */
     public void checkForProperInstantiation() {
         Field[] fields = this.getClass().getDeclaredFields();
         for (Field field : fields) {

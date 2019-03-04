@@ -1,9 +1,5 @@
 package fms_server.requests;
 
-import fms_server.models.AuthToken;
-
-import java.util.Map;
-
 public class AuthenticatedRequest {
     /**
      * Authentication token

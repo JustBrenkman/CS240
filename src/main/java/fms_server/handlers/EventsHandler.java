@@ -11,6 +11,7 @@ import fms_server.services.EventService;
 import fms_server.services.NotAuthenticatedException;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 public class EventsHandler extends Handler {
     private EventService service;
@@ -18,6 +19,12 @@ public class EventsHandler extends Handler {
         service = new EventService(new EventDAO());
     }
 
+    /**
+     * Handles the http request
+     *
+     * @param exchange Data about the request
+     * @throws IOException if there was an error
+     */
     @Override
     public void handleRequest(HttpExchange exchange) throws IOException {
         try {
@@ -26,18 +33,18 @@ public class EventsHandler extends Handler {
                 EventRequest request = new EventRequest(getAuthToken(exchange.getRequestHeaders()), args[2]);
                 EventResult result = service.getEvent(request);
                 String json = gson.toJson(result);
-                exchange.sendResponseHeaders(result.isSuccess()? 200: 202, json.getBytes().length);
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
                 exchange.getResponseBody().write(json.getBytes());
             } else {
                 EventsResult result = service.getEventList(new AuthenticatedRequest(getAuthToken(exchange.getRequestHeaders())));
                 String json = gson.toJson(result);
-                exchange.sendResponseHeaders(result.isSuccess()? 200: 202, json.getBytes().length);
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
                 exchange.getResponseBody().write(json.getBytes());
             }
         } catch (NotAuthenticatedException e) {
             Logger.warn("Not authenticated", e);
             String result = gson.toJson(new EventsResult(false, "Not authorized", null));
-            exchange.sendResponseHeaders(401, result.getBytes().length);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, result.getBytes().length);
             exchange.getResponseBody().write(result.getBytes());
         } finally {
             exchange.close();

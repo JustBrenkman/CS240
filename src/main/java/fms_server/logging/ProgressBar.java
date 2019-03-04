@@ -1,5 +1,7 @@
 package fms_server.logging;
 
+import com.google.common.annotations.Beta;
+
 public class ProgressBar {
     private int maxLength;
     private double percent;
@@ -16,6 +18,7 @@ public class ProgressBar {
     private String INCREMENT_7 = "\u2589";
     private String INCREMENT_8 = "\u2588";
 
+    @Beta
     public ProgressBar(int width) {
         this.maxLength = width;
     }
@@ -23,8 +26,6 @@ public class ProgressBar {
     public void startProgressBar() {
         System.out.print(PROGRESS_START + "          " + PROGRESS_END + "\n");
     }
-
-
 
     public void update(double percentage) {
 //        System.out.print(PROGRESS_START + INCREMENT + INCREMENT + INCREMENT + "      " + PROGRESS_END + "\r");

@@ -2,7 +2,10 @@ package fms_server.dao;
 
 import fms_server.logging.Logger;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DataBase {
     private static Connection connection;
@@ -60,7 +63,7 @@ public class DataBase {
             connection.close();
             connection = null;
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new DataBaseException("Cannot close exception", DataBaseException.ERROR_TYPE.SQL);
         }
     }
@@ -105,14 +108,14 @@ public class DataBase {
                     "FOREIGN KEY ( `id` ) REFERENCES persons( `id` )\n" +
                     ");";
 
-//            Logger.info("Creating events table");
+            Logger.fine("Creating events table");
             stmt.execute(sql);
-//            Logger.info("Creating persons table");
+            Logger.fine("Creating persons table");
             stmt.execute(sql_persons);
-//            Logger.info("Creating users");
+            Logger.fine("Creating users");
             stmt.execute(sql_users);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.error("Failed to create database tables", e);
             throw new DataBaseException("Something went wrong", DataBaseException.ERROR_TYPE.SQL);
         } finally {
             closeConnection(true);

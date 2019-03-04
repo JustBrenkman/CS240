@@ -6,8 +6,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 
-import java.util.LinkedHashMap;
-
 /**
  * This class takes the authentication token and performs all the calculations about the authentication of the token
  */
@@ -31,17 +29,16 @@ public class AuthToken {
         this.authToken = authToken;
     }
 
+    /**
+     * Decodes auth token and gets username
+     *
+     * @return username in auth token
+     */
     public String getUserName() {
         Jws<Claims> body = Jwts.parser().setSigningKey(FMSServer.getKey()).parseClaimsJws(authToken);
         Logger.fine("Username: " + body.getBody().getSubject());
         return body.getBody().getSubject();
     }
-
-    /**
-     * Checks to see if the authentication token is valid
-     * @return valid or not
-     */
-    public boolean isAuthenticated(){return true;}
 
     public String getAuthTokenString() {
         return authToken;

@@ -1,8 +1,15 @@
 package fms_server.dao;
 
 public class DataBaseException extends Exception {
-    public enum ERROR_TYPE {SQL, CONNECTION_ALREADY_IN_USE, UNKNOWN, CLOSED_CONNECTION}
+    /**
+     * Type of failure
+     */
     private ERROR_TYPE type;
+
+    /**
+     * Possible database failure types
+     */
+    public enum ERROR_TYPE {SQL, CONNECTION_ALREADY_IN_USE, UNKNOWN, CLOSED_CONNECTION}
 
     public DataBaseException() {
         super();

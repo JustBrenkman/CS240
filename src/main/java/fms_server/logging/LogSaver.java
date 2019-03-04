@@ -4,13 +4,27 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Calendar;
+import java.util.Deque;
 
 public class LogSaver {
-    private Path path;
-    private Deque<String> messageQueue;
-    private String timestamp;
+    /**
+     * Is in the process of writing messages to file
+     */
     private static boolean logging = false;
+    /**
+     * Path to file
+     */
+    private Path path;
+    /**
+     * List of logs to write to file
+     */
+    private Deque<String> messageQueue;
+    /**
+     * Date that log file was created
+     */
+    private String timestamp;
 
     public LogSaver(String path) {
         this.path = Paths.get(path);
@@ -26,8 +40,13 @@ public class LogSaver {
         }
     }
 
-    public static String exceptionStacktraceToString(Exception e)
-    {
+    /**
+     * Converts an exception to a string list
+     *
+     * @param e exception
+     * @return string reforestation
+     */
+    public static String exceptionStacktraceToString(Exception e) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
         e.printStackTrace(ps);
@@ -35,10 +54,21 @@ public class LogSaver {
         return baos.toString();
     }
 
+    /**
+     * Log message
+     * @param level
+     * @param message
+     */
     public void log(Logger.LEVEL level, String message) {
         log(level, message, null);
     }
 
+    /**
+     * Log message
+     * @param level
+     * @param message
+     * @param e
+     */
     public void log(Logger.LEVEL level, String message, Exception e) {
         Calendar calendar = Calendar.getInstance();
         String timestamp = new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss:mmm").format(calendar.getTime());
@@ -52,10 +82,13 @@ public class LogSaver {
             new Thread(this::writeLogQueueToFile).start();
     }
 
+    /**
+     * Write all logged messages to file
+     */
     private void writeLogQueueToFile() {
         logging = true;
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(String.valueOf(path + "/" + timestamp + ".txt"), true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(path + "/" + timestamp + ".txt", true));
             PrintWriter printWriter = new PrintWriter(writer);
             while (!messageQueue.isEmpty())
                 printWriter.println(messageQueue.pop());
@@ -66,6 +99,9 @@ public class LogSaver {
         logging = false;
     }
 
+    /**
+     * Flush out the queue
+     */
     public void flush() {
         writeLogQueueToFile();
     }

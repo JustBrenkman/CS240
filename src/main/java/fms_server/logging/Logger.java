@@ -1,11 +1,12 @@
 package fms_server.logging;
 
+import fms_server.annotation.Unfinsihed;
+
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * Provides an abstraction to System.out.print that will format the output for better logging
@@ -14,7 +15,13 @@ import java.util.concurrent.Callable;
  * TODO Add custom color scheming
  */
 public class Logger {
+    /**
+     * Saves log to file
+     */
     private static LogSaver logSaver;
+    /**
+     * Whether or not to log to file
+     */
     private static boolean logClass = false;
 
     public static void setLogSaver(LogSaver saver) {
@@ -186,6 +193,12 @@ public class Logger {
     }
     public static void error(Class<?> tClass, String message) {error(tClass, message, null);}
 
+    /**
+     * Logs a severe log
+     *
+     * @param message message
+     * @param e       exception
+     */
     public static void severe(String message, Exception e) {
         if (logClass)
             message = modifyMessageIncludeClass(Arrays.asList(Thread.currentThread().getStackTrace()), message);
@@ -404,15 +417,25 @@ public class Logger {
     public static LEVEL getLogLevel() {
         return logLevel;
     }
+
     public static void setLogLevel(LEVEL logLevel) {
         Logger.logLevel = logLevel;
     }
 
+    /**
+     * Creates a log saver
+     */
     public static void setUpLogSaver() {
         if (logSaver == null)
             logSaver = new LogSaver("logs");
     }
 
+    /**
+     * Logs a log
+     * @param level level
+     * @param message message
+     * @param e exception
+     */
     private static void saveLog(LEVEL level, String message, Exception e) {
         if (logSaver != null)
             logSaver.log(level, message, e);
@@ -428,21 +451,35 @@ public class Logger {
         if (logSaver != null)
             logSaver.flush();
     }
+
     public static LogSaver getLogSaver() {
         return logSaver;
     }
-
     public static boolean isLogClass() {
         return logClass;
     }
+
     public static void setLogClass(boolean logClass) {
         Logger.logClass = logClass;
     }
 
+    /**
+     * Logs entering a method
+     *
+     * @param tClass class
+     * @param method method
+     */
+    @Unfinsihed
     public static void enter(Class<?> tClass, Method method) {
         fine("Entering CLASS: " + tClass.getSimpleName() + ", METHOD: " + method.getName());
     }
 
+    /**
+     * Logs exiting a method
+     * @param tClass class
+     * @param method method
+     */
+    @Unfinsihed
     public static void exit(Class<?> tClass, Method method) {
         fine("Entering CLASS: " + tClass.getSimpleName() + ", METHOD: " + method.getName());
     }

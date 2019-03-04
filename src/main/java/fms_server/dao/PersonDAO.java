@@ -1,10 +1,10 @@
 package fms_server.dao;
 
+import fms_server.annotation.Unimplemented;
 import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
 import fms_server.models.ModelDoesNotFitException;
 import fms_server.models.Person;
-import fms_server.models.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -240,14 +240,8 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
      * @return List
      */
     @Override
+    @Unimplemented
     public List<Person> filter(Map<String, Object> queries) {
         return null;
     }
-
-    /**
-     * Gets a list of persons that are associated with the person
-     * @param person person that is in question
-     * @return List of person objects
-     */
-    public List<Person> filterByUser(User person) {return null;}
 }

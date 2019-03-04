@@ -1,14 +1,15 @@
 package fms_server.services;
 
-import fms_server.dao.*;
+import fms_server.dao.DataBaseException;
+import fms_server.dao.EventDAO;
+import fms_server.dao.PersonDAO;
+import fms_server.dao.UserDAO;
 import fms_server.logging.Logger;
 import fms_server.models.Event;
 import fms_server.models.Person;
 import fms_server.models.User;
 import fms_server.requests.LoadRequest;
 import fms_server.results.LoadResult;
-
-import javax.xml.crypto.Data;
 
 /**
  * Load service class
@@ -55,7 +56,6 @@ public class LoadService extends Service {
             } catch (DataBaseException | NullPointerException e) {
                 Logger.warn("Unable to add data to database", e);
                 allLoaded = false;
-//                return new LoadResult(false, "Unable to load the data");
             }
         return new LoadResult(allLoaded, allLoaded ? "Loaded " + request.getPersons().length + " users, " + request.getPersons().length + " persons, " + request.getEvents().length + " events" + " into the databases" : "Unable to load the data");
     }

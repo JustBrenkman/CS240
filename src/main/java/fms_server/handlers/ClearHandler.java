@@ -9,6 +9,7 @@ import fms_server.results.ClearResult;
 import fms_server.services.ClearService;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 /**
  * Handles the clear extension
@@ -30,11 +31,11 @@ public class ClearHandler extends Handler {
         try {
             ClearResult clearResult = service.call(ClearResult.class, null);
             String response = gson.toJson(clearResult);
-            exchange.sendResponseHeaders(clearResult.isSuccess()? 200: 202, response.getBytes().length);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.getBytes().length);
             exchange.getResponseBody().write(response.getBytes());
         } catch (NoSuchMethodException e) {
             Logger.severe("Unable to clear tables", e);
-            exchange.sendResponseHeaders(500, 0);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
         } finally {
             exchange.close();
         }

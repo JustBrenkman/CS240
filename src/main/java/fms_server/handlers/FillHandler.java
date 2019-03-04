@@ -1,7 +1,10 @@
 package fms_server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
-import fms_server.dao.*;
+import fms_server.dao.DataBaseException;
+import fms_server.dao.EventDAO;
+import fms_server.dao.PersonDAO;
+import fms_server.dao.UserDAO;
 import fms_server.logging.Logger;
 import fms_server.requests.FillRequest;
 import fms_server.results.FillResult;
@@ -21,6 +24,12 @@ public class FillHandler extends Handler {
         service = new FillService(new EventDAO(), new UserDAO(), new PersonDAO());
     }
 
+    /**
+     * Handle the fill handler, generate a bunch of data
+     *
+     * @param exchange Data about the request
+     * @throws IOException if there is an error in fulfilling the request
+     */
     @Override
     public void handleRequest(HttpExchange exchange) throws IOException {
         String[] args = exchange.getRequestURI().getPath().split("/");
@@ -32,7 +41,7 @@ public class FillHandler extends Handler {
                 Logger.fine("Username: " + username + ", generations: " + generations);
                 FillResult result = service.fill(new FillRequest(username, generations));
                 String json = gson.toJson(result);
-                exchange.sendResponseHeaders(200, json.getBytes().length);
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
                 exchange.getResponseBody().write(json.getBytes());
             } else {
                 throw new BadRequestException("Not enough params");

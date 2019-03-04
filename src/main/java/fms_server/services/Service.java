@@ -1,5 +1,6 @@
 package fms_server.services;
 
+import com.google.common.annotations.Beta;
 import com.google.gson.Gson;
 import fms_server.FMSServer;
 import fms_server.dao.IDatabaseAccessObject;
@@ -39,12 +40,30 @@ public class Service {
         return dao;
     }
 
+    /**
+     * Register a service call
+     *
+     * @param tClass   return type of function
+     * @param function function
+     * @param <T>      return type
+     */
+    @Beta
     <T extends Result> void registerServiceCall(Class<T> tClass, Function<Request, Result> function) {
         if (serviceCalls.containsKey(tClass))
             Logger.warn("Already set that service call, rewriting the old call");
         serviceCalls.put(tClass, function);
     }
 
+    /**
+     * Call function to call a service function
+     * @param tClass return type
+     * @param request request
+     * @param <T> type of return
+     * @param <U> type of request
+     * @return result
+     * @throws NoSuchMethodException if it doesn't exist
+     */
+    @Beta
     public <T extends Result, U extends Request> T call(Class<T> tClass, U request) throws NoSuchMethodException {
         try {
             if (serviceCalls.containsKey(tClass))

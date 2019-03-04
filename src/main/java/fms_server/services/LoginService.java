@@ -11,7 +11,6 @@ import fms_server.requests.LoginRequest;
 import fms_server.results.LoginResult;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 /**
  * Service class to do with logging in
@@ -40,7 +39,6 @@ public class LoginService extends Service {
                 return new LoginResult(true, "Found user", generateAuthToken(user).getAuthTokenString(), user.getUsername(), user.getPeronID());
             }
         } catch (DataBaseException | ModelNotFoundException e) {
-//            e.printStackTrace();
             Logger.warn("Unable to login user", e);
             return new LoginResult(false, "Failed to find user", null, null, null);
         }

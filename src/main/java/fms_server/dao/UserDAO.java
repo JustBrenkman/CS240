@@ -1,5 +1,6 @@
 package fms_server.dao;
 
+import fms_server.annotation.Unimplemented;
 import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
 import fms_server.models.ModelDoesNotFitException;
@@ -158,6 +159,7 @@ public class UserDAO implements IDatabaseAccessObject<User, String> {
      * @param user user object to update
      */
     @Override
+    @Unimplemented
     public void update(User user) {
 
     }
@@ -234,6 +236,7 @@ public class UserDAO implements IDatabaseAccessObject<User, String> {
      * @return list of filtered objects
      */
     @Override
+    @Unimplemented
     public List<User> filter(Map<String, Object> queries) {
         return null;
     }

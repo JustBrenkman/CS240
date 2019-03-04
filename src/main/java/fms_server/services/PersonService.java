@@ -9,7 +9,6 @@ import fms_server.models.AuthToken;
 import fms_server.models.Person;
 import fms_server.requests.AuthenticatedRequest;
 import fms_server.requests.PersonRequest;
-import fms_server.results.EventResult;
 import fms_server.results.PersonResult;
 import fms_server.results.PersonsResult;
 
@@ -42,8 +41,7 @@ public class PersonService extends Service {
             list = ((PersonDAO) getDao()).getAll();
             Person[] listr = new Person[list.size()];
             listr = list.toArray(listr);
-            PersonsResult result = new PersonsResult(!list.isEmpty(), "", listr);
-            return result;
+            return new PersonsResult(!list.isEmpty(), "", listr);
         } catch (DataBaseException | ModelNotFoundException e) {
             Logger.error("Something went wrong getting the list of persons", e);
         }

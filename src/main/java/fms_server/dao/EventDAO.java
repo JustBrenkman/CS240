@@ -1,10 +1,10 @@
 package fms_server.dao;
 
+import fms_server.annotation.Unimplemented;
 import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
 import fms_server.models.Event;
 import fms_server.models.ModelDoesNotFitException;
-import fms_server.models.Person;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -256,6 +256,7 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
      * @return List of filtered events
      */
     @Override
+    @Unimplemented
     public List<Event> filter(Map<String, Object> queries) {
         return null;
     }

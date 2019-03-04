@@ -1,16 +1,16 @@
 package fms_server.services;
 
-import fms_server.dao.*;
+import fms_server.dao.DataBaseException;
+import fms_server.dao.EventDAO;
+import fms_server.dao.IDatabaseAccessObject;
+import fms_server.dao.ModelNotFoundException;
 import fms_server.logging.Logger;
 import fms_server.models.AuthToken;
 import fms_server.models.Event;
-import fms_server.models.Person;
 import fms_server.requests.AuthenticatedRequest;
 import fms_server.requests.EventRequest;
 import fms_server.results.EventResult;
 import fms_server.results.EventsResult;
-import fms_server.results.PersonsResult;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.List;
 
@@ -40,8 +40,7 @@ public class EventService extends Service {
             list = ((EventDAO) getDao()).getAllFromDescendant(token.getUserName());
             Event[] listr = new Event[list.size()];
             listr = list.toArray(listr);
-            EventsResult result = new EventsResult(!list.isEmpty(), "", listr);
-            return result;
+            return new EventsResult(!list.isEmpty(), "", listr);
         } catch (DataBaseException | ModelNotFoundException e) {
             Logger.error("Something went wrong getting the list of events", e);
             return new EventsResult(false, "Failed to get list of events", null);
