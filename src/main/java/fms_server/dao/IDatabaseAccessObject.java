@@ -7,6 +7,7 @@
 package fms_server.dao;
 
 import fms_server.annotation.Unimplemented;
+import fms_server.exceptions.DataBaseException;
 
 import java.util.List;
 import java.util.Map;

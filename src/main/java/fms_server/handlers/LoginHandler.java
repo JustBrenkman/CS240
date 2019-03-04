@@ -8,6 +8,7 @@ package fms_server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import fms_server.dao.UserDAO;
+import fms_server.exceptions.BadRequestException;
 import fms_server.logging.Logger;
 import fms_server.requests.LoginRequest;
 import fms_server.results.LoginResult;
@@ -20,7 +21,7 @@ import java.net.HttpURLConnection;
  * This is the login handler class, it will handle the login url extension
  */
 public class LoginHandler extends Handler {
-    LoginService service;
+    private LoginService service;
 
     public LoginHandler() {
         service = new LoginService(new UserDAO());
@@ -36,7 +37,6 @@ public class LoginHandler extends Handler {
         try {
             LoginResult result = service.login(convertToRequest(exchange.getRequestBody(), LoginRequest.class));
             String json = gson.toJson(result);
-//            Logger.info("Returning: " + json);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
             exchange.getResponseBody().write(json.getBytes());
         } catch (BadRequestException e) {

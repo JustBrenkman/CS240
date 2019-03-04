@@ -13,8 +13,9 @@ import fms_server.requests.AuthenticatedRequest;
 import fms_server.requests.EventRequest;
 import fms_server.results.EventResult;
 import fms_server.results.EventsResult;
+import fms_server.results.Result;
 import fms_server.services.EventService;
-import fms_server.services.NotAuthenticatedException;
+import fms_server.exceptions.NotAuthenticatedException;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -36,18 +37,20 @@ public class EventsHandler extends Handler {
     public void handleRequest(HttpExchange exchange) throws IOException {
         try {
             String[] args = exchange.getRequestURI().getPath().split("/");
-            if (args.length > 2) {
-                EventRequest request = new EventRequest(getAuthToken(exchange.getRequestHeaders()), args[2]);
-                EventResult result = service.getEvent(request);
-                String json = gson.toJson(result);
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
-                exchange.getResponseBody().write(json.getBytes());
-            } else {
-                EventsResult result = service.getEventList(new AuthenticatedRequest(getAuthToken(exchange.getRequestHeaders())));
-                String json = gson.toJson(result);
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
-                exchange.getResponseBody().write(json.getBytes());
-            }
+            Result result;
+
+            if (args.length > 2)
+                result = service.getEvent(new EventRequest(
+                        getAuthToken(exchange.getRequestHeaders()), args[2]
+                ));
+            else
+                result = service.getEventList(new AuthenticatedRequest(
+                        getAuthToken(exchange.getRequestHeaders())
+                ));
+
+            String json = gson.toJson(result);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
+            exchange.getResponseBody().write(json.getBytes());
         } catch (NotAuthenticatedException e) {
             Logger.warn("Not authenticated", e);
             String result = gson.toJson(new EventsResult(false, "Not authorized", null));

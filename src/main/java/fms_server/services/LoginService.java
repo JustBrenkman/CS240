@@ -7,7 +7,7 @@
 package fms_server.services;
 
 import com.google.common.hash.Hashing;
-import fms_server.dao.DataBaseException;
+import fms_server.exceptions.DataBaseException;
 import fms_server.dao.IDatabaseAccessObject;
 import fms_server.dao.ModelNotFoundException;
 import fms_server.dao.UserDAO;

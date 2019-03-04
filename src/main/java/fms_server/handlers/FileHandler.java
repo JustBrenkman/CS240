@@ -29,18 +29,20 @@ public class FileHandler extends Handler {
     @Override
     public void handleRequest(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
+
         if (path == null || path.equals("/"))
             path = "/index.html";
+
         path = webPath + path;
         try {
-            Logger.fine(path);
+            // Check to see if the file exists
             File file = new File(path);
             if (!file.exists())
                 throw new FileNotFoundException();
+
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, Files.size(Paths.get(path)));
-            OutputStream out = exchange.getResponseBody();
-            Files.copy(Paths.get(path), out);
-        } catch (Exception e) {
+            Files.copy(Paths.get(path), exchange.getResponseBody());
+        } catch (FileNotFoundException e) {
             Logger.error("Unable to find file", e);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, 0);
         } finally {

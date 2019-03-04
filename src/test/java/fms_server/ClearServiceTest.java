@@ -1,7 +1,7 @@
 package fms_server;
 
 import fms_server.dao.DataBase;
-import fms_server.dao.DataBaseException;
+import fms_server.exceptions.DataBaseException;
 import fms_server.dao.PersonDAO;
 import fms_server.dao.UserDAO;
 import fms_server.logging.Logger;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ClearServiceTest {
-    ClearService service;
+    private ClearService service;
 
     ClearServiceTest() {
         service = new ClearService(new UserDAO(), new PersonDAO(), new UserDAO());

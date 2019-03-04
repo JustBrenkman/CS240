@@ -13,7 +13,7 @@ import fms_server.logging.Logger;
 import fms_server.requests.AuthenticatedRequest;
 import fms_server.requests.PersonRequest;
 import fms_server.results.PersonResult;
-import fms_server.results.PersonsResult;
+import fms_server.results.Result;
 import fms_server.services.PersonService;
 
 import java.io.IOException;
@@ -30,21 +30,22 @@ public class PersonHandler extends Handler {
     public void handleRequest(HttpExchange exchange) throws IOException {
         try {
             String[] args = exchange.getRequestURI().getPath().split("/");
-            if (args.length > 2) {
-                PersonRequest request = new PersonRequest(getAuthToken(exchange.getRequestHeaders()), args[2]);
-                PersonResult result = service.getPerson(request);
-                String json = gson.toJson(result);
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
-                exchange.getResponseBody().write(json.getBytes());
-            } else {
-                PersonsResult result = service.getAllPersons(new AuthenticatedRequest(getAuthToken(exchange.getRequestHeaders())));
-                String json = gson.toJson(result);
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
-                exchange.getResponseBody().write(json.getBytes());
-            }
+            Result result;
+
+            if (args.length > 2)
+                result = service.getPerson(new PersonRequest(getAuthToken(exchange.getRequestHeaders()), args[2]));
+            else
+                result = service.getAllPersons(new AuthenticatedRequest(getAuthToken(exchange.getRequestHeaders())));
+
+            String json = gson.toJson(result);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
+            exchange.getResponseBody().write(json.getBytes());
+
         } catch (Exception e) {
-            Logger.warn(e instanceof ModelNotFoundException? "User not found" : "Not authenticated", e);
-            String result = gson.toJson(new PersonResult(false, e instanceof ModelNotFoundException? "User not found" : "Not authorized", null));
+            Logger.warn(e instanceof ModelNotFoundException ? "User not found" : "Not authenticated", e);
+            String result = gson.toJson(new PersonResult(false, e instanceof ModelNotFoundException ?
+                    "User not found" : "Not authorized", null));
+
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, result.getBytes().length);
             exchange.getResponseBody().write(result.getBytes());
         } finally {

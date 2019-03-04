@@ -7,7 +7,8 @@
 package fms_server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
-import fms_server.dao.DataBaseException;
+import fms_server.exceptions.BadRequestException;
+import fms_server.exceptions.DataBaseException;
 import fms_server.dao.EventDAO;
 import fms_server.dao.PersonDAO;
 import fms_server.dao.UserDAO;

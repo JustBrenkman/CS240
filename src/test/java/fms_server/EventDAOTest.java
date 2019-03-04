@@ -1,7 +1,7 @@
 package fms_server;
 
 import fms_server.dao.DataBase;
-import fms_server.dao.DataBaseException;
+import fms_server.exceptions.DataBaseException;
 import fms_server.dao.EventDAO;
 import fms_server.dao.ModelNotFoundException;
 import fms_server.logging.Logger;

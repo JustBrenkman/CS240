@@ -8,7 +8,7 @@ package fms_server;
 
 import com.sun.net.httpserver.HttpServer;
 import fms_server.dao.DataBase;
-import fms_server.dao.DataBaseException;
+import fms_server.exceptions.DataBaseException;
 import fms_server.handlers.*;
 import fms_server.logging.LogSaver;
 import fms_server.logging.Logger;

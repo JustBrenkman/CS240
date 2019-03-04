@@ -10,6 +10,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import fms_server.dao.*;
+import fms_server.exceptions.DataBaseException;
 import fms_server.logging.Logger;
 import fms_server.models.Event;
 import fms_server.models.Person;
@@ -39,7 +40,6 @@ public class FillService extends Service {
     }
 
     public FillService(EventDAO eventDAO, UserDAO userDAO, PersonDAO personDAO) {
-        super(eventDAO);
         this.personDAO = personDAO;
         this.eventDAO = eventDAO;
         this.userDAO = userDAO;
@@ -51,14 +51,14 @@ public class FillService extends Service {
      * @return whether fill was successful
      */
     public FillResult fill(FillRequest request) throws DataBaseException {
-        List<Person> ancestors = new ArrayList<>();
+        List<Person> ancestors;
         List<Event> events = new ArrayList<>();
         try {
             User user = userDAO.getUserByUsername(request.getUserName()); // Get the user
 
             // Delete existing data about user
             Generator.setUser(user.getUsername());
-            personDAO.deleteAll(user.getUsername(), user.getId());
+            personDAO.deleteAll(user.getUsername(), user.getId()); // Deletes all except the user
             eventDAO.deleteAll(user.getUsername());
 
             // Get person from user and generate additional information
@@ -67,11 +67,6 @@ public class FillService extends Service {
             Logger.info("person: " + person.toString());
             Logger.info("spouse: " + spouse.toString());
             ancestors = Generator.generateGenerations(Arrays.asList(person), request.getGenerations(), events, 2019 - 35);
-//            events = Generator.generateEvents(ancestors);
-
-            // Add generated events
-//            events.addAll(Generator.generateEvents(person));
-//            events.addAll(Generator.generateEvents(spouse));
             personDAO.add(spouse);
             personDAO.addAll(ancestors);
             personDAO.update(person); // Update person information
@@ -79,8 +74,6 @@ public class FillService extends Service {
         } catch (ModelNotFoundException e) {
             Logger.error("Cannot find user", e);
             return new FillResult(false, "Unable to generate for user, user may not exist");
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return new FillResult(true, "Successfully added " + ancestors.size() + " persons and " + events.size() + " events to database");
     }
@@ -162,18 +155,13 @@ public class FillService extends Service {
                 return new HashMap<>();
             Person mother = generateFemalePerson();
             Person father = generateMalePerson();
-//            Person spouse = generateSpouse(person);
             person.setMotherID(mother.getId());
             person.setFatherID(father.getId());
             father.setSpouseID(mother.getId());
             mother.setSpouseID(father.getId());
-//            if (spouse != null)
-//                person.setSpouseID(spouse.getId());
             HashMap<String, Person> personList = new HashMap<>();
             personList.put("mother", mother);
             personList.put("father", father);
-//            if (spouse != null)
-//                personList.put("spouse", spouse);
             return personList;
         }
 
@@ -288,37 +276,9 @@ public class FillService extends Service {
             return events;
         }
 
-        public static List<Event> generateEvents(List<Person> people) {
-            List<Event> events = new ArrayList<>();
-            for (Person person : people)
-                events.addAll(generateEvents(person));
-            return events;
-        }
-
-        public static List<Event> generateEvents(Person person) {
-            List<Event> events = new ArrayList<>();
-            Random random = new Random();
-            for (String type : eventTypes) {
-                Map<String, Object> loc = locations.get(random.nextInt(locations.size() - 1));
-                events.add(new Event(
-                        UUID.randomUUID().toString(),
-                        user,
-                        person.getPersonID(),
-                        (double) loc.getOrDefault("latitude", -111.6509753),
-                        (double) loc.getOrDefault("longitude", 40.245769),
-                        String.valueOf(loc.getOrDefault("country", "USA")),
-                        String.valueOf(loc.getOrDefault("city", "Provo")),
-                        type,
-                        random.nextInt(2019)
-                ));
-            }
-            return events;
-        }
-
         public static String getUser() {
             return user;
         }
-
         public static void setUser(String user) {
             Generator.user = user;
         }

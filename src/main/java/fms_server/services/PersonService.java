@@ -6,10 +6,11 @@
 
 package fms_server.services;
 
-import fms_server.dao.DataBaseException;
+import fms_server.exceptions.DataBaseException;
 import fms_server.dao.IDatabaseAccessObject;
 import fms_server.dao.ModelNotFoundException;
 import fms_server.dao.PersonDAO;
+import fms_server.exceptions.NotAuthenticatedException;
 import fms_server.logging.Logger;
 import fms_server.models.AuthToken;
 import fms_server.models.Person;

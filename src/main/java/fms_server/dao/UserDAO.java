@@ -7,9 +7,10 @@
 package fms_server.dao;
 
 import fms_server.annotation.Unimplemented;
+import fms_server.exceptions.DataBaseException;
 import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
-import fms_server.models.ModelDoesNotFitException;
+import fms_server.exceptions.ModelDoesNotFitException;
 import fms_server.models.User;
 
 import java.sql.*;

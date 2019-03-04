@@ -1,6 +1,7 @@
 package fms_server;
 
 import fms_server.dao.*;
+import fms_server.exceptions.DataBaseException;
 import fms_server.logging.Logger;
 import fms_server.models.User;
 import org.junit.jupiter.api.*;

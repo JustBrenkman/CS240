@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpExchange;
 import fms_server.dao.EventDAO;
 import fms_server.dao.PersonDAO;
 import fms_server.dao.UserDAO;
+import fms_server.exceptions.BadRequestException;
 import fms_server.logging.Logger;
 import fms_server.requests.LoadRequest;
 import fms_server.results.LoadResult;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 
 public class LoadHandler extends Handler {
-    LoadService service = new LoadService(new EventDAO(), new UserDAO(), new PersonDAO());
+    private LoadService service = new LoadService(new EventDAO(), new UserDAO(), new PersonDAO());
 
     /**
      * Loads data into database

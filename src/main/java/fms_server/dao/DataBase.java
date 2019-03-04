@@ -6,14 +6,15 @@
 
 package fms_server.dao;
 
+import fms_server.exceptions.DataBaseException;
 import fms_server.logging.Logger;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DataBase {
+    /**
+     * Static connection to the database, thread safe
+     */
     private static Connection connection;
 
     static {
@@ -41,8 +42,8 @@ public class DataBase {
             final String CONNECTION_URL = "jdbc:sqlite:familymap.db";
             connection = DriverManager.getConnection(CONNECTION_URL);
             if (connection != null) {
-//                DatabaseMetaData meta = connection.getMetaData();
-//                Logger.fine("The driver name is " + meta.getDriverName());
+                DatabaseMetaData meta = connection.getMetaData();
+                Logger.fine("The driver name is " + meta.getDriverName());
                 connection.setAutoCommit(autocommit);
             }
             return connection;
@@ -69,7 +70,6 @@ public class DataBase {
             connection.close();
             connection = null;
         } catch (SQLException e) {
-//            e.printStackTrace();
             throw new DataBaseException("Cannot close exception", DataBaseException.ERROR_TYPE.SQL);
         }
     }

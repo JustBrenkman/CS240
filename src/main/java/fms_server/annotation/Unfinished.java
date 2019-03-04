@@ -18,6 +18,6 @@ import java.lang.annotation.Target;
         ElementType.FIELD
 })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Unfinsihed {
+public @interface Unfinished {
     boolean value() default true;
 }

@@ -28,8 +28,18 @@ import java.util.function.Function;
  * Base class for all services
  */
 public class Service {
+    /**
+     * Database access object for the service
+     */
     private IDatabaseAccessObject dao;
+    /**
+     * This is for converting json to string and vice versa
+     */
     private Gson gson;
+    /**
+     * This is a map of service calls that the service can handle based on their return values
+     */
+    @Beta
     private HashMap<Class<?>, Function<Request, Result>> serviceCalls; // This is an experimental feature
 
     public Service(IDatabaseAccessObject dao) {
@@ -37,6 +47,8 @@ public class Service {
         this.gson = new Gson();
         serviceCalls = new HashMap<>();
     }
+
+    public Service() {}
 
     /**
      * Gets the IDatabaseAccessObject associated with the class
@@ -93,7 +105,7 @@ public class Service {
     }
 
     /**
-     * Authenticates an authtoken
+     * Authenticates an auth token. Checks to see that it has not been tampered with and that it has not expired
      * @param token token string
      * @return if token is authenticated
      */

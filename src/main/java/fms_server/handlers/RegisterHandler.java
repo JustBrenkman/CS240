@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpExchange;
 import fms_server.dao.EventDAO;
 import fms_server.dao.PersonDAO;
 import fms_server.dao.UserDAO;
+import fms_server.exceptions.BadRequestException;
 import fms_server.logging.Logger;
 import fms_server.requests.RegisterRequest;
 import fms_server.results.Result;

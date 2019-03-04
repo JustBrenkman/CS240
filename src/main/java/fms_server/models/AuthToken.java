@@ -25,7 +25,7 @@ public class AuthToken {
     /**
      * Constructor for the authentication token
      * @param authToken authentication string
-     * @param subject Authdata to include in authtoken
+     * @param subject Auth data to include in auth token
      */
     public AuthToken(String authToken, String subject) {
         this.authToken = authToken;

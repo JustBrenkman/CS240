@@ -6,7 +6,7 @@
 
 package fms_server.logging;
 
-import fms_server.annotation.Unfinsihed;
+import fms_server.annotation.Unfinished;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -489,7 +489,7 @@ public class Logger {
      * @param tClass class
      * @param method method
      */
-    @Unfinsihed
+    @Unfinished
     public static void enter(Class<?> tClass, Method method) {
         fine("Entering CLASS: " + tClass.getSimpleName() + ", METHOD: " + method.getName());
     }
@@ -499,7 +499,7 @@ public class Logger {
      * @param tClass class
      * @param method method
      */
-    @Unfinsihed
+    @Unfinished
     public static void exit(Class<?> tClass, Method method) {
         fine("Entering CLASS: " + tClass.getSimpleName() + ", METHOD: " + method.getName());
     }

@@ -6,6 +6,7 @@
 
 package fms_server.handlers;
 
+import com.google.common.annotations.Beta;
 import com.sun.net.httpserver.HttpExchange;
 import fms_server.dao.EventDAO;
 import fms_server.dao.PersonDAO;
@@ -33,10 +34,10 @@ public class ClearHandler extends Handler {
      * @throws IOException through an exception if something went wrong
      */
     @Override
+    @Beta
     public void handleRequest(HttpExchange exchange) throws IOException {
         try {
-            ClearResult clearResult = service.call(ClearResult.class, null);
-            String response = gson.toJson(clearResult);
+            String response = gson.toJson(service.call(ClearResult.class, null));
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.getBytes().length);
             exchange.getResponseBody().write(response.getBytes());
         } catch (NoSuchMethodException e) {

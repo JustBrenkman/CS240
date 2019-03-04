@@ -7,10 +7,10 @@
 package fms_server.dao;
 
 import fms_server.annotation.Unimplemented;
+import fms_server.exceptions.DataBaseException;
 import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
-import fms_server.models.Event;
-import fms_server.models.ModelDoesNotFitException;
+import fms_server.exceptions.ModelDoesNotFitException;
 import fms_server.models.Person;
 
 import java.sql.*;
@@ -239,7 +239,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
             throw new ModelNotFoundException("SQL query did not delete anything");
     }
 
-    public void deleteAll(String des, String id) throws DataBaseException, ModelNotFoundException {
+    public void deleteAll(String des, String id) throws DataBaseException {
         String sql = "DELETE FROM persons WHERE descendant=? AND id!=?";
         boolean commit = false;
         Connection connection = DataBase.getConnection(false);
