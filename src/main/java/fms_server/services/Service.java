@@ -94,14 +94,23 @@ public class Service {
 
     /**
      * Creates a AuthToken
-     * @param user
-     * @return
+     * @param user user information to be added to auth token
+     * @return auth token
      */
     public AuthToken generateAuthToken(User user) {
+        return generateAuthToken(user.getUsername());
+    }
+
+    /**
+     * Creates a AuthToken
+     * @param username user information to be added to auth token
+     * @return auth token
+     */
+    public AuthToken generateAuthToken(String username) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR_OF_DAY, 1);
-        String jws = Jwts.builder().setSubject(user.getUsername()).setExpiration(cal.getTime()).signWith(FMSServer.getKey()).compact();
-        return new AuthToken(jws, user.getUsername());
+        String jws = Jwts.builder().setSubject(username).setExpiration(cal.getTime()).signWith(FMSServer.getKey()).compact();
+        return new AuthToken(jws, username);
     }
 
     /**

@@ -71,6 +71,7 @@ public class EventService extends Service {
                 return new EventResult(false, "Could not find the model", null);
         } catch (ModelNotFoundException | DataBaseException e) {
             Logger.error("Something went wrong, could not find the model", e);
+            return new EventResult(false, "Could not find model", null);
         }
         return new EventResult(event != null, event == null ? "Could not find the model" : "Got it", event);
     }

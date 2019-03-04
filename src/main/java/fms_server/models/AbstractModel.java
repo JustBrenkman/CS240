@@ -14,8 +14,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -55,9 +53,17 @@ public abstract class AbstractModel<T> {
         try {
             Constructor<T> constructor = tClass.getDeclaredConstructor(); // Gets the protected constructor
             model = constructor.newInstance((Object[]) null); // Instantiate model regardless of number of params
-            List<Field> fields = Arrays.asList(tClass.getDeclaredFields());
-            fields.addAll(Arrays.asList(tClass.getSuperclass().getDeclaredFields())); // Don't forget the super class
+            Field[] fields = tClass.getDeclaredFields();
+            Field[] superFields = tClass.getSuperclass().getDeclaredFields();
             for (Field field : fields) {
+                try {
+                    field.set(model, resultSet.getObject(field.getName()));
+                } catch (IllegalAccessException | SQLException e) {
+                    Logger.warn("[CASTING ERROR]: Class-> " + tClass.getName() + ", Variable not found: " +
+                            field.getName() + ", type: " + field.getType().getName(), e);
+                }
+            }
+            for (Field field : superFields) {
                 try {
                     field.set(model, resultSet.getObject(field.getName()));
                 } catch (IllegalAccessException | SQLException e) {
@@ -92,8 +98,16 @@ public abstract class AbstractModel<T> {
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append( this.getClass().getSimpleName() );
-        List<Field> fields = Arrays.asList(this.getClass().getDeclaredFields());
-        fields.addAll(Arrays.asList(this.getClass().getSuperclass().getDeclaredFields()));
+        Field[] fields = this.getClass().getDeclaredFields();
+        Field[] superfields = this.getClass().getSuperclass().getDeclaredFields();
+        for ( Field field : superfields) {
+            result.append(", ");
+            try {
+                result.append( field.getName()).append(": ").append( field.get(this));
+            } catch ( IllegalAccessException ex ) {
+                Logger.warn("Unable to access field: " + field.getName());
+            }
+        }
         for ( Field field : fields ) {
             result.append(", ");
             try {
@@ -113,8 +127,7 @@ public abstract class AbstractModel<T> {
         for (Field field : fields) {
             try {
                 if (field.get(this) == null)
-                    Logger.warn("Could not find value to instantiate: " + field.getName() + ", on class: " +
-                            this.getClass().getSimpleName() + "; this could result in failure to complete request");
+                    Logger.warn("Could not find value to instantiate: " + field.getName() + ", on class: " + this.getClass().getSimpleName() + "; this could result in failure to complete request");
             } catch (IllegalAccessException e) {
                 Logger.warn("Unable to read request field, please make sure that it is protected", e);
             }
@@ -124,8 +137,7 @@ public abstract class AbstractModel<T> {
             for (Field field : superfields) {
                 try {
                     if (field.get(this) == null)
-                        Logger.warn("Could not find value to instantiate: " + field.getName() + ", on class: " +
-                                this.getClass().getSimpleName() + "; this could result in failure to complete request");
+                        Logger.warn("Could not find value to instantiate: " + field.getName() + ", on class: " + this.getClass().getSimpleName() + "; this could result in failure to complete request");
                 } catch (IllegalAccessException e) {
                     Logger.warn("Unable to read request field, please make sure that it is protected", e);
                 }

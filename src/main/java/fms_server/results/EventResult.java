@@ -12,39 +12,39 @@ public class EventResult extends Result {
     /**
      * Name of user account this event belongs to
      */
-    private final String descendant;
+    private String descendant;
     /**
      * Event’s unique ID
      */
-    private final String eventID;
+    private String eventID;
     /**
      * ID of the person this event belongs to
      */
-    private final String personID;
+    private String personID;
     /**
      * Latitude of the event’s location
      */
-    private final double latitude;
+    private double latitude;
     /**
      * Longitude of the event’s location
      */
-    private final double longitude;
+    private double longitude;
     /**
      * Name of country where event occurred
      */
-    private final String country;
+    private String country;
     /**
      * Name of city where event occurred
      */
-    private final String city;
+    private String city;
     /**
      * Type of event
      */
-    private final String eventType;
+    private String eventType;
     /**
      * Year the event occurred
      */
-    private final int year;
+    private int year;
 
     /**
      * Constructor for result class
@@ -75,14 +75,16 @@ public class EventResult extends Result {
 
     public EventResult(boolean success, String message, Event event) {
         super(success, message);
-        this.descendant = event.getDescendant();
-        this.eventID = event.getEventID();
-        this.personID = event.getPersonID();
-        this.latitude = event.getLatitude();
-        this.longitude = event.getLongitude();
-        this.country = event.getCountry();
-        this.city = event.getCity();
-        this.eventType = event.getEventType();
-        this.year = event.getYear();
+        if (event != null) {
+            this.descendant = event.getDescendant();
+            this.eventID = event.getEventID();
+            this.personID = event.getPersonID();
+            this.latitude = event.getLatitude();
+            this.longitude = event.getLongitude();
+            this.country = event.getCountry();
+            this.city = event.getCity();
+            this.eventType = event.getEventType();
+            this.year = event.getYear();
+        }
     }
 }
