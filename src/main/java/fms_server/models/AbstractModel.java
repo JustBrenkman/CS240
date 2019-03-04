@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/4/19 11:06 AM
+ */
+
 package fms_server.models;
 
 import fms_server.logging.Logger;
@@ -7,8 +13,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -48,7 +52,7 @@ public abstract class AbstractModel<T> {
         try {
             Constructor<T> constructor = tClass.getDeclaredConstructor(); // Gets the protected constructor
             model = constructor.newInstance((Object[]) null);
-            List<Field> fields = Arrays.asList(tClass.getDeclaredFields());
+            Field[] fields = tClass.getDeclaredFields();
             Field[] superFields = tClass.getSuperclass().getDeclaredFields();
             for (Field field : fields) {
                 try {

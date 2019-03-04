@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/4/19 11:06 AM
+ */
+
 package fms_server.logging;
 
 import fms_server.annotation.Unfinsihed;
@@ -132,6 +138,7 @@ public class Logger {
         log(LEVEL.INFO, message);
         saveLog(LEVEL.INFO, message);
     }
+
     public static void info(Class<?> tClass, String message) {
         message = modifyMessageAddClass(tClass, message);
         info(message);
@@ -148,6 +155,7 @@ public class Logger {
         log(LEVEL.FINE, message);
 //        saveLog(LEVEL.FINE, message);
     }
+
     public static void fine(Class<?> tClass, String message) {
         message = modifyMessageAddClass(tClass, message);
         fine(message);
@@ -158,6 +166,7 @@ public class Logger {
      * @param message message to display
      */
     public static void warn(String message) {warn(message, null);}
+
     public static void warn(String message, Exception e) {
         if (logClass)
             message = modifyMessageIncludeClass(Arrays.asList(Thread.currentThread().getStackTrace()), message);
@@ -167,10 +176,12 @@ public class Logger {
         log(LEVEL.WARN, message);
         saveLog(LEVEL.WARN, message, e);
     }
+
     public static void warn(Class<?> tClass, String message, Exception e) {
         message = modifyMessageAddClass(tClass, message);
         warn(message, e);
     }
+
     public static void warn(Class<?> tClass, String message) {warn(tClass, message, null);}
 
     /**
@@ -187,10 +198,12 @@ public class Logger {
         log(LEVEL.ERROR, message);
         saveLog(LEVEL.ERROR, message, e);
     }
+
     public static void error(Class<?> tClass, String message, Exception e) {
         message = modifyMessageAddClass(tClass, message);
         error(message, e);
     }
+
     public static void error(Class<?> tClass, String message) {error(tClass, message, null);}
 
     /**
@@ -209,10 +222,12 @@ public class Logger {
         log(LEVEL.SEVERE, message);
         saveLog(LEVEL.SEVERE, message, e);
     }
+
     public static void severe(Class<?> tClass, String message, Exception e) {
         message = modifyMessageAddClass(tClass, message);
         severe(message, e);
     }
+
     public static void severe(Class<?> tClass, String message) {severe(tClass, message, null);}
 
     /**
@@ -226,6 +241,7 @@ public class Logger {
         saveLog(LEVEL.PASS, message);
         log(LEVEL.PASS, message);
     }
+
     public static void pass(Class<?> tClass, String message) {
         message = modifyMessageAddClass(tClass, message);
         pass(message);
@@ -242,6 +258,7 @@ public class Logger {
         saveLog(LEVEL.FAIL, message);
         log(LEVEL.FAIL, message);
     }
+
     public static void fail(Class<?> tClass, String message) {
         message = modifyMessageAddClass(tClass, message);
         fail(message);
@@ -258,6 +275,7 @@ public class Logger {
         saveLog(LEVEL.HEAD, message);
         log(LEVEL.HEAD, message);
     }
+
     public static void head(Class<?> tClass, String message) {
         message = modifyMessageAddClass(tClass, message);
         head(message);
@@ -440,6 +458,7 @@ public class Logger {
         if (logSaver != null)
             logSaver.log(level, message, e);
     }
+
     private static void saveLog(LEVEL level, String message) {
         saveLog(level, message, null);
     }
@@ -455,6 +474,7 @@ public class Logger {
     public static LogSaver getLogSaver() {
         return logSaver;
     }
+
     public static boolean isLogClass() {
         return logClass;
     }

@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/4/19 11:06 AM
+ */
+
 package fms_server.services;
 
 import com.google.common.reflect.TypeToken;
@@ -23,6 +29,7 @@ public class FillService extends Service {
     private EventDAO eventDAO;
     private UserDAO userDAO;
     private PersonDAO personDAO;
+
     /**
      * Fill service constructor
      * @param dao DataAccessObject for database access
@@ -130,11 +137,11 @@ public class FillService extends Service {
         private static Person getSpouse(Person person, List<Person> persons) {
             if (person.getSpouseID() == null)
                 return null;
-           Person spouse = null;
-           for (Person sp : persons)
-               if (sp.getId().equals(person.getSpouseID()))
-                   spouse = sp;
-           return spouse;
+            Person spouse = null;
+            for (Person sp : persons)
+                if (sp.getId().equals(person.getSpouseID()))
+                    spouse = sp;
+            return spouse;
         }
 
         public static Person generateSpouse(Person person) {

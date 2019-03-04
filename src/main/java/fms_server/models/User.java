@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/4/19 11:06 AM
+ */
+
 package fms_server.models;
 
 import com.google.common.hash.Hashing;
@@ -5,7 +11,6 @@ import fms_server.requests.RegisterRequest;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * User model class

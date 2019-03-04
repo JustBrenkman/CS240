@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/4/19 11:06 AM
+ */
+
 package fms_server.results;
 
 import fms_server.models.Event;
@@ -10,6 +16,7 @@ public class EventsResult extends Result {
      * List of events
      */
     private final Event[] data;
+
     /**
      * Constructor for result class
      *  @param success whether or not request was successful

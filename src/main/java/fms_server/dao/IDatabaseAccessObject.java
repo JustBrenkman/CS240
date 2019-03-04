@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/4/19 11:06 AM
+ */
+
 package fms_server.dao;
 
 import fms_server.annotation.Unimplemented;
@@ -17,6 +23,7 @@ public interface IDatabaseAccessObject<T, V> {
      * @throws DataBaseException if something happens it will stop and not commit
      */
     void addAll(List<T> list) throws DataBaseException;
+
     /**
      * This gets the object based on the id, assuming all objects contain an id
      * @param id Identifier of object

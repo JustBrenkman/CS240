@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/4/19 11:06 AM
+ */
+
 package fms_server.services;
 
 import fms_server.dao.*;
@@ -10,7 +16,10 @@ import fms_server.results.LoginResult;
 import fms_server.results.RegisterResult;
 import fms_server.results.Result;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class RegisterService extends Service {
     private IDatabaseAccessObject<Person, String> personDAO;
@@ -39,7 +48,7 @@ public class RegisterService extends Service {
             if (user.getUsername() == null)
                 return new RegisterResult(false, "Bad request, username needs to be lowercase", null);
             personDAO.add(person);
-            ((UserDAO) getDao()).add(userToAdd);
+            getDao().add(userToAdd);
             FillService.Generator.setUser(user.getUsername());
             Person spouse = FillService.Generator.generateSpouse(person);
             List<Person> people = FillService.Generator.generateGenerations(Arrays.asList(person, spouse), 4, events, 2019 - 35);

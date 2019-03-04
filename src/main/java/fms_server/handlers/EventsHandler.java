@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/4/19 11:06 AM
+ */
+
 package fms_server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -15,6 +21,7 @@ import java.net.HttpURLConnection;
 
 public class EventsHandler extends Handler {
     private EventService service;
+
     public EventsHandler() {
         service = new EventService(new EventDAO());
     }

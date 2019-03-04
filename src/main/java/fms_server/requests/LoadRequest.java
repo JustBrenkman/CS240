@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/4/19 11:06 AM
+ */
+
 package fms_server.requests;
 
-import fms_server.models.*;
+import fms_server.models.Event;
+import fms_server.models.Person;
+import fms_server.models.User;
 
 public class LoadRequest extends Request {
     /**

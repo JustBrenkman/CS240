@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/4/19 11:06 AM
+ */
+
 package fms_server.services;
 
 import fms_server.dao.DataBaseException;
@@ -46,17 +52,17 @@ public class LoadService extends Service {
             user.hashPassword();
         }
         boolean allLoaded = true;
-            try {
-                for (Event event : request.getEvents())
-                    eventDAO.add(event);
-                for (User user : request.getUsers())
-                    userDAO.add(user);
-                for (Person person : request.getPersons())
-                    personDAO.add(person);
-            } catch (DataBaseException | NullPointerException e) {
-                Logger.warn("Unable to add data to database", e);
-                allLoaded = false;
-            }
+        try {
+            for (Event event : request.getEvents())
+                eventDAO.add(event);
+            for (User user : request.getUsers())
+                userDAO.add(user);
+            for (Person person : request.getPersons())
+                personDAO.add(person);
+        } catch (DataBaseException | NullPointerException e) {
+            Logger.warn("Unable to add data to database", e);
+            allLoaded = false;
+        }
         return new LoadResult(allLoaded, allLoaded ? "Loaded " + request.getPersons().length + " users, " + request.getPersons().length + " persons, " + request.getEvents().length + " events" + " into the databases" : "Unable to load the data");
     }
 }

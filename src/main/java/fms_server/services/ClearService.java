@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/4/19 11:06 AM
+ */
+
 package fms_server.services;
 
 import fms_server.dao.DataBaseException;
@@ -15,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ClearService extends Service {
     private List<IDatabaseAccessObject> daos;
+
     /**
      * Constructor for the clear service
      * @param dao IDatabaseAccessObject
