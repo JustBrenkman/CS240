@@ -42,9 +42,11 @@ public class PersonService extends Service {
         if (authenticateToken(request.getToken()))
             throw new NotAuthenticatedException();
 
+        AuthToken token = new AuthToken(request.getToken());
+
         List<Person> list;
         try {
-            list = ((PersonDAO) getDao()).getAll();
+            list = ((PersonDAO) getDao()).getAllFromDescendant(token.getUserName());
             Person[] listr = new Person[list.size()];
             listr = list.toArray(listr);
             return new PersonsResult(!list.isEmpty(), "", listr);

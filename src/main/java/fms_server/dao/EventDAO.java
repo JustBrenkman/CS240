@@ -236,7 +236,6 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
         } finally {
             DataBase.closeConnection(true);
         }
-        Logger.info("Deleted: " + commit);
     }
 
     /**

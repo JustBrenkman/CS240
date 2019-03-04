@@ -193,7 +193,6 @@ public class UserDAO implements IDatabaseAccessObject<User, String> {
             stmt.setString(1, id);
             commit = stmt.executeUpdate() == 1;
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DataBaseException("Unable remove entry");
         } finally {
             DataBase.closeConnection(commit);

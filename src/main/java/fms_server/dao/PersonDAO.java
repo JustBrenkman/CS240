@@ -9,6 +9,7 @@ package fms_server.dao;
 import fms_server.annotation.Unimplemented;
 import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
+import fms_server.models.Event;
 import fms_server.models.ModelDoesNotFitException;
 import fms_server.models.Person;
 
@@ -81,6 +82,36 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
             throw new ModelNotFoundException("Could not find person, likely wrong id");
 
         return person;
+    }
+
+    /**
+     * Gets all event objects in database
+     * @return List of Event's
+     */
+    public List<Person> getAllFromDescendant(String des) throws DataBaseException, ModelNotFoundException {
+        String sql = "SELECT * FROM persons WHERE descendant=?";
+        List<Person> events = new ArrayList<>();
+        Connection connection = DataBase.getConnection(false);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, des);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                events.add(AbstractModel.castToModel(Person.class, rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to get person, something is wrong with the SQL command: " + sql);
+        } catch (ModelDoesNotFitException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Failed to convert entry to model");
+        } finally {
+            DataBase.closeConnection(true);
+        }
+
+        if (events.isEmpty())
+            throw new ModelNotFoundException("Could not find person, likely wrong id");
+
+        return events;
     }
 
     /**

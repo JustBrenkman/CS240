@@ -51,7 +51,7 @@ public class FillService extends Service {
      * @return whether fill was successful
      */
     public FillResult fill(FillRequest request) throws DataBaseException {
-        List<Person> ancestors;
+        List<Person> ancestors = new ArrayList<>();
         List<Event> events = new ArrayList<>();
         try {
             User user = userDAO.getUserByUsername(request.getUserName()); // Get the user
@@ -64,12 +64,14 @@ public class FillService extends Service {
             // Get person from user and generate additional information
             Person person = personDAO.get(user.getId());
             Person spouse = Generator.generateSpouse(person);
-            ancestors = Generator.generateGenerations(Arrays.asList(person, spouse), request.getGenerations(), events, 2019);
-            events = Generator.generateEvents(ancestors);
+            Logger.info("person: " + person.toString());
+            Logger.info("spouse: " + spouse.toString());
+            ancestors = Generator.generateGenerations(Arrays.asList(person), request.getGenerations(), events, 2019 - 35);
+//            events = Generator.generateEvents(ancestors);
 
             // Add generated events
-            events.addAll(Generator.generateEvents(person));
-            events.addAll(Generator.generateEvents(spouse));
+//            events.addAll(Generator.generateEvents(person));
+//            events.addAll(Generator.generateEvents(spouse));
             personDAO.add(spouse);
             personDAO.addAll(ancestors);
             personDAO.update(person); // Update person information
@@ -77,6 +79,8 @@ public class FillService extends Service {
         } catch (ModelNotFoundException e) {
             Logger.error("Cannot find user", e);
             return new FillResult(false, "Unable to generate for user, user may not exist");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return new FillResult(true, "Successfully added " + ancestors.size() + " persons and " + events.size() + " events to database");
     }
@@ -145,7 +149,7 @@ public class FillService extends Service {
         }
 
         public static Person generateSpouse(Person person) {
-            Person spouse = person.getSpouseID() == null? person.getGender().equals("m") ? generateFemalePerson() : generateMalePerson() : null;
+            Person spouse = person.getGender().equals("m") ? generateFemalePerson() : generateMalePerson();
             if (spouse != null) {
                 person.setSpouseID(spouse.getId());
                 spouse.setSpouseID(person.getId());
@@ -158,18 +162,18 @@ public class FillService extends Service {
                 return new HashMap<>();
             Person mother = generateFemalePerson();
             Person father = generateMalePerson();
-            Person spouse = generateSpouse(person);
+//            Person spouse = generateSpouse(person);
             person.setMotherID(mother.getId());
             person.setFatherID(father.getId());
             father.setSpouseID(mother.getId());
             mother.setSpouseID(father.getId());
-            if (spouse != null)
-                person.setSpouseID(spouse.getId());
+//            if (spouse != null)
+//                person.setSpouseID(spouse.getId());
             HashMap<String, Person> personList = new HashMap<>();
             personList.put("mother", mother);
             personList.put("father", father);
-            if (spouse != null)
-                personList.put("spouse", spouse);
+//            if (spouse != null)
+//                personList.put("spouse", spouse);
             return personList;
         }
 
@@ -177,18 +181,18 @@ public class FillService extends Service {
             return gGDive(people, depth, 0, events, year);
         }
 
-        private static List<Person> gGDive(List<Person> people, int depth, int current, List<Event> events, int year) {
-            current++;
-            if (current > depth)
+        private static List<Person> gGDive(Collection<Person> people, int depth, int current, List<Event> events, int year) {
+            if (current >= depth)
                 return new ArrayList<>();
+            current++;
             List<Person> generated = new ArrayList<>();
             for (Person person : people) {
                 HashMap<String, Person> peopleToAdd = generateImmediateGeneration(person);
                 events.addAll(generateEventsForCouple(peopleToAdd, year));
                 generated.addAll(peopleToAdd.values());
+                peopleToAdd.remove("spouse");
+                generated.addAll(gGDive(peopleToAdd.values(), depth, current, events, year - 50));
             }
-            year -= 50;
-            generated.addAll(gGDive(generated, depth, current, events, year));
             return generated;
         }
 
