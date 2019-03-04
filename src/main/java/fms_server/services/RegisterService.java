@@ -40,6 +40,7 @@ public class RegisterService extends Service {
                 return new RegisterResult(false, "Bad request, username needs to be lowercase", null);
             personDAO.add(person);
             ((UserDAO) getDao()).add(userToAdd);
+            FillService.Generator.setUser(user.getUsername());
             Person spouse = FillService.Generator.generateSpouse(person);
             List<Person> people = FillService.Generator.generateGenerations(Arrays.asList(person, spouse), 4, events, 2019 - 35);
             HashMap<String, Person> map = new HashMap<>();

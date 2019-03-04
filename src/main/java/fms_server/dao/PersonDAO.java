@@ -202,6 +202,21 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
             throw new ModelNotFoundException("SQL query did not delete anything");
     }
 
+    public void deleteAll(String des, String id) throws DataBaseException, ModelNotFoundException {
+        String sql = "DELETE FROM persons WHERE descendant=? AND id!=?";
+        boolean commit = false;
+        Connection connection = DataBase.getConnection(false);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, des);
+            stmt.setString(2, id);
+            commit = stmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw new DataBaseException("Unable remove entry");
+        } finally {
+            DataBase.closeConnection(true);
+        }
+    }
+
     /**
      * Clears all persons
      */

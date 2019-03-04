@@ -212,6 +212,27 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
             throw new ModelNotFoundException("SQL query did not delete anything");
     }
 
+
+    /**
+     * Deletes an object from the database
+     * @param des identifier of the object
+     */
+    public void deleteAll(String des) throws DataBaseException, ModelNotFoundException {
+        String sql = "DELETE FROM events WHERE descendant=?";
+        boolean commit = false;
+        Connection connection = DataBase.getConnection(false);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, des);
+            commit = stmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataBaseException("Unable remove entry");
+        } finally {
+            DataBase.closeConnection(true);
+        }
+        Logger.info("Deleted: " + commit);
+    }
+
     /**
      * Clears all events
      */

@@ -165,6 +165,10 @@ public class EventDAOTest {
         });
     }
 
+    @Test@DisplayName("DELETE some users")
+    void deleteSome() {
+    }
+
     @AfterAll
     public static void end() {
         Logger.line();

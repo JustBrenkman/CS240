@@ -11,10 +11,10 @@ import fms_server.models.User;
 import fms_server.requests.FillRequest;
 import fms_server.results.FillResult;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
 import java.util.*;
 
 /**
@@ -49,6 +49,9 @@ public class FillService extends Service {
         List<Event> events = new ArrayList<>();
         try {
             User user = userDAO.getUserByUsername(request.getUserName());
+            Generator.setUser(user.getUsername());
+            personDAO.deleteAll(user.getUsername(), user.getId());
+            eventDAO.deleteAll(user.getUsername());
             Person person = personDAO.get(user.getId());
             Person spouse = Generator.generateSpouse(person);
             ancestors = Generator.generateGenerations(Arrays.asList(person, spouse), request.getGenerations(), events, 2019);
@@ -76,6 +79,7 @@ public class FillService extends Service {
         private static String[] lastNames = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson"};
         private static String[] eventTypes = {"birth", "travel", "death"};
         private static List<LinkedTreeMap<String, Object>> locations;
+        private static String user;
 
         static {
             Type type = new TypeToken<LinkedTreeMap<String, List<LinkedTreeMap<String, Object>>>>(){}.getType();
@@ -103,7 +107,7 @@ public class FillService extends Service {
         private static Person generatePerson(String firstname, String gender, Random random) {
             return new Person(
                     UUID.randomUUID().toString(),
-                    null,
+                    user,
                     firstname,
                     lastNames[random.nextInt(lastNames.length - 1)],
                     gender,
@@ -179,7 +183,7 @@ public class FillService extends Service {
             loc = locations.get(random.nextInt(locations.size() - 1));
             Event birth = new Event(
                     UUID.randomUUID().toString(),
-                    null,
+                    user,
                     couples.get("mother").getPersonID(),
                     (double) loc.getOrDefault("latitude", -111.6509753),
                     (double) loc.getOrDefault("longitude", 40.245769),
@@ -192,7 +196,7 @@ public class FillService extends Service {
             loc = locations.get(random.nextInt(locations.size() - 1));
             Event birth1 = new Event(
                     UUID.randomUUID().toString(),
-                    null,
+                    user,
                     couples.get("father").getPersonID(),
                     (double) loc.getOrDefault("latitude", -111.6509753),
                     (double) loc.getOrDefault("longitude", 40.245769),
@@ -205,7 +209,7 @@ public class FillService extends Service {
             loc = locations.get(random.nextInt(locations.size() - 1));
             Event travel1 = new Event(
                     UUID.randomUUID().toString(),
-                    null,
+                    user,
                     couples.get("father").getPersonID(),
                     (double) loc.getOrDefault("latitude", -111.6509753),
                     (double) loc.getOrDefault("longitude", 40.245769),
@@ -218,7 +222,7 @@ public class FillService extends Service {
             loc = locations.get(random.nextInt(locations.size() - 1));
             Event travel2 = new Event(
                     UUID.randomUUID().toString(),
-                    null,
+                    user,
                     couples.get("mother").getPersonID(),
                     (double) loc.getOrDefault("latitude", -111.6509753),
                     (double) loc.getOrDefault("longitude", 40.245769),
@@ -232,7 +236,7 @@ public class FillService extends Service {
             int marraigeYear = random.nextInt(2) + year;
             Event marriage1 = new Event(
                     UUID.randomUUID().toString(),
-                    null,
+                    user,
                     couples.get("mother").getPersonID(),
                     (double) loc.getOrDefault("latitude", -111.6509753),
                     (double) loc.getOrDefault("longitude", 40.245769),
@@ -244,7 +248,7 @@ public class FillService extends Service {
 
             Event marriage2 = new Event(
                     UUID.randomUUID().toString(),
-                    null,
+                    user,
                     couples.get("father").getPersonID(),
                     (double) loc.getOrDefault("latitude", -111.6509753),
                     (double) loc.getOrDefault("longitude", 40.245769),
@@ -277,7 +281,7 @@ public class FillService extends Service {
                 Map<String, Object> loc = locations.get(random.nextInt(locations.size() - 1));
                 events.add(new Event(
                         UUID.randomUUID().toString(),
-                        null,
+                        user,
                         person.getPersonID(),
                         (double) loc.getOrDefault("latitude", -111.6509753),
                         (double) loc.getOrDefault("longitude", 40.245769),
@@ -288,6 +292,14 @@ public class FillService extends Service {
                 ));
             }
             return events;
+        }
+
+        public static String getUser() {
+            return user;
+        }
+
+        public static void setUser(String user) {
+            Generator.user = user;
         }
     }
 
