@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/7/19 7:20 PM
+ * Last Modified 3/7/19 7:42 PM
  */
 
 package fms_server;
@@ -15,19 +15,12 @@ import fms_server.models.User;
 import fms_server.requests.FillRequest;
 import fms_server.results.FillResult;
 import fms_server.services.FillService;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-public class FillServiceTest {
-    private static PersonDAO personDAO;
-    private static UserDAO userDAO;
-    private static EventDAO eventDAO;
-
-    static {
-        personDAO = new PersonDAO();
-        eventDAO = new EventDAO();
-        userDAO = new UserDAO();
-    }
-
+public class FillServiceTest extends ServiceTest {
     private FillService service;
 
     FillServiceTest() {
@@ -41,13 +34,6 @@ public class FillServiceTest {
         userDAO.clear();
         personDAO.add(new Person("1", "JustBrenkman", "Ben", "Brenkman", "m", "1", "2", "3"));
         userDAO.add(new User("JustBrenkman", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman@gmail.com", "Ben", "Brenkman", "m", "1"));
-    }
-
-    @AfterAll
-    static void shutdown() throws DataBaseException {
-        personDAO.clear();
-        eventDAO.clear();
-        userDAO.clear();
     }
 
     @Test

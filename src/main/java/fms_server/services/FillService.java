@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/7/19 7:42 PM
  */
 
 package fms_server.services;
@@ -67,6 +67,7 @@ public class FillService extends Service {
             Logger.info("person: " + person.toString());
             Logger.info("spouse: " + spouse.toString());
             ancestors = Generator.generateGenerations(Arrays.asList(person), request.getGenerations(), events, 2019 - 35);
+
             personDAO.add(spouse);
             personDAO.addAll(ancestors);
             personDAO.update(person); // Update person information
@@ -82,10 +83,21 @@ public class FillService extends Service {
      * This generates the events and ancestors for a person
      */
     public static class Generator {
+        /**
+         * List of first male names
+         */
         private static String[] firstMaleNames = {"Liam", "Noah", "William", "James", "Logan", "Benjamin", "Mason", "Elijah", "Oliver", "Jacob", "Lucas", "Michael","Alexander","Ethan","Daniel","Matthew","Aiden","Henry","Joseph","Jackson"};
+        /**
+         * List of first female names
+         */
         private static String[] firstFemaleNames = {"Emma","Olivia","Ava","Isabella","Sophia","Mia","Charlotte","Amelia","Evelyn","Abigail","Harper","Emily","Elizabeth","Avery","Sofia","Ella","Madison","Scarlett","Victoria","Aria"};
+        /**
+         * List of surnames
+         */
         private static String[] lastNames = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson"};
-        private static String[] eventTypes = {"birth", "travel", "death"};
+        /**
+         * List of random locations
+         */
         private static List<LinkedTreeMap<String, Object>> locations;
         /**
          * Current user to fill data in
@@ -106,18 +118,34 @@ public class FillService extends Service {
             }
         }
 
+        /**
+         * Creates a new male
+         *
+         * @return new male person
+         */
         static Person generateMalePerson() {
             Random random = new Random();
             String firstName = firstMaleNames[random.nextInt(firstMaleNames.length - 1)];
             return generatePerson(firstName, "m", random);
         }
 
+        /**
+         * Create a new female
+         * @return female person
+         */
         static Person generateFemalePerson() {
             Random random = new Random();
             String firstName = firstFemaleNames[random.nextInt(firstFemaleNames.length - 1)];
             return generatePerson(firstName, "f", random);
         }
 
+        /**
+         * Creates a person
+         * @param firstname first name
+         * @param gender gender
+         * @param random random number generator
+         * @return a new person
+         */
         private static Person generatePerson(String firstname, String gender, Random random) {
             return new Person(
                     UUID.randomUUID().toString(),
@@ -131,16 +159,11 @@ public class FillService extends Service {
             );
         }
 
-        private static Person getSpouse(Person person, List<Person> persons) {
-            if (person.getSpouseID() == null)
-                return null;
-            Person spouse = null;
-            for (Person sp : persons)
-                if (sp.getId().equals(person.getSpouseID()))
-                    spouse = sp;
-            return spouse;
-        }
-
+        /**
+         * Create a spouse for someone
+         * @param person the person who is single
+         * @return spouse
+         */
         public static Person generateSpouse(Person person) {
             Person spouse = person.getGender().equals("m") ? generateFemalePerson() : generateMalePerson();
             if (spouse != null) {
@@ -150,6 +173,11 @@ public class FillService extends Service {
             return spouse;
         }
 
+        /**
+         * Generates mother and father
+         * @param person person whom you want to give parents to
+         * @return mother and father collection
+         */
         private static HashMap<String, Person> generateImmediateGeneration(Person person) {
             if (person == null)
                 return new HashMap<>();
@@ -165,10 +193,27 @@ public class FillService extends Service {
             return personList;
         }
 
+        /**
+         * initial call to the recursive function
+         * @param people list of people to generate parents for
+         * @param depth number of generations to fill
+         * @param events list of all events generated
+         * @param year year range
+         * @return list of persons generated
+         */
         public static List<Person> generateGenerations(List<Person> people, int depth, List<Event> events, int year) {
             return gGDive(people, depth, 0, events, year);
         }
 
+        /**
+         * Recursive generative function
+         * @param people list of people to generate parents for
+         * @param depth number of generations to fill
+         * @param current current generation
+         * @param events list of all events generated
+         * @param year year range
+         * @return list of persons generated
+         */
         private static List<Person> gGDive(Collection<Person> people, int depth, int current, List<Event> events, int year) {
             if (current >= depth)
                 return new ArrayList<>();
@@ -184,6 +229,12 @@ public class FillService extends Service {
             return generated;
         }
 
+        /**
+         * Generates the events for a couple
+         * @param couples map of couple, mother and father
+         * @param year year range
+         * @return list of events
+         */
         public static List<Event> generateEventsForCouple(HashMap<String, Person> couples, int year) {
             List<Event> events = new ArrayList<>();
             Random random = new Random();

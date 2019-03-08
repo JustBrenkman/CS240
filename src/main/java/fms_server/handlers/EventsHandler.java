@@ -1,21 +1,20 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/7/19 7:42 PM
  */
 
 package fms_server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import fms_server.dao.EventDAO;
+import fms_server.exceptions.NotAuthenticatedException;
 import fms_server.logging.Logger;
 import fms_server.requests.AuthenticatedRequest;
 import fms_server.requests.EventRequest;
-import fms_server.results.EventResult;
 import fms_server.results.EventsResult;
 import fms_server.results.Result;
 import fms_server.services.EventService;
-import fms_server.exceptions.NotAuthenticatedException;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

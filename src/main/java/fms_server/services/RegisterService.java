@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/7/19 7:20 PM
+ * Last Modified 3/7/19 7:42 PM
  */
 
 package fms_server.services;
 
 import fms_server.dao.EventDAO;
-import fms_server.dao.IDatabaseAccessObject;
 import fms_server.dao.PersonDAO;
 import fms_server.dao.UserDAO;
+import fms_server.exceptions.DataBaseException;
 import fms_server.logging.Logger;
 import fms_server.models.Event;
 import fms_server.models.Person;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class RegisterService extends Service {
-    private IDatabaseAccessObject<Person, String> personDAO;
+    private PersonDAO personDAO;
     private EventDAO eventDAO;
 
     /**
@@ -46,27 +46,42 @@ public class RegisterService extends Service {
     public Result register(RegisterRequest user) {
         try {
             Person person = new Person(user);
-            List<Event> events = new ArrayList<>();
             User userToAdd = new User(person.getId(), user);
             if (user.getUsername() == null)
                 return new RegisterResult(false, "Bad request, username needs to be lowercase", null);
             personDAO.add(person);
             getDao().add(userToAdd);
-            FillService.Generator.setUser(user.getUsername());
-            Person spouse = FillService.Generator.generateSpouse(person);
-            List<Person> people = FillService.Generator.generateGenerations(Arrays.asList(person, spouse), 4, events, 2019 - 35);
-            HashMap<String, Person> map = new HashMap<>();
-            map.put("mother", spouse);
-            map.put("father", person);
-            List<Event> coupleEvents = FillService.Generator.generateEventsForCouple(map, 2019);
-            personDAO.add(spouse);
-            personDAO.addAll(people);
-            eventDAO.addAll(events);
-            eventDAO.addAll(coupleEvents);
+            createRandomInfo(user, person); // Fills in 4 generations
             return new LoginResult(true, "Successfully register user", generateAuthToken(userToAdd).getAuthTokenString(), user.getUsername(), person.getId());
         } catch (Exception e) {
             Logger.error("Unable to add user", e);
             return new RegisterResult(false, "Already a user, or missing information", null);
         }
+    }
+
+    /**
+     * Creates random information
+     *
+     * @param user   user
+     * @param person person
+     * @throws DataBaseException if something goes wrong
+     */
+    private void createRandomInfo(RegisterRequest user, Person person) throws DataBaseException {
+        List<Event> events = new ArrayList<>();
+
+        FillService.Generator.setUser(user.getUsername());
+        Person spouse = FillService.Generator.generateSpouse(person);
+        List<Person> people = FillService.Generator.generateGenerations(Arrays.asList(person, spouse), 4, events, 2019 - 35);
+
+        // Create events for couple
+        HashMap<String, Person> map = new HashMap<>();
+        map.put("mother", spouse);
+        map.put("father", person);
+        List<Event> coupleEvents = FillService.Generator.generateEventsForCouple(map, 2019);
+
+        personDAO.add(spouse);
+        personDAO.addAll(people);
+        eventDAO.addAll(events);
+        eventDAO.addAll(coupleEvents);
     }
 }
