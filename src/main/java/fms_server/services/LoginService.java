@@ -1,16 +1,15 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/7/19 7:20 PM
  */
 
 package fms_server.services;
 
 import com.google.common.hash.Hashing;
-import fms_server.exceptions.DataBaseException;
-import fms_server.dao.IDatabaseAccessObject;
 import fms_server.dao.ModelNotFoundException;
 import fms_server.dao.UserDAO;
+import fms_server.exceptions.DataBaseException;
 import fms_server.logging.Logger;
 import fms_server.models.User;
 import fms_server.requests.LoginRequest;
@@ -27,7 +26,7 @@ public class LoginService extends Service {
      * Constructor for the login service
      * @param dao UserDAO
      */
-    public LoginService(IDatabaseAccessObject dao) {
+    public LoginService(UserDAO dao) {
         super(dao);
     }
 

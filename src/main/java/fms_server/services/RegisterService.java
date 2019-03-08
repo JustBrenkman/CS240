@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/7/19 7:20 PM
  */
 
 package fms_server.services;
 
-import fms_server.dao.*;
-import fms_server.exceptions.DataBaseException;
+import fms_server.dao.EventDAO;
+import fms_server.dao.IDatabaseAccessObject;
+import fms_server.dao.PersonDAO;
+import fms_server.dao.UserDAO;
 import fms_server.logging.Logger;
 import fms_server.models.Event;
 import fms_server.models.Person;
@@ -42,10 +44,10 @@ public class RegisterService extends Service {
      * @return A RegisterResult that contains the information about the result of the request
      */
     public Result register(RegisterRequest user) {
-        Person person = new Person(user);
-        List<Event> events = new ArrayList<>();
-        User userToAdd = new User(person.getId(), user);
         try {
+            Person person = new Person(user);
+            List<Event> events = new ArrayList<>();
+            User userToAdd = new User(person.getId(), user);
             if (user.getUsername() == null)
                 return new RegisterResult(false, "Bad request, username needs to be lowercase", null);
             personDAO.add(person);
@@ -61,10 +63,10 @@ public class RegisterService extends Service {
             personDAO.addAll(people);
             eventDAO.addAll(events);
             eventDAO.addAll(coupleEvents);
-        } catch (DataBaseException e) {
+            return new LoginResult(true, "Successfully register user", generateAuthToken(userToAdd).getAuthTokenString(), user.getUsername(), person.getId());
+        } catch (Exception e) {
             Logger.error("Unable to add user", e);
-            return new RegisterResult(false, "Already a user", null);
+            return new RegisterResult(false, "Already a user, or missing information", null);
         }
-        return new LoginResult(true, "Successfully register user", generateAuthToken(userToAdd).getAuthTokenString(), user.getUsername(), person.getId());
     }
 }

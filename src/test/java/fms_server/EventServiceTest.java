@@ -1,10 +1,16 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 3/7/19 7:20 PM
+ */
+
 package fms_server;
 
 import fms_server.dao.DataBase;
 import fms_server.dao.EventDAO;
-import fms_server.exceptions.DataBaseException;
 import fms_server.dao.PersonDAO;
 import fms_server.dao.UserDAO;
+import fms_server.exceptions.DataBaseException;
 import fms_server.exceptions.NotAuthenticatedException;
 import fms_server.logging.Logger;
 import fms_server.models.Event;
@@ -204,7 +210,7 @@ public class EventServiceTest {
             EventService service = new EventService(new EventDAO());
             Result result = service.getEventList(new AuthenticatedRequest(service.generateAuthToken("JustBrenkman").getAuthTokenString()));
             Logger.pass("Passed get non existent event");
-            Assertions.assertTrue(result.isSuccess());
+            Assertions.assertFalse(result.isSuccess());
         } catch (NotAuthenticatedException e) {
             Logger.fail("Failed to get event");
         }

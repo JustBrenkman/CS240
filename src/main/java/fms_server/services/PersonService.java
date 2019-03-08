@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/7/19 7:20 PM
  */
 
 package fms_server.services;
 
-import fms_server.exceptions.DataBaseException;
 import fms_server.dao.IDatabaseAccessObject;
 import fms_server.dao.ModelNotFoundException;
 import fms_server.dao.PersonDAO;
+import fms_server.exceptions.DataBaseException;
 import fms_server.exceptions.NotAuthenticatedException;
 import fms_server.logging.Logger;
 import fms_server.models.AuthToken;
@@ -62,13 +62,19 @@ public class PersonService extends Service {
      * @param request contains id information, and authentication
      * @return a person object
      */
-    public PersonResult getPerson(PersonRequest request) throws NotAuthenticatedException, ModelNotFoundException, DataBaseException {
+    public PersonResult getPerson(PersonRequest request) throws NotAuthenticatedException {
         if (authenticateToken(request.getAuthToken()))
             throw new NotAuthenticatedException();
-        Person person = ((PersonDAO) getDao()).get(request.getPersonID());
-        AuthToken token = new AuthToken(request.getAuthToken());
-        if (!person.getDescendant().equals(token.getUserName()))
+        Person person = null;
+        try {
+            person = ((PersonDAO) getDao()).get(request.getPersonID());
+            AuthToken token = new AuthToken(request.getAuthToken());
+            if (!person.getDescendant().equals(token.getUserName()))
+                return new PersonResult(false, "Could not find the model", null);
+        } catch (DataBaseException | ModelNotFoundException e) {
             return new PersonResult(false, "Could not find the model", null);
+        }
+
         return new PersonResult(true, "Got em", person);
     }
 }
