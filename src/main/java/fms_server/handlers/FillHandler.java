@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/14/19 4:33 PM
  */
 
 package fms_server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
-import fms_server.exceptions.BadRequestException;
-import fms_server.exceptions.DataBaseException;
 import fms_server.dao.EventDAO;
 import fms_server.dao.PersonDAO;
 import fms_server.dao.UserDAO;
+import fms_server.exceptions.BadRequestException;
+import fms_server.exceptions.DataBaseException;
 import fms_server.logging.Logger;
 import fms_server.requests.FillRequest;
 import fms_server.results.FillResult;
@@ -63,8 +63,6 @@ public class FillHandler extends Handler {
             String json = gson.toJson(new FillResult(false, "Sever internal error"));
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, json.getBytes().length);
             exchange.getResponseBody().write(json.getBytes());
-        } finally {
-            exchange.close();
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/14/19 4:33 PM
  */
 
 package fms_server.handlers;
@@ -12,7 +12,6 @@ import fms_server.logging.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -45,8 +44,6 @@ public class FileHandler extends Handler {
         } catch (FileNotFoundException e) {
             Logger.error("Unable to find file", e);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, 0);
-        } finally {
-            exchange.close();
         }
     }
 }

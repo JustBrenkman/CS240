@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/14/19 4:33 PM
  */
 
 package fms_server;
@@ -67,6 +67,8 @@ public class FMSServer {
      * Secret key for the server
      */
     private static final Key key;
+
+    public static boolean DEBUG_MODE = true;
 
     static {
         key = Keys.secretKeyFor(SignatureAlgorithm.HS256);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/7/19 7:42 PM
+ * Last Modified 3/14/19 4:33 PM
  */
 
 package fms_server.handlers;
@@ -55,8 +55,6 @@ public class EventsHandler extends Handler {
             String result = gson.toJson(new EventsResult(false, "Not authorized", null));
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, result.getBytes().length);
             exchange.getResponseBody().write(result.getBytes());
-        } finally {
-            exchange.close();
         }
     }
 }

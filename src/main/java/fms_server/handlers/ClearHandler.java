@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/14/19 4:33 PM
  */
 
 package fms_server.handlers;
@@ -43,8 +43,6 @@ public class ClearHandler extends Handler {
         } catch (NoSuchMethodException e) {
             Logger.severe("Unable to clear tables", e);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-        } finally {
-            exchange.close();
         }
     }
 }

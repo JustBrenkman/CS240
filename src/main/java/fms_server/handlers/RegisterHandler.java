@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/14/19 4:33 PM
  */
 
 package fms_server.handlers;
@@ -44,8 +44,6 @@ public class RegisterHandler extends Handler {
         } catch (BadRequestException e) {
             Logger.error("Bad request: " + e.getMessage(), e);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-        } finally {
-            exchange.close();
         }
     }
 }

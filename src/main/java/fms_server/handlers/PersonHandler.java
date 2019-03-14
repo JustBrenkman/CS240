@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/14/19 4:33 PM
  */
 
 package fms_server.handlers;
@@ -48,8 +48,6 @@ public class PersonHandler extends Handler {
 
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, result.getBytes().length);
             exchange.getResponseBody().write(result.getBytes());
-        } finally {
-            exchange.close();
         }
     }
 }

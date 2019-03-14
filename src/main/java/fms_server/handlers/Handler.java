@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 3/14/19 4:33 PM
  */
 
 package fms_server.handlers;
@@ -10,10 +10,11 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import fms_server.FMSServer;
 import fms_server.exceptions.BadRequestException;
+import fms_server.exceptions.NotAuthenticatedException;
 import fms_server.logging.Logger;
 import fms_server.requests.Request;
-import fms_server.exceptions.NotAuthenticatedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +39,14 @@ public abstract class Handler implements HttpHandler {
      * @return formatted string
      */
     private String getServerCallLog(String handler, HttpExchange exchange, int returnVal, double time) {
-        return " -- " + exchange.getRemoteAddress().getHostName() + " -- \"" + exchange.getRequestMethod() + "\" " + exchange.getRequestURI().getPath() + " " + exchange.getProtocol() + " " + returnVal + " " + time + "s";
+        String hostname = "localhost";
+        if (!FMSServer.DEBUG_MODE)
+            hostname = exchange.getRemoteAddress().getHostName();
+
+        String requestMethod = exchange.getRequestMethod();
+        String path = exchange.getRequestURI().getPath();
+        String protocol = exchange.getProtocol();
+        return " -- " + hostname + " -- \"" + requestMethod + "\" " + path + " " + protocol + " " + returnVal + " " + time + "s";
     }
 
     /**
@@ -87,6 +95,7 @@ public abstract class Handler implements HttpHandler {
         long startTime = new Date().getTime();
         try {
             handleRequest(exchange);
+            exchange.getResponseHeaders().add("Connection", "close");
         } catch (Exception e) {
             Logger.error("Something went wrong during the handle", e);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
@@ -96,6 +105,7 @@ public abstract class Handler implements HttpHandler {
             long endTime = new Date().getTime();
             double difference = (endTime - startTime) / 1000.0;
             Logger.head(getServerCallLog(exchange.getRequestURI().getPath(), exchange, exchange.getResponseCode(), difference));
+            exchange.close();
         }
     }
 
