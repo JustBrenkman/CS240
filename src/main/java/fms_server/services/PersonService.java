@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/7/19 7:20 PM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.services;
@@ -47,7 +47,7 @@ public class PersonService extends Service {
 
         List<Person> list;
         try {
-            list = ((PersonDAO) getDao()).getAllFromDescendant(token.getUserName());
+            list = ((PersonDAO) getDao()).getAllFromDescendant(token.getuserName());
             Person[] listr = new Person[list.size()];
             listr = list.toArray(listr);
             return new PersonsResult(!list.isEmpty(), "", listr);
@@ -69,7 +69,7 @@ public class PersonService extends Service {
         try {
             person = ((PersonDAO) getDao()).get(request.getPersonID());
             AuthToken token = new AuthToken(request.getAuthToken());
-            if (!person.getDescendant().equals(token.getUserName()))
+            if (!person.getDescendant().equals(token.getuserName()))
                 return new PersonResult(false, "Could not find the model", null);
         } catch (DataBaseException | ModelNotFoundException e) {
             return new PersonResult(false, "Could not find the model", null);

@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.dao;
 
 import fms_server.annotation.Unimplemented;
 import fms_server.exceptions.DataBaseException;
+import fms_server.exceptions.ModelDoesNotFitException;
 import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
-import fms_server.exceptions.ModelDoesNotFitException;
 import fms_server.models.Person;
 
 import java.sql.*;
@@ -25,19 +25,20 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
     @Override
     public void addAll(List<Person> list) throws DataBaseException {
         boolean commit = false;
-        String sql = "INSERT INTO persons (id, descendant, firstName, lastName, gender, fatherID, motherID, spouseID)" +
+        String sql = "INSERT INTO persons (personID, descendant, firstName, lastName, gender, father, mother, spouse)" +
                 "VALUES (?,?,?,?,?,?,?,?)";
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Person person : list) {
-                stmt.setString(1, person.getId());
+//                stmt.setString(1, person.getId());
+                stmt.setString(1, person.getPersonID());
                 stmt.setString(2, person.getDescendant());
                 stmt.setString(3, person.getFirstName());
                 stmt.setString(4, person.getLastName());
                 stmt.setObject(5, person.getGender());
-                stmt.setObject(6, person.getFatherID());
-                stmt.setObject(7, person.getMotherID());
-                stmt.setObject(8, person.getSpouseID());
+                stmt.setObject(6, person.getfather());
+                stmt.setObject(7, person.getmother());
+                stmt.setObject(8, person.getspouse());
 
                 stmt.executeUpdate();
                 Logger.fine("Added: " + person.toString());
@@ -59,7 +60,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
      */
     @Override
     public Person get(String id) throws DataBaseException, ModelNotFoundException {
-        String sql = "SELECT * FROM persons WHERE id=?";
+        String sql = "SELECT * FROM persons WHERE personID=?";
         Person person = null;
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -154,18 +155,19 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
     @Override
     public void add(Person person) throws DataBaseException {
         boolean commit = false;
-        String sql = "INSERT INTO persons (id, descendant, firstName, lastName, gender, fatherID, motherID, spouseID)" +
+        String sql = "INSERT INTO persons (personID, descendant, firstName, lastName, gender, father, mother, spouse)" +
                 "VALUES (?,?,?,?,?,?,?,?)";
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, person.getId());
+            stmt.setString(1, person.getPersonID());
+//            stmt.setString(1, person.getId());
             stmt.setString(2, person.getDescendant());
             stmt.setString(3, person.getFirstName());
             stmt.setString(4, person.getLastName());
             stmt.setObject(5, person.getGender());
-            stmt.setObject(6, person.getFatherID());
-            stmt.setObject(7, person.getMotherID());
-            stmt.setObject(8, person.getSpouseID());
+            stmt.setObject(6, person.getfather());
+            stmt.setObject(7, person.getmother());
+            stmt.setObject(8, person.getspouse());
 
             stmt.executeUpdate();
             commit = true;
@@ -185,7 +187,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
      */
     @Override
     public void update(Person person) throws DataBaseException {
-        String sql = "UPDATE persons SET descendant=?, firstname=?, lastName=?, gender=?, fatherID=?, motherID=?, SpouseID=? WHERE id=?";
+        String sql = "UPDATE persons SET descendant=?, firstname=?, lastName=?, gender=?, father=?, mother=?, spouse=? WHERE personID=?";
         boolean commit = false;
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -193,10 +195,10 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
             stmt.setString(2, person.getFirstName());
             stmt.setString(3, person.getLastName());
             stmt.setString(4, person.getGender());
-            stmt.setString(5, person.getFatherID());
-            stmt.setString(6, person.getMotherID());
-            stmt.setString(7, person.getSpouseID());
-            stmt.setString(8, person.getId());
+            stmt.setString(5, person.getfather());
+            stmt.setString(6, person.getmother());
+            stmt.setString(7, person.getspouse());
+            stmt.setString(8, person.getPersonID());
             stmt.executeUpdate();
             commit = true;
         } catch (SQLException e) {
@@ -223,7 +225,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
      */
     @Override
     public void delete(String id) throws DataBaseException, ModelNotFoundException {
-        String sql = "DELETE FROM persons WHERE id=?";
+        String sql = "DELETE FROM persons WHERE personID=?";
         boolean commit = false;
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -240,7 +242,7 @@ public class PersonDAO implements IDatabaseAccessObject<Person, String> {
     }
 
     public void deleteAll(String des, String id) throws DataBaseException {
-        String sql = "DELETE FROM persons WHERE descendant=? AND id!=?";
+        String sql = "DELETE FROM persons WHERE descendant=? AND personID!=?";
         boolean commit = false;
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

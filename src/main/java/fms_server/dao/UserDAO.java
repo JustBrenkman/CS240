@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.dao;
 
 import fms_server.annotation.Unimplemented;
 import fms_server.exceptions.DataBaseException;
+import fms_server.exceptions.ModelDoesNotFitException;
 import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
-import fms_server.exceptions.ModelDoesNotFitException;
 import fms_server.models.User;
 
 import java.sql.*;
@@ -71,15 +71,15 @@ public class UserDAO implements IDatabaseAccessObject<User, String> {
 
     /**
      * Gets a user based on email to check
-     * @param username email of user
+     * @param userName email of user
      * @return user object with email as above
      */
-    public User getUserByUsername(String username) throws DataBaseException, ModelNotFoundException {
-        String sql = "SELECT * FROM users WHERE username=?";
+    public User getUserByUserName(String userName) throws DataBaseException, ModelNotFoundException {
+        String sql = "SELECT * FROM users WHERE userName=?";
         User user = null;
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, username);
+            stmt.setString(1, userName);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 user = AbstractModel.castToModel(User.class, rs);
@@ -137,12 +137,12 @@ public class UserDAO implements IDatabaseAccessObject<User, String> {
     @Override
     public void add(User user) throws DataBaseException {
         boolean commit = false;
-        String sql = "INSERT INTO users (id, username, email, password, firstName, lastName, gender)" +
+        String sql = "INSERT INTO users (id, userName, email, password, firstName, lastName, gender)" +
                 "VALUES (?,?,?,?,?,?,?)";
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, user.getId());
-            stmt.setString(2, user.getUsername());
+            stmt.setString(2, user.getuserName());
             stmt.setString(3, user.getEmail());
             stmt.setString(4, user.getPassword());
             stmt.setString(5, user.getFirstName());

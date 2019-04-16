@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.dao;
@@ -87,31 +87,31 @@ public class DataBase {
                     "`city`       VARCHAR( 100 ) NOT NULL," +
                     "`eventType`  VARCHAR( 50 ) NOT NULL," +
                     "`year`       INTEGER NOT NULL, " +
-                    "FOREIGN KEY (descendant) REFERENCES users(username), " +
+                    "FOREIGN KEY (descendant) REFERENCES users(userName), " +
                     "FOREIGN KEY (personID) REFERENCES persons(personID)" +
                     ");";
 
             String sql_persons = "CREATE TABLE IF NOT EXISTS `persons` (\n" +
-                    "`id`\t VARCHAR( 36 ) NOT NULL PRIMARY KEY UNIQUE,\n" +
+                    "`personID`\t VARCHAR( 36 ) NOT NULL PRIMARY KEY UNIQUE,\n" +
                     "`descendant` VARCHAR( 50 ),\n" +
                     "`firstName`  VARCHAR( 50 ) NOT NULL,\n" +
                     "`lastName`   VARCHAR( 50 ) NOT NULL,\n" +
                     "`gender`     VARCHAR( 1 ) NOT NULL,\n" +
-                    "`fatherID`   VARCHAR( 32 ),\n" +
-                    "`motherID`   VARCHAR( 32 ),\n" +
-                    "`spouseID`   VARCHAR( 32 )\n" +
+                    "`father`   VARCHAR( 32 ),\n" +
+                    "`mother`   VARCHAR( 32 ),\n" +
+                    "`spouse`   VARCHAR( 32 )\n" +
                     ");";
 
             String sql_users = "CREATE TABLE IF NOT EXISTS `users` (\n" +
                     "`id`  VARCHAR ( 36 ) NOT NULL UNIQUE,\n" +
                     "`email`     VARCHAR ( 50) NOT NULL UNIQUE,\n" +
-                    "`username`  VARCHAR ( 50 ) NOT NULL UNIQUE,\n" +
+                    "`userName`  VARCHAR ( 50 ) NOT NULL UNIQUE,\n" +
                     "`password`  BINARY  ( 128 ) NOT NULL,\n" +
                     "`firstName` VARCHAR ( 50 ) NOT NULL,\n" +
                     "`lastName`  VARCHAR ( 50 ) NOT NULL,\n" +
                     "`gender`    VARCHAR ( 1 ) NOT NULL,\n" +
                     "PRIMARY KEY ( `id` ),\n" +
-                    "FOREIGN KEY ( `id` ) REFERENCES persons( `id` )\n" +
+                    "FOREIGN KEY ( `id` ) REFERENCES persons( `personID` )\n" +
                     ");";
 
             Logger.fine("Creating events table");

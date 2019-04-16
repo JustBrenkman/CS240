@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/14/19 4:33 PM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.handlers;
@@ -117,7 +117,8 @@ public abstract class Handler implements HttpHandler {
     public abstract void handleRequest(HttpExchange exchange) throws IOException;
 
     /**
-     * Retrieves the auth token from the header
+     * Retrieves the auth token from the header/'
+     *
      *
      * @param headers request header
      * @return auth token

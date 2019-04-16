@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.models;
@@ -17,9 +17,9 @@ import java.util.Objects;
  */
 public class User extends AbstractModel<String> {
     /**
-     * Username variable
+     * userName variable
      */
-    protected String username;
+    protected String userName;
     /**
      * Password variable, should be hashed
      */
@@ -43,7 +43,7 @@ public class User extends AbstractModel<String> {
 
     /**
      * User constructor
-     * @param username - username of the user
+     * @param userName - userName of the user
      * @param password - password for the user hashed
      * @param email - email of the user
      * @param firstName - first name of user
@@ -51,8 +51,8 @@ public class User extends AbstractModel<String> {
      * @param gender - gender of user
      * @param peronID - person id of the user
      */
-    public User(String username, String password, String email, String firstName, String lastName, String gender, String peronID) {
-        this.username = username;
+    public User(String userName, String password, String email, String firstName, String lastName, String gender, String peronID) {
+        this.userName = userName;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
@@ -70,7 +70,7 @@ public class User extends AbstractModel<String> {
 
     public User(String personId, RegisterRequest request) {
         this.setId(personId);
-        this.username = request.getUsername();
+        this.userName = request.getuserName();
         this.password = Hashing.sha256().hashString(request.getPassword(), StandardCharsets.UTF_8).toString();
         this.email = request.getEmail();
         this.firstName = request.getFirstName();
@@ -79,19 +79,19 @@ public class User extends AbstractModel<String> {
     }
 
     /**
-     * Getter for user username
-     * @return username
+     * Getter for user userName
+     * @return userName
      */
-    public String getUsername() {
-        return username;
+    public String getuserName() {
+        return userName;
     }
 
     /**
-     * Setter for username
-     * @param username - username
+     * Setter for userName
+     * @param userName - userName
      */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setuserName(String userName) {
+        this.userName = userName;
     }
 
     /**
@@ -179,7 +179,7 @@ public class User extends AbstractModel<String> {
      * Getter for user's person id
      * @return - person if of user
      */
-    public String getPeronID() {
+    public String getPersonID() {
         return this.getId();
     }
 
@@ -198,7 +198,7 @@ public class User extends AbstractModel<String> {
         if (!super.equals(o)) return false;
         User user = (User) o;
         return gender.equals(user.gender) &&
-                Objects.equals(username, user.username) &&
+                Objects.equals(userName, user.userName) &&
                 Objects.equals(password, user.password) &&
                 Objects.equals(email, user.email) &&
                 Objects.equals(firstName, user.firstName) &&
@@ -207,7 +207,7 @@ public class User extends AbstractModel<String> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), username, password, email, firstName, lastName, gender);
+        return Objects.hash(super.hashCode(), userName, password, email, firstName, lastName, gender);
     }
 
     public void hashPassword() {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.models;
@@ -37,13 +37,13 @@ public class AuthToken {
     }
 
     /**
-     * Decodes auth token and gets username
+     * Decodes auth token and gets userName
      *
-     * @return username in auth token
+     * @return userName in auth token
      */
-    public String getUserName() {
+    public String getuserName() {
         Jws<Claims> body = Jwts.parser().setSigningKey(FMSServer.getKey()).parseClaimsJws(authToken);
-        Logger.fine("Username: " + body.getBody().getSubject());
+        Logger.fine("userName: " + body.getBody().getSubject());
         return body.getBody().getSubject();
     }
 

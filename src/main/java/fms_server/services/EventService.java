@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.services;
 
-import fms_server.exceptions.DataBaseException;
 import fms_server.dao.EventDAO;
 import fms_server.dao.IDatabaseAccessObject;
 import fms_server.dao.ModelNotFoundException;
+import fms_server.exceptions.DataBaseException;
 import fms_server.exceptions.NotAuthenticatedException;
 import fms_server.logging.Logger;
 import fms_server.models.AuthToken;
@@ -44,7 +44,7 @@ public class EventService extends Service {
         AuthToken token = new AuthToken(request.getToken());
         List<Event> list;
         try {
-            list = ((EventDAO) getDao()).getAllFromDescendant(token.getUserName());
+            list = ((EventDAO) getDao()).getAllFromDescendant(token.getuserName());
             Event[] listr = new Event[list.size()];
             listr = list.toArray(listr);
             return new EventsResult(!list.isEmpty(), "", listr);
@@ -67,7 +67,7 @@ public class EventService extends Service {
         Event event = null;
         try {
             event = ((EventDAO) getDao()).get(request.getEventID());
-            if (!event.getDescendant().equals(token.getUserName()))
+            if (!event.getDescendant().equals(token.getuserName()))
                 return new EventResult(false, "Could not find the model", null);
         } catch (ModelNotFoundException | DataBaseException e) {
             Logger.error("Something went wrong, could not find the model", e);

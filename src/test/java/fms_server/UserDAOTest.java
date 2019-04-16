@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2019.
+ * @author Ben Brenkman
+ * Last Modified 4/16/19 5:07 PM
+ */
+
 package fms_server;
 
-import fms_server.dao.*;
+import fms_server.dao.DataBase;
+import fms_server.dao.ModelNotFoundException;
+import fms_server.dao.UserDAO;
 import fms_server.exceptions.DataBaseException;
 import fms_server.logging.Logger;
 import fms_server.models.User;
@@ -97,7 +105,7 @@ public class UserDAOTest {
         User userToCheck = new User("JustBrenkman", "oihsafihoiafiaosfoisdhfoisdbvosdv", "JustBrenkman@gmail.com", "Ben", "Brenkman", "m", "1");
         try {
             userDAO.add(userToCheck);
-            Assertions.assertEquals(userToCheck, userDAO.getUserByUsername("JustBrenkman"));
+            Assertions.assertEquals(userToCheck, userDAO.getUserByUserName("JustBrenkman"));
         } catch (DataBaseException | ModelNotFoundException e) {
             Logger.fail("Failed to retrieve user by email");
             Assertions.fail();

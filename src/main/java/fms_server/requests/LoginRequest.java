@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.requests;
 
 public class LoginRequest extends Request {
     /**
-     * Username of the user attempting to login
+     * userName of the user attempting to login
      */
-    protected final String username;
+    protected final String userName;
     /**
      * Password of the user attempting to login, un-hashed
      */
@@ -18,16 +18,16 @@ public class LoginRequest extends Request {
 
     /**
      * Constructor for the login request
-     * @param userName username of the user attempting to login not null
+     * @param userName userName of the user attempting to login not null
      * @param password password of the user attempting to login not null
      */
     public LoginRequest(String userName, String password) {
-        this.username = userName;
+        this.userName = userName;
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getuserName() {
+        return userName;
     }
 
     public String getPassword() {

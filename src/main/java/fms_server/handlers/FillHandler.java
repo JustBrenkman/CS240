@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/14/19 4:33 PM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.handlers;
@@ -43,10 +43,10 @@ public class FillHandler extends Handler {
         Logger.fine("Number or args: " + args.length);
         try {
             if (args.length >= 3) {
-                String username = args[2];
+                String userName = args[2];
                 int generations = (args.length >= 4) ? Integer.valueOf(args[3]) : 4;
-                Logger.fine("Username: " + username + ", generations: " + generations);
-                FillResult result = service.fill(new FillRequest(username, generations));
+                Logger.fine("userName: " + userName + ", generations: " + generations);
+                FillResult result = service.fill(new FillRequest(userName, generations));
                 String json = gson.toJson(result);
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, json.getBytes().length);
                 exchange.getResponseBody().write(json.getBytes());

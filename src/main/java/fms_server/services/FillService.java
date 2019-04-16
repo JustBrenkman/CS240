@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/7/19 7:42 PM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.services;
@@ -54,12 +54,12 @@ public class FillService extends Service {
         List<Person> ancestors;
         List<Event> events = new ArrayList<>();
         try {
-            User user = userDAO.getUserByUsername(request.getUserName()); // Get the user
+            User user = userDAO.getUserByUserName(request.getuserName()); // Get the user
 
             // Delete existing data about user
-            Generator.setUser(user.getUsername());
-            personDAO.deleteAll(user.getUsername(), user.getId()); // Deletes all except the user
-            eventDAO.deleteAll(user.getUsername());
+            Generator.setUser(user.getuserName());
+            personDAO.deleteAll(user.getuserName(), user.getId()); // Deletes all except the user
+            eventDAO.deleteAll(user.getuserName());
 
             // Get person from user and generate additional information
             Person person = personDAO.get(user.getId());
@@ -67,6 +67,10 @@ public class FillService extends Service {
             Logger.info("person: " + person.toString());
             Logger.info("spouse: " + spouse.toString());
             ancestors = Generator.generateGenerations(Arrays.asList(person), request.getGenerations(), events, 2019 - 35);
+            events.addAll(Generator.generateEventsForCouple(new HashMap<>() {{
+                put("mother", spouse);
+                put("father", person);
+            }}, 2019));
 
             personDAO.add(spouse);
             personDAO.addAll(ancestors);
@@ -167,8 +171,8 @@ public class FillService extends Service {
         public static Person generateSpouse(Person person) {
             Person spouse = person.getGender().equals("m") ? generateFemalePerson() : generateMalePerson();
             if (spouse != null) {
-                person.setSpouseID(spouse.getId());
-                spouse.setSpouseID(person.getId());
+                person.setspouse(spouse.getPersonID());
+                spouse.setspouse(person.getPersonID());
             }
             return spouse;
         }
@@ -183,10 +187,10 @@ public class FillService extends Service {
                 return new HashMap<>();
             Person mother = generateFemalePerson();
             Person father = generateMalePerson();
-            person.setMotherID(mother.getId());
-            person.setFatherID(father.getId());
-            father.setSpouseID(mother.getId());
-            mother.setSpouseID(father.getId());
+            person.setmother(mother.getPersonID());
+            person.setfather(father.getPersonID());
+            father.setspouse(mother.getPersonID());
+            mother.setspouse(father.getPersonID());
             HashMap<String, Person> personList = new HashMap<>();
             personList.put("mother", mother);
             personList.put("father", father);

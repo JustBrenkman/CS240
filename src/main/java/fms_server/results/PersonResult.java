@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.results;
@@ -32,15 +32,15 @@ public class PersonResult extends Result {
     /**
      * Father's id
      */
-    private final String fatherID;
+    private final String father;
     /**
      * Mother's ID
      */
-    private final String motherID;
+    private final String mother;
     /**
      * Spouse's id
      */
-    private final String spouseID;
+    private final String spouse;
 
 
     /**
@@ -52,42 +52,42 @@ public class PersonResult extends Result {
      * @param firstName first name of person
      * @param lastName last name of person
      * @param gender gender of person
-     * @param fatherID father's id can be null
-     * @param motherID mother's id can be null
-     * @param spouseID spouse's id can be null
+     * @param father father's id can be null
+     * @param mother mother's id can be null
+     * @param spouse spouse's id can be null
      */
-    public PersonResult(boolean success, String message, String descendant, String personID, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
+    public PersonResult(boolean success, String message, String descendant, String personID, String firstName, String lastName, String gender, String father, String mother, String spouse) {
         super(success, message);
         this.descendant = descendant;
         this.personID = personID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
-        this.fatherID = fatherID;
-        this.motherID = motherID;
-        this.spouseID = spouseID;
+        this.father = father;
+        this.mother = mother;
+        this.spouse = spouse;
     }
 
     public PersonResult(boolean success, String message, Person person) {
         super(success, message);
         if (person != null) {
             this.descendant = person.getDescendant();
-            this.personID = person.getId();
+            this.personID = person.getPersonID();
             this.firstName = person.getFirstName();
             this.lastName = person.getLastName();
             this.gender = person.getGender();
-            this.fatherID = person.getFatherID();
-            this.motherID = person.getMotherID();
-            this.spouseID = person.getSpouseID();
+            this.father = person.getfather();
+            this.mother = person.getmother();
+            this.spouse = person.getspouse();
         } else {
             this.descendant = null;
             this.personID = null;
             this.firstName = null;
             this.lastName = null;
             this.gender = null;
-            this.fatherID = null;
-            this.motherID = null;
-            this.spouseID = null;
+            this.father = null;
+            this.mother = null;
+            this.spouse = null;
         }
     }
 
@@ -111,15 +111,15 @@ public class PersonResult extends Result {
         return gender;
     }
 
-    public String getFatherID() {
-        return fatherID;
+    public String getfather() {
+        return father;
     }
 
-    public String getMotherID() {
-        return motherID;
+    public String getmother() {
+        return mother;
     }
 
-    public String getSpouseID() {
-        return spouseID;
+    public String getspouse() {
+        return spouse;
     }
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.models;
@@ -15,7 +15,7 @@ import java.util.UUID;
  */
 public class Person extends AbstractModel<String> {
     /**
-     * User (Username) to which this person belongs
+     * User (userName) to which this person belongs
      */
     protected String descendant;
     /**
@@ -33,15 +33,17 @@ public class Person extends AbstractModel<String> {
     /**
      * ID of person’s father (possibly null)
      */
-    protected String fatherID;
+    protected String father;
     /**
      * Mother: ID of person’s mother (possibly null)
      */
-    protected String motherID;
+    protected String mother;
     /**
      * Spouse: ID of person’s spouse (possibly null)
      */
-    protected String spouseID;
+    protected String spouse;
+
+    protected String personID;
 
     /**
      * Constructor for the person object
@@ -50,24 +52,25 @@ public class Person extends AbstractModel<String> {
      * @param firstName - first name of the person
      * @param lastName - last name of the person
      * @param gender - gender of the person
-     * @param fatherID - father id number of the person
-     * @param motherID - mother id of the person
-     * @param spouseID - spouse id of the person
+     * @param father - father id number of the person
+     * @param mother - mother id of the person
+     * @param spouse - spouse id of the person
      */
-    public Person(String personID, String descendant, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
+    public Person(String personID, String descendant, String firstName, String lastName, String gender, String father, String mother, String spouse) {
         this.setId(personID);
+        this.personID = personID;
         this.descendant = descendant;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
-        this.fatherID = fatherID;
-        this.motherID = motherID;
-        this.spouseID = spouseID;
+        this.father = father;
+        this.mother = mother;
+        this.spouse = spouse;
     }
 
     public Person(RegisterRequest request) {
         this.setId(UUID.randomUUID().toString());
-        this.descendant = request.getUsername();
+        this.descendant = request.getuserName();
         this.firstName = request.getFirstName();
         this.lastName = request.getLastName();
         this.gender = request.getGender();
@@ -80,6 +83,8 @@ public class Person extends AbstractModel<String> {
      * @return - person id
      */
     public String getPersonID() {
+        if (this.getId() == null)
+            return this.personID;
         return this.getId();
     }
 
@@ -89,6 +94,7 @@ public class Person extends AbstractModel<String> {
      */
     public void setPersonID(String personID) {
         this.setId(personID);
+        this.personID = personID;
     }
 
     /**
@@ -159,47 +165,47 @@ public class Person extends AbstractModel<String> {
      * Getter for father's id
      * @return - id of the father
      */
-    public String getFatherID() {
-        return fatherID;
+    public String getfather() {
+        return father;
     }
 
     /**
      * Setter for the father
-     * @param fatherID - father's id
+     * @param father - father's id
      */
-    public void setFatherID(String fatherID) {
-        this.fatherID = fatherID;
+    public void setfather(String father) {
+        this.father = father;
     }
 
     /**
      * Getter for mother's id
      * @return - mother's id
      */
-    public String getMotherID() {
-        return motherID;
+    public String getmother() {
+        return mother;
     }
 
     /**
      * Setter for mother's id
-     * @param motherID - mother's id
+     * @param mother - mother's id
      */
-    public void setMotherID(String motherID) {
-        this.motherID = motherID;
+    public void setmother(String mother) {
+        this.mother = mother;
     }
 
     /**
      * Getter for spouse's id
      * @return spouse's id
      */
-    public String getSpouseID() {
-        return spouseID;
+    public String getspouse() {
+        return spouse;
     }
 
     /**
      * Setter for spouse's id
-     * @param spouseID - spouse's id
+     * @param spouse - spouse's id
      */
-    public void setSpouseID(String spouseID) {
-        this.spouseID = spouseID;
+    public void setspouse(String spouse) {
+        this.spouse = spouse;
     }
 }

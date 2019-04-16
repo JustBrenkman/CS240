@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.services;
@@ -98,19 +98,19 @@ public class Service {
      * @return auth token
      */
     public AuthToken generateAuthToken(User user) {
-        return generateAuthToken(user.getUsername());
+        return generateAuthToken(user.getuserName());
     }
 
     /**
      * Creates a AuthToken
-     * @param username user information to be added to auth token
+     * @param userName user information to be added to auth token
      * @return auth token
      */
-    public AuthToken generateAuthToken(String username) {
+    public AuthToken generateAuthToken(String userName) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR_OF_DAY, 1);
-        String jws = Jwts.builder().setSubject(username).setExpiration(cal.getTime()).signWith(FMSServer.getKey()).compact();
-        return new AuthToken(jws, username);
+        String jws = Jwts.builder().setSubject(userName).setExpiration(cal.getTime()).signWith(FMSServer.getKey()).compact();
+        return new AuthToken(jws, userName);
     }
 
     /**

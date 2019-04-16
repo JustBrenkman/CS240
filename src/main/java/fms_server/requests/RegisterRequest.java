@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.requests;
@@ -10,7 +10,7 @@ public class RegisterRequest extends Request {
     /**
      * User Name of the user being registered, not null
      */
-    protected final String username;
+    protected final String userName;
     /**
      * Password un hashed of the user, not null
      */
@@ -34,7 +34,7 @@ public class RegisterRequest extends Request {
 
     /**
      * Constructor of the register request
-     * @param userName username not null
+     * @param userName userName not null
      * @param password password un-hashed not null
      * @param email email address not null
      * @param firstName first name of the user not null
@@ -42,7 +42,7 @@ public class RegisterRequest extends Request {
      * @param gender gender of the user not null
      */
     public RegisterRequest(String userName, String password, String email, String firstName, String lastName, String gender) {
-        this.username = userName;
+        this.userName = userName;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
@@ -50,8 +50,8 @@ public class RegisterRequest extends Request {
         this.gender = gender;
     }
 
-    public String getUsername() {
-        return username;
+    public String getuserName() {
+        return userName;
     }
 
     public String getPassword() {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/7/19 7:42 PM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.services;
@@ -46,13 +46,13 @@ public class RegisterService extends Service {
     public Result register(RegisterRequest user) {
         try {
             Person person = new Person(user);
-            User userToAdd = new User(person.getId(), user);
-            if (user.getUsername() == null)
-                return new RegisterResult(false, "Bad request, username needs to be lowercase", null);
+            User userToAdd = new User(person.getPersonID(), user);
+            if (user.getuserName() == null)
+                return new RegisterResult(false, "Bad request, userName needs to be lowercase", null);
             personDAO.add(person);
             getDao().add(userToAdd);
             createRandomInfo(user, person); // Fills in 4 generations
-            return new LoginResult(true, "Successfully register user", generateAuthToken(userToAdd).getAuthTokenString(), user.getUsername(), person.getId());
+            return new LoginResult(true, "Successfully register user", generateAuthToken(userToAdd).getAuthTokenString(), user.getuserName(), person.getPersonID());
         } catch (Exception e) {
             Logger.error("Unable to add user", e);
             return new RegisterResult(false, "Already a user, or missing information", null);
@@ -69,9 +69,9 @@ public class RegisterService extends Service {
     private void createRandomInfo(RegisterRequest user, Person person) throws DataBaseException {
         List<Event> events = new ArrayList<>();
 
-        FillService.Generator.setUser(user.getUsername());
+        FillService.Generator.setUser(user.getuserName());
         Person spouse = FillService.Generator.generateSpouse(person);
-        List<Person> people = FillService.Generator.generateGenerations(Arrays.asList(person, spouse), 4, events, 2019 - 35);
+        List<Person> people = FillService.Generator.generateGenerations(Arrays.asList(person), 4, events, 2019 - 35);
 
         // Create events for couple
         HashMap<String, Person> map = new HashMap<>();

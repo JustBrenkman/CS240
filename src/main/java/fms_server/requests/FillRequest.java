@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.requests;
 
 public class FillRequest extends Request {
     /**
-     * Username of the fill request
+     * userName of the fill request
      */
     private final String userName;
     /**
@@ -18,7 +18,7 @@ public class FillRequest extends Request {
 
     /**
      * Fill request constructor
-     * @param userName username of the person to fill
+     * @param userName userName of the person to fill
      * @param generations number of generations to fill
      */
     public FillRequest(String userName, int generations) {
@@ -26,7 +26,7 @@ public class FillRequest extends Request {
         this.generations = generations;
     }
 
-    public String getUserName() {
+    public String getuserName() {
         return userName;
     }
 

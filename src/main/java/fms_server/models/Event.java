@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/16/19 5:07 PM
  */
 
 package fms_server.models;
@@ -19,7 +19,7 @@ public class Event extends AbstractModel<String> {
     /**
      * ID of the person this event belongs to
      */
-    protected String personId;
+    protected String personID;
     /**
      * Latitude of the event’s location
      */
@@ -60,7 +60,7 @@ public class Event extends AbstractModel<String> {
     public Event(String eventID, String descendant, String personID, double latitude, double longitude, String country, String city, String eventType, int year) {
         this.setId(eventID);
         this.descendant = descendant;
-        this.personId = personID;
+        this.personID = personID;
         this.latitude = latitude;
         this.longitude = longitude;
         this.country = country;
@@ -110,15 +110,15 @@ public class Event extends AbstractModel<String> {
      * @return - Person id
      */
     public String getPersonID() {
-        return personId;
+        return personID;
     }
 
     /**
      * Setter for Person id
-     * @param personId - Person id
+     * @param personID - Person id
      */
-    public void setPersonID(String personId) {
-        this.personId = personId;
+    public void setPersonID(String personID) {
+        this.personID = personID;
     }
 
     /**
@@ -240,7 +240,7 @@ public class Event extends AbstractModel<String> {
                 Double.compare(event.longitude, longitude) == 0 &&
                 year == event.year &&
                 descendant.equals(event.descendant) &&
-                personId.equals(event.personId) &&
+                personID.equals(event.personID) &&
                 country.equals(event.country) &&
                 city.equals(event.city) &&
                 eventType.equals(event.eventType);
@@ -248,6 +248,6 @@ public class Event extends AbstractModel<String> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), descendant, personId, latitude, longitude, country, city, eventType, year);
+        return Objects.hash(super.hashCode(), descendant, personID, latitude, longitude, country, city, eventType, year);
     }
 }
