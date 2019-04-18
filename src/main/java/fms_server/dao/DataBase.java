@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 4/16/19 5:07 PM
+ * Last Modified 4/17/19 8:20 PM
  */
 
 package fms_server.dao;
@@ -78,7 +78,7 @@ public class DataBase {
         getConnection(false);
         try (Statement stmt = connection.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS `events` (" +
-                    "`id`    VARCHAR( 36 )NOT NULL PRIMARY KEY UNIQUE," +
+                    "`eventID`    VARCHAR( 36 )NOT NULL PRIMARY KEY UNIQUE," +
                     "`descendant` VARCHAR( 50 )," +
                     "`personID`   VARCHAR( 32 ) NOT NULL," +
                     "`latitude`   DOUBLE NOT NULL," +

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 4/16/19 5:07 PM
+ * Last Modified 4/17/19 8:20 PM
  */
 
 package fms_server.handlers;
@@ -16,6 +16,7 @@ import fms_server.exceptions.NotAuthenticatedException;
 import fms_server.logging.Logger;
 import fms_server.requests.Request;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -49,6 +50,32 @@ public abstract class Handler implements HttpHandler {
         return " -- " + hostname + " -- \"" + requestMethod + "\" " + path + " " + protocol + " " + returnVal + " " + time + "s";
     }
 
+    private static byte[] readAllBytes(InputStream inputStream) throws IOException {
+        final int bufLen = 4 * 0x400; // 4KB
+        byte[] buf = new byte[bufLen];
+        int readLen;
+        IOException exception = null;
+
+        try {
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                while ((readLen = inputStream.read(buf, 0, bufLen)) != -1)
+                    outputStream.write(buf, 0, readLen);
+
+                return outputStream.toByteArray();
+            }
+        } catch (IOException e) {
+            exception = e;
+            throw e;
+        } finally {
+            if (exception == null) inputStream.close();
+            else try {
+                inputStream.close();
+            } catch (IOException e) {
+                exception.addSuppressed(e);
+            }
+        }
+    }
+
     /**
      * Converts an input stream into a request object. Note inputstream must contain a json formatted string
      * @param inputStream Data from exchange
@@ -60,7 +87,7 @@ public abstract class Handler implements HttpHandler {
     <T extends Request> T convertToRequest(InputStream inputStream, Class<T> tClass) throws BadRequestException {
         T instance = null;
         try {
-            instance = gson.fromJson(byteArrayToJSONString(inputStream.readAllBytes()), tClass);
+            instance = gson.fromJson(byteArrayToJSONString(readAllBytes(inputStream)), tClass);
             if (instance == null)
                 throw new BadRequestException("Unable to create request instance");
             instance.checkForProperInstantiation();
@@ -73,15 +100,6 @@ public abstract class Handler implements HttpHandler {
         }
 
         return instance;
-    }
-
-    /**
-     * Turns an array of bytes to String
-     * @param data byte array
-     * @return String that should be a json format
-     */
-    private String byteArrayToJSONString(byte[] data) {
-        return new String(data);
     }
 
     /**
@@ -136,5 +154,17 @@ public abstract class Handler implements HttpHandler {
             }
         }
         throw new NotAuthenticatedException("There is no auth_token");
+    }
+
+    /**
+     * Turns an array of bytes to String
+     *
+     * @param data byte array
+     * @return String that should be a json format
+     */
+    private String byteArrayToJSONString(byte[] data) {
+        String re = new String(data);
+//        System.out.println(re);
+        return re;
     }
 }

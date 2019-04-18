@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 3/4/19 11:06 AM
+ * Last Modified 4/17/19 8:20 PM
  */
 
 package fms_server.dao;
 
 import fms_server.annotation.Unimplemented;
 import fms_server.exceptions.DataBaseException;
+import fms_server.exceptions.ModelDoesNotFitException;
 import fms_server.logging.Logger;
 import fms_server.models.AbstractModel;
 import fms_server.models.Event;
-import fms_server.exceptions.ModelDoesNotFitException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -25,12 +25,12 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
     @Override
     public void addAll(List<Event> list) throws DataBaseException {
         boolean commit = false;
-        String sql = "INSERT INTO events (id, descendant, personId, latitude, longitude, " +
+        String sql = "INSERT INTO events (eventID, descendant, personId, latitude, longitude, " +
                 "country, city, eventType, year) VALUES(?,?,?,?,?,?,?,?,?)";
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Event event : list) {
-                stmt.setString(1, event.getId());
+                stmt.setString(1, event.getEventID());
                 stmt.setString(2, event.getDescendant());
                 stmt.setString(3, event.getPersonID());
                 stmt.setDouble(4, event.getLatitude());
@@ -61,7 +61,7 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
      */
     @Override
     public Event get(String id) throws DataBaseException, ModelNotFoundException {
-        String sql = "SELECT * FROM events WHERE id=?";
+        String sql = "SELECT * FROM events WHERE eventID=?";
         Event event = null;
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -153,11 +153,11 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
     @Override
     public void add(Event event) throws DataBaseException {
         boolean commit = false;
-        String sql = "INSERT INTO events (id, descendant, personId, latitude, longitude, " +
+        String sql = "INSERT INTO events (eventID, descendant, personId, latitude, longitude, " +
                 "country, city, eventType, year) VALUES(?,?,?,?,?,?,?,?,?)";
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, event.getId());
+            stmt.setString(1, event.getEventID());
             stmt.setString(2, event.getDescendant());
             stmt.setString(3, event.getPersonID());
             stmt.setDouble(4, event.getLatitude());
@@ -201,7 +201,7 @@ public class EventDAO implements IDatabaseAccessObject<Event, String> {
      */
     @Override
     public void delete(String id) throws DataBaseException, ModelNotFoundException {
-        String sql = "DELETE FROM events WHERE id=?";
+        String sql = "DELETE FROM events WHERE eventID=?";
         boolean commit = false;
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

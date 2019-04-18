@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 4/16/19 5:07 PM
+ * Last Modified 4/17/19 8:20 PM
  */
 
 package fms_server.models;
@@ -45,6 +45,8 @@ public class Event extends AbstractModel<String> {
      */
     protected int year;
 
+    protected String eventID;
+
     /**
      * Event constructor
      * @param eventID - Unique id to the event
@@ -67,6 +69,7 @@ public class Event extends AbstractModel<String> {
         this.city = city;
         this.eventType = eventType;
         this.year = year;
+        this.eventID = eventID;
     }
 
     protected Event() {
@@ -78,6 +81,8 @@ public class Event extends AbstractModel<String> {
      * @return - event id
      */
     public String getEventID() {
+        if (eventID != null)
+            return eventID;
         return this.getId();
     }
 
@@ -87,6 +92,7 @@ public class Event extends AbstractModel<String> {
      */
     public void setEventID(String eventID) {
         this.setId(eventID);
+        this.eventID = eventID;
     }
 
     /**

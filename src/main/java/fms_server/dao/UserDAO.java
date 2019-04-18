@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 4/16/19 5:07 PM
+ * Last Modified 4/17/19 8:20 PM
  */
 
 package fms_server.dao;
@@ -17,6 +17,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * User Data Access Object for fetching, modifying and adding new objects of User type
@@ -141,7 +142,7 @@ public class UserDAO implements IDatabaseAccessObject<User, String> {
                 "VALUES (?,?,?,?,?,?,?)";
         Connection connection = DataBase.getConnection(false);
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, user.getId());
+            stmt.setString(1, user.getPersonID() == null ? UUID.randomUUID().toString() : user.getPersonID());
             stmt.setString(2, user.getuserName());
             stmt.setString(3, user.getEmail());
             stmt.setString(4, user.getPassword());

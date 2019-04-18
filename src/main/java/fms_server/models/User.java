@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 4/16/19 5:07 PM
+ * Last Modified 4/17/19 8:20 PM
  */
 
 package fms_server.models;
@@ -41,6 +41,8 @@ public class User extends AbstractModel<String> {
      */
     protected String gender;
 
+    protected String personID;
+
     /**
      * User constructor
      * @param userName - userName of the user
@@ -49,16 +51,17 @@ public class User extends AbstractModel<String> {
      * @param firstName - first name of user
      * @param lastName - last name of user
      * @param gender - gender of user
-     * @param peronID - person id of the user
+     * @param personID - person id of the user
      */
-    public User(String userName, String password, String email, String firstName, String lastName, String gender, String peronID) {
+    public User(String userName, String password, String email, String firstName, String lastName, String gender, String personID) {
         this.userName = userName;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
-        this.setId(peronID);
+        this.setId(personID);
+        this.personID = personID;
     }
 
     /**
@@ -76,6 +79,7 @@ public class User extends AbstractModel<String> {
         this.firstName = request.getFirstName();
         this.lastName = request.getLastName();
         this.gender = String.valueOf(request.getGender());
+        this.personID = personId;
     }
 
     /**
@@ -180,6 +184,8 @@ public class User extends AbstractModel<String> {
      * @return - person if of user
      */
     public String getPersonID() {
+        if (personID != null)
+            return personID;
         return this.getId();
     }
 
@@ -188,6 +194,7 @@ public class User extends AbstractModel<String> {
      * @param personID - peron's id of user
      */
     public void setPeronID(String personID) {
+        this.personID = personID;
         this.setId(personID);
     }
 

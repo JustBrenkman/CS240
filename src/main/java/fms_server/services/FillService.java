@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019.
  * @author Ben Brenkman
- * Last Modified 4/16/19 5:07 PM
+ * Last Modified 4/17/19 8:20 PM
  */
 
 package fms_server.services;
@@ -58,19 +58,19 @@ public class FillService extends Service {
 
             // Delete existing data about user
             Generator.setUser(user.getuserName());
-            personDAO.deleteAll(user.getuserName(), user.getId()); // Deletes all except the user
+            personDAO.deleteAll(user.getuserName(), user.getPersonID()); // Deletes all except the user
             eventDAO.deleteAll(user.getuserName());
 
             // Get person from user and generate additional information
-            Person person = personDAO.get(user.getId());
+            Person person = personDAO.get(user.getPersonID());
             Person spouse = Generator.generateSpouse(person);
             Logger.info("person: " + person.toString());
             Logger.info("spouse: " + spouse.toString());
             ancestors = Generator.generateGenerations(Arrays.asList(person), request.getGenerations(), events, 2019 - 35);
-            events.addAll(Generator.generateEventsForCouple(new HashMap<>() {{
-                put("mother", spouse);
-                put("father", person);
-            }}, 2019));
+            HashMap<String, Person> map = new HashMap<>();
+            map.put("mother", spouse);
+            map.put("father", person);
+            events.addAll(Generator.generateEventsForCouple(map, 2019));
 
             personDAO.add(spouse);
             personDAO.addAll(ancestors);
